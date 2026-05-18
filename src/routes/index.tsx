@@ -3,11 +3,16 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { NewsletterForm } from "@/components/site/NewsletterForm";
 import { getHomeSections } from "@/lib/home.functions";
 import { getPublicSponsors } from "@/lib/sponsors.functions";
+import { getUpcomingAgenda } from "@/lib/agenda.functions";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const [home, sponsors] = await Promise.all([getHomeSections(), getPublicSponsors()]);
-    return { ...home, sponsors };
+    const [home, sponsors, upcoming] = await Promise.all([
+      getHomeSections(),
+      getPublicSponsors(),
+      getUpcomingAgenda(),
+    ]);
+    return { ...home, sponsors, upcoming };
   },
   head: () => ({
     meta: [
