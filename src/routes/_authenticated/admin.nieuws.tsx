@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { AdminPage } from "@/components/admin/AdminPage";
 import { optimizeImageForUpload } from "@/lib/optimizeImage";
+import { MediaPickerDialog } from "@/components/admin/MediaPickerDialog";
 import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
 import { supabase } from "@/integrations/supabase/client";
 import { deleteNews, listNews, upsertNews, type NewsAdminRow, type NewsStatus } from "@/lib/news.functions";
@@ -74,6 +75,7 @@ function Page() {
 
   const [draft, setDraft] = useState<Draft>(EMPTY);
   const [uploading, setUploading] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState("");
@@ -291,14 +293,23 @@ function Page() {
                 )}
               </div>
               <div style={{ display: "grid", gap: 6, flex: 1 }}>
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  onChange={(e) => {
-                    const f = e.target.files?.[0];
-                    if (f) void onUploadImage(f);
-                  }}
-                />
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  <label style={{ ...btn(), display: "inline-flex", alignItems: "center", cursor: "pointer" }}>
+                    Uploaden
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      style={{ display: "none" }}
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f) void onUploadImage(f);
+                      }}
+                    />
+                  </label>
+                  <button type="button" style={btn()} onClick={() => setShowPicker(true)}>
+                    Mediabank
+                  </button>
+                </div>
                 <input
                   style={input()}
                   placeholder="…of plak een afbeeldings-URL"
@@ -438,6 +449,12 @@ function Page() {
           </table>
         )}
       </section>
+      <MediaPickerDialog
+        open={showPicker}
+        onClose={() => setShowPicker(false)}
+        defaultBucket="news-media"
+        onSelect={(url) => setDraft((d) => ({ ...d, cover_image_url: url }))}
+      />
     </AdminPage>
   );
 }
