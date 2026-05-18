@@ -101,10 +101,23 @@ function HomePage() {
                     <p className="w-card__date">{c.date}</p>
                     <h3 className="w-card__title">{c.title}</h3>
                     <p className="w-card__dek">{c.dek}</p>
-                    <span className="w-card__cta">Kaarten &amp; info {arrow}</span>
                   </div>
                 </Link>
               ))}
+            </div>
+          </div>
+
+          {/* SPONSORS */}
+          <div className="w-sponsors" aria-label="Onze sponsors">
+            <h2 className="w-sponsors__title">Onze sponsors</h2>
+            <div className="w-sponsors__viewport">
+              <div className="w-sponsors__track">
+                {[...sponsors, ...sponsors].map((s, i) => (
+                  <div className="w-sponsors__item" key={`${s.name}-${i}`} aria-hidden={i >= sponsors.length || undefined}>
+                    <span className="w-sponsors__logo">{s.name}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
