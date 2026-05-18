@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { NewsletterForm } from "@/components/site/NewsletterForm";
+import { getHomeSections } from "@/lib/home.functions";
 
 export const Route = createFileRoute("/")({
+  loader: () => getHomeSections(),
   head: () => ({
     meta: [
       { title: "Koninklijk Fanfarekorps Wilhelmina — Heerde" },
@@ -33,6 +35,7 @@ const stories = [
 ];
 
 function HomePage() {
+  const { hero, banner } = Route.useLoaderData();
   return (
     <SiteLayout overDark>
       {/* HERO */}
@@ -43,21 +46,23 @@ function HomePage() {
         <div className="w-hero__diamonds" aria-hidden="true"><i /><i /><i /><i /></div>
 
         <div className="w-hero__content is-in">
-          <p className="w-hero__eyebrow">Koninklijk Fanfarekorps Wilhelmina</p>
+          {hero.eyebrow && <p className="w-hero__eyebrow">{hero.eyebrow}</p>}
           <h1 className="w-hero__title">
-            Seizoen 2026
-            <em>Verstilling &amp; vuur</em>
+            {hero.title}
+            {hero.subtitle && <em>{hero.subtitle}</em>}
           </h1>
-          <p className="w-hero__lead">
-            Drie orkesten, twaalf concerten en een nieuwe compositie van huiscomponist Anouk Veldman — een seizoen tussen ingetogen kamermuziek en groot fanfaregeluid.
-          </p>
+          {hero.text && <p className="w-hero__lead">{hero.text}</p>}
           <div className="w-hero__ctas">
-            <Link className="w-btn w-btn--primary" to="/optredens">
-              Concertagenda {arrow}
-            </Link>
-            <Link className="w-btn w-btn--ghost-light" to="/nieuws">
-              Bekijk de series
-            </Link>
+            {hero.primary_label && (
+              <a className="w-btn w-btn--primary" href={hero.primary_href || "/"}>
+                {hero.primary_label} {arrow}
+              </a>
+            )}
+            {hero.secondary_label && (
+              <a className="w-btn w-btn--ghost-light" href={hero.secondary_href || "/"}>
+                {hero.secondary_label}
+              </a>
+            )}
           </div>
         </div>
         <div className="w-hero__scroll" aria-hidden="true">Scroll</div>
@@ -95,19 +100,19 @@ function HomePage() {
             </div>
           </div>
 
-          {/* PROMO */}
+          {/* PROMO / BANNER */}
           <div className="w-promo">
             <div className="w-promo__copy">
               <div className="w-promo__dots" aria-hidden="true"><i /><i /><i /></div>
               <div>
-                <h3 className="w-promo__title">Programmaboek 26/27</h3>
-                <p className="w-promo__dek">
-                  Een bijzondere kennismaking met het seizoen — dirigent, musici en het volledige programma van fanfareorkest, slagwerkensemble en opleidingsorkest.
-                </p>
+                <h3 className="w-promo__title">{banner.title}</h3>
+                {banner.text && <p className="w-promo__dek">{banner.text}</p>}
               </div>
-              <Link className="w-btn w-btn--primary w-promo__cta" to="/optredens">
-                Bekijk de concerten {arrow}
-              </Link>
+              {banner.button_label && (
+                <a className="w-btn w-btn--primary w-promo__cta" href={banner.button_href || "/"}>
+                  {banner.button_label} {arrow}
+                </a>
+              )}
             </div>
             <div className="w-promo__media" aria-hidden="true">
               <span className="ph ph--rehearsal" style={{ position: "absolute", inset: 0 }} />
