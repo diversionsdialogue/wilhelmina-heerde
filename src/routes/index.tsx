@@ -103,7 +103,7 @@ function HomePage() {
               {upcoming.length === 0 && (
                 <p style={{ color: "#888" }}>Er staan op dit moment geen geplande optredens in de agenda.</p>
               )}
-              {upcoming.map((c) => (
+              {upcoming.map((c: AgendaItem) => (
                 <Link key={c.id} className="w-card" to="/optredens">
                   <div className="w-card__media">
                     {c.image_url ? (
