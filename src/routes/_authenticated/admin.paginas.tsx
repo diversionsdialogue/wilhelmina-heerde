@@ -249,14 +249,23 @@ function Page() {
                 )}
               </div>
               <div style={{ display: "grid", gap: 6, flex: 1 }}>
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  onChange={(e) => {
-                    const f = e.target.files?.[0];
-                    if (f) void onUploadImage(f);
-                  }}
-                />
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  <label style={{ ...btn(), display: "inline-flex", alignItems: "center", cursor: "pointer" }}>
+                    Uploaden
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      style={{ display: "none" }}
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f) void onUploadImage(f);
+                      }}
+                    />
+                  </label>
+                  <button type="button" style={btn()} onClick={() => setShowPicker(true)}>
+                    Mediabank
+                  </button>
+                </div>
                 <input
                   style={input()}
                   placeholder="…of plak een afbeeldings-URL"
