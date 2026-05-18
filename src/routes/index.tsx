@@ -51,7 +51,7 @@ const stories = [
 ];
 
 function HomePage() {
-  const { hero, banner, sponsors } = Route.useLoaderData();
+  const { hero, banner, sponsors, upcoming } = Route.useLoaderData();
   return (
     <SiteLayout overDark>
       {/* HERO */}
