@@ -69,6 +69,7 @@ function Page() {
 
   const [draft, setDraft] = useState<Draft>(EMPTY);
   const [uploading, setUploading] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
   const saveMut = useMutation({
