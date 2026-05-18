@@ -1,115 +1,162 @@
 
-# Plan — Website Koninklijk Fanfarekorps Wilhelmina
+# Beheeromgeving — definitief plan
 
-## Doel
-Het bijgeleverde design (5 pagina's, complete design tokens, herbruikbare blokken) omzetten naar een onderhoudbare TanStack Start website met Lovable Cloud backend. Twee rollen: **admin** (alles + gebruikersbeheer) en **contentbeheerder** (alleen content). n8n-integratie voor formulieren komt later.
+Gekozen uitgangspunten (op basis van jouw antwoorden):
+- **Statistieken**: starten met wat Lovable Cloud / onze eigen tabel kan bieden (zie sectie 9). Later eventueel uitbreiden.
+- **Versiehistorie**: ja, **max 3 revisies** per item (oudste rolt eruit).
+- **Concept + geplande publicatie**: ja.
+- **Preview-link** voor concepten (signed, zonder login): ja.
+- **SEO per item**: ja (meta-titel, -omschrijving, OG-image, indexeerbaar).
+- **Afbeeldingen optimaliseren**: ja, automatisch bij upload (meerdere formaten + WebP).
+- **Meertaligheid**: nee.
+- **2FA**: nee.
+- Wél meenemen (geen extra vraag): **audit log**, **redirects**, **alt-tekst verplicht**, **back-up-export**.
 
 ---
 
-## 1. Design system overnemen
+## 1. Toegang & rollen
 
-- Fonts (Roboto + Roboto Slab .ttf) → `public/fonts/` + `@font-face` in `src/styles.css`
-- Alle CSS custom properties uit `colors_and_type.css` (`--w-black`, `--w-gold`, `--w-bg-warm`, `--w-bg-sand`, type-scale, spacing, motion) → `src/styles.css` als design tokens, gemapt op shadcn-tokens (`--background` → `--w-bg-warm`, `--primary` → `--w-black`, `--accent` → `--w-gold`, …)
-- Logo's (SVG) → `src/assets/`
-- Aangeleverde `styles.css` (2144 regels componentstijlen — header, hero, cards, promo, full-bleed, footer, nieuwsbrief) wordt 1:1 overgenomen als globale CSS. Component-classes (`w-hero`, `w-card`, `w-promo`, …) blijven hetzelfde.
+- `/login` (bestaat).
+- `/admin/*` afgeschermd via `_authenticated` + role-check.
+- Rollen: **admin** (alles) en **content_manager** (alle content; geen gebruikers/instellingen).
+- Eerste admin: `william@diversions.nl`.
 
-## 2. Routes (publieke site)
+## 2. Layout van het beheer
 
-`src/routes/`:
-- `index.tsx` — Home (hero + binnenkort + nieuws + ontdek + steun + nieuwsbrief)
-- `optredens.tsx` — alle optredens
-- `optredens.$slug.tsx` — optreden detail
-- `nieuws.tsx` — alle nieuwsberichten
-- `nieuws.$slug.tsx` — nieuwsbericht detail (= huidige `blog.html`)
-- `contact.tsx`
-- `over.tsx`, `orkesten.tsx`, `steun.tsx` — vrije CMS-pagina's
+```text
+┌─────────────────────────────────────────────────────────┐
+│  Wilhelmina · Beheer        zoek…    [naam ▾] uitloggen │
+├──────────────┬──────────────────────────────────────────┤
+│ Dashboard    │                                          │
+│ Homepage     │                                          │
+│ Menu         │            (inhoud per pagina)           │
+│ Nieuws       │                                          │
+│ Agenda       │                                          │
+│ Pagina's     │                                          │
+│ Sponsors     │                                          │
+│ Media        │                                          │
+│ Redirects    │                                          │
+│ ──────────── │                                          │
+│ Gebruikers   │  (alleen admin)                          │
+│ Instellingen │  (alleen admin)                          │
+└──────────────┴──────────────────────────────────────────┘
+```
 
-Gedeelde `SiteHeader` / `SiteFooter` componenten in `src/components/site/`. Sticky scroll-state (over donker → wit) overgenomen uit het design.
+Eigen, strakke shadcn-stijl, los van de publieke site. Inklapbare sidebar, mobiel responsive.
 
-## 3. Backend — Lovable Cloud (Supabase)
+## 3. Dashboard
 
-**Stap 1**: Lovable Cloud aanzetten.
+Bovenaan een **periode-selector**: vandaag / 7 dagen / 30 dagen / 90 dagen / dit jaar / aangepast.
 
-**Tabellen:**
+- **Kerncijfers** (4 tegels): unieke bezoekers, paginaweergaves, gem. sessieduur, bouncepercentage — met % verandering t.o.v. vorige periode.
+- **Bezoekersgrafiek** (lijn over tijd).
+- **Meest bezochte pagina's** — top 10.
+- **Bronnen** — direct / zoekmachine / social / referrals.
+- **Apparaten** — desktop / mobiel / tablet.
+- **Snelle acties** — "Nieuw bericht", "Nieuwe agenda", "Nieuwe pagina".
+- **Recente activiteit** — laatste 10 wijzigingen (uit audit log).
 
-| Tabel | Belangrijke velden |
-|---|---|
-| `profiles` | `id` (FK auth.users), `display_name`, `created_at` |
-| `app_role` (enum) | `admin`, `content_manager` |
-| `user_roles` | `user_id`, `role` — aparte tabel (security best practice) |
-| `performances` (optredens) | `slug`, `title`, `subtitle`, `starts_at`, `location`, `ensemble`, `description`, `cover_image`, `ticket_url`, `status` (draft/published), `sort_order` |
-| `news` | `slug`, `eyebrow` (Interview/Achtergrond/…), `title`, `excerpt`, `body` (markdown), `cover_image`, `author`, `published_at`, `status` |
-| `pages` | `slug` (over/orkesten/steun/…), `title`, `hero_image`, `body`, `status` |
-| `home_blocks` | `kind` (hero/promo/fullbleed/promo2), `position`, `payload` (jsonb met titel/dek/cta/foto/link), `enabled` — herbruikbare homepage-blokken |
-| `newsletters` | `issue_number`, `title`, `published_at`, `payload` jsonb met dezelfde block-types → archief samengesteld uit dezelfde blokken |
-| `sponsors` | `id`, `name`, `logo_url`, `website_url`, `tier` (hoofdsponsor/patron/overig), `sort_order`, `enabled` — los invoerveld zodat sliders dynamisch gegenereerd worden |
-| `media` | uploads naar Supabase Storage |
+## 4. Beheer per onderdeel
 
-**Security definer functie** `has_role(uid, role)` om RLS-recursie te voorkomen.
+### a) Homepage — blokken (drag-sort)
+Hero • Binnenkort (auto uit Agenda) • Nieuws-strook (auto, aantal instelbaar) • Promo-blokken (vrij) • Full-bleed-blok • Sponsors-strook • Nieuwsbrief-band. Per blok: zichtbaar/volgorde/payload.
 
-**RLS:**
-- Anon mag lezen waar `status = 'published'` (en alles voor `sponsors` waar `enabled = true`).
-- `content_manager` + `admin` mogen alle content lezen/schrijven.
-- Alleen `admin` mag `user_roles` muteren.
+### b) Menu
+Header (mega-menu kolommen) + footer-kolommen + de "Zelf muziek maken — start direct" banner. Drag-sort, label + URL of interne pagina-koppeling.
 
-**Storage bucket**: `media` (publiek read) — voor cover-foto's en sponsor-logo's.
+### c) Nieuws
+Lijst met filters; editor met titel/slug/eyebrow/excerpt/markdown-body/cover/publicatiedatum/status. Concept → plan-publicatie → gepubliceerd → depubliceren. SEO-veld + preview-link + revisies (max 3).
 
-## 4. Authenticatie
+### d) Agenda (optredens)
+Lijst (komend/verleden, filter op ensemble); editor met titel/slug/datum+tijd/locatie/ensemble/beschrijving/cover/ticket-URL/status. Automatisch depubliceren na einddatum (optie).
 
-- Email + wachtwoord login op `/login`.
-- Trigger op `auth.users` → maakt automatisch `profiles` rij.
-- **Initiële admin**: na signup voor `william@diversions.nl` zet ik handmatig (SQL) de rol `admin`.
-- `/admin/*` beschermd via `_authenticated` layout + role check.
-- Publieke pagina's: data via `createServerFn` met `supabaseAdmin` (alleen `published`/`enabled` rijen, expliciete projectie) — voorkomt SSR/prerender 401s.
+### e) Pagina's
+Vrije pagina's (over, orkesten, steun, bestuur, dirigent, opleiding, lid worden, beeld & geluid, contact, …): titel/slug/hero/body (markdown of blokken)/SEO/status.
 
-## 5. Admin paneel (`/admin/*`)
+### f) Sponsors
+Naam, logo (upload), website, tier (hoofd/patron/overig), volgorde, zichtbaar. Automatisch in footer-strip + sponsorblok.
 
-Eenvoudig CMS in shadcn-stijl (los van de site-styling):
-- `/admin` — dashboard met counts
-- `/admin/optredens` — lijst + create/edit
-- `/admin/nieuws` — lijst + create/edit (markdown editor)
-- `/admin/homepage` — drag-sort van `home_blocks`, edit van payload (afbeeldingen via Storage)
-- `/admin/nieuwsbrieven` — uitgaven samenstellen uit blokken (verwijzingen naar optredens/nieuws of vrije blokken)
-- `/admin/pagina's` — vrije pagina's
-- `/admin/sponsors` — los formulier: **naam, logo (upload), website-URL, tier, volgorde, zichtbaar** → footer-strip en eventuele logo-slider worden hieruit dynamisch gerenderd
-- `/admin/gebruikers` — alleen admin: gebruikers + rollen
-- Image uploads → Supabase Storage
+### g) Media
+Bibliotheek (uploads), kopieer-URL, alt-tekst **verplicht**, vervangen, verwijderen. Bij upload: auto-resize naar meerdere breedtes + WebP-variant; origineel bewaard.
 
-Contentbeheerder ziet alles behalve `Gebruikers`.
+### h) Redirects
+Tabel van → naar (301/302), zoekbaar. 404-rapport (top 20 niet-bestaande URL's van de afgelopen periode) met "maak redirect"-knop.
 
-## 6. Formulieren (contact + nieuwsbrief)
+## 5. Universele content-features (gelden voor Nieuws, Agenda, Pagina's)
 
-Voor nu: formulieren tonen volgens design, submit-actie is een placeholder server function die nog niets verstuurt (UI-feedback "verzonden ✓" werkt al). Zodra je de n8n webhook hebt, plug ik die in 1 plek in (één secret `N8N_WEBHOOK_URL` + één server function die naar n8n POSTed met `{ type: 'contact'|'newsletter', ...velden }`). Geen verdere wijzigingen aan de UI nodig.
+- **Status**: concept / gepland / gepubliceerd / gedepubliceerd.
+- **Geplande publicatie**: datum/tijd in de toekomst — cron-job zet status op gepubliceerd.
+- **Preview-link**: knop "Deel preview" → kopieert signed URL (`?preview=<token>`) die 7 dagen geldig is, geen login nodig.
+- **Revisies**: bij elke "Opslaan/Publiceren" wordt een snapshot bewaard. **Max 3** — bij de 4e rolt de oudste eruit. Knop "Herstel naar deze versie".
+- **SEO per item**: meta-titel, meta-omschrijving, OG-image override, indexeerbaar ja/nee.
+- **Audit log**: wie/wat/wanneer geregistreerd, zichtbaar onder elk item én op dashboard.
 
-## 7. SEO
+## 6. Gebruikersbeheer (alleen admin)
 
-- Per route eigen `head()` met titel, description, og:title/description, og:image (uit cover).
-- NL/EN toggle in header zichtbaar, EN nog niet ingericht (later).
-- `sitemap.xml` en `robots.txt` worden meegeleverd.
+- Lijst (naam, e-mail, rol, laatste login).
+- Uitnodigen via e-mail (wachtwoord-set link).
+- Rol wijzigen, deactiveren, verwijderen.
 
-## 8. Volgorde van uitvoering
+## 7. Instellingen (alleen admin)
 
-1. Design tokens + fonts + globale CSS overzetten; logo's importeren.
-2. Site-shell (Header, Footer, Mobile menu) + route-structuur met statische placeholder content uit het design.
-3. Home, Optredens, Nieuws, Contact, detail-pagina's renderen — eerst statisch om het design 1:1 te krijgen.
-4. Lovable Cloud aanzetten + schema (tabellen, enum, RLS, trigger, storage).
-5. Server functions voor publieke reads; pagina's omzetten naar data uit DB.
-6. Auth + `/login` + rolcontrole; admin-rol toekennen aan william@diversions.nl.
-7. Admin paneel (optredens → nieuws → home_blocks → sponsors → overige).
-8. Contact/nieuwsbrief UI (n8n later).
-9. SEO-meta + sitemap.
-10. QA per pagina (desktop + mobiel).
+- Algemeen: sitenaam, contactgegevens, social links.
+- SEO defaults: title-suffix, default OG-image, favicon, `robots.txt`-toggle.
+- Integraties: webhook-URL voor nieuwsbrief (n8n) en contactformulier-ontvangers.
+- Back-up: knop "Exporteer alle content als JSON".
 
-## Technische details (kort)
+## 8. UX-conventies
 
-- **TanStack Start v1** + file routing. Geen edge functions; backend-logic in `createServerFn`.
-- **Rich text**: markdown-opslag + `react-markdown` voor render.
-- **Afbeeldingen**: Supabase Storage; in CMS een file-uploader; op de site lazy `<img>`.
-- **Sponsor-slider**: opbouwen uit `sponsors` waar `enabled = true`, gesorteerd op `sort_order`, gerenderd in footer-strip + (optioneel) carousel-blok dat als `home_block` kan worden toegevoegd.
-- **State management admin**: TanStack Query met server functions.
-- **Toegankelijkheid**: bestaande aria-attributen uit het design behouden, focus-state, skip-link toevoegen.
+Auto-save concept • ⌘S opslaan • ⌘K snel zoeken • bevestigingsdialoog bij verwijderen • lege-state-teksten ("Nog geen berichten — maak je eerste bericht") • toast bij opslaan/publiceren • preview-knop opent publieke pagina in nieuw tabblad.
 
-## Wat ik later nog van je nodig heb
-- n8n webhook-URL (voor contact + nieuwsbrief submits).
-- Echte foto's en sponsor-logo's (placeholders gebruiken we tot dan).
-- Bevestiging na eerste signup van william@diversions.nl, zodat ik de admin-rol kan toekennen.
+## 9. Statistieken — startaanpak (Lovable Cloud)
+
+Lovable Cloud biedt geen kant-en-klaar analytics-product voor eindbezoekers. Wat we wél kunnen doen, zonder externe tool en zonder cookiebanner:
+
+- **Eigen `page_view`-tabel** in onze database. Een minieme client-side tracker stuurt per paginabezoek: pad, timestamp, referrer (zonder query), user-agent (geparseerd naar device-type), geanonimiseerd IP (alleen om unieke bezoekers per dag te tellen — hash, niet opgeslagen).
+- Server function aggregeert dit naar de dashboard-cijfers (kerncijfers, top-pagina's, bronnen, apparaten, lijn over tijd).
+- AVG-vriendelijk (geen externe partij, geen cookie nodig), maar minder rijk dan Google Analytics (geen demografie, geen funnels). Voor jullie doel — "hoeveel mensen, welke pagina's, waar vandaan" — ruim voldoende.
+
+Als later blijkt dat je meer wilt (campagnes, conversies), kunnen we Plausible/Umami koppelen zonder iets aan de site te verbouwen — alleen het dashboard verandert van bron.
+
+---
+
+## 10. Technische details (kort)
+
+Nieuwe tabellen die nog moeten:
+- `performances`, `pages`, `home_blocks`, `menu_items`, `sponsors`, `media`, `media_variants`
+- `redirects`, `not_found_log`
+- `audit_log`, `revisions` (met trigger die >3 snapshots per item opruimt)
+- `settings` (key/value)
+- `scheduled_publications` (cron-rij voor gepland publiceren/depubliceren)
+- `page_views` (statistieken — zie 9)
+- `preview_tokens` (token + item-ref + verloopdatum)
+
+Verder:
+- Storage bucket `media` (publiek read) + tweede bucket `media-private` voor concept-previews.
+- Beeld-optimalisatie: bij upload één server function die varianten genereert (320/640/960/1440 px + WebP). De `<img>` in de site krijgt `srcset`/`sizes` automatisch.
+- Server functions voor CRUD met `requireSupabaseAuth` + role-check (`is_content_editor` / `has_role`).
+- Cron (Supabase pg_cron of TanStack server route + extern scheduler): elke 5 min geplande publicaties verwerken; dagelijks `page_views` aggregeren.
+- Audit log via Postgres trigger op alle content-tabellen.
+
+---
+
+## 11. Bouwvolgorde
+
+1. **Admin-skelet**: layout, sidebar, lege secties, role-check, dashboard met dummy-cijfers.
+2. **Statistieken-pijplijn**: `page_views`-tabel + tracker + aggregatie → echte cijfers op dashboard.
+3. **Nieuws** als referentie-implementatie (concept/gepland/preview/revisies/SEO — alles).
+4. **Agenda** (zelfde patroon, plus datum/tijd-logica).
+5. **Pagina's**.
+6. **Media + afbeelding-optimalisatie** (parallel aan 3–5 nodig zodra eerste upload binnenkomt).
+7. **Homepage-blokken** (drag-sort + payload-editors).
+8. **Menu**.
+9. **Sponsors**.
+10. **Redirects + 404-rapport**.
+11. **Gebruikersbeheer + Instellingen**.
+12. **Back-up-export** + audit-log-weergave verfijnen.
+
+Iedere stap is na oplevering bruikbaar zonder dat de volgende klaar hoeft te zijn.
+
+---
+
+Klaar om te starten met stap 1 (admin-skelet + dashboard) zodra je dit plan goedkeurt.
