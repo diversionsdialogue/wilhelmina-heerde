@@ -245,7 +245,30 @@ async function convertToWebp(file: MediaFile): Promise<{ base64: string; content
   return { base64, contentType: "image/webp", newName: `${safeBase}.webp` };
 }
 
-function Detail({ file, onClose, onDelete, deleting }: { file: MediaFile; onClose: () => void; onDelete: () => void; deleting: boolean }) {
+function Detail({
+  file,
+  onClose,
+  onDelete,
+  deleting,
+  onRename,
+  renaming,
+  onOptimize,
+  optimizing,
+}: {
+  file: MediaFile;
+  onClose: () => void;
+  onDelete: () => void;
+  deleting: boolean;
+  onRename: (newName: string) => void;
+  renaming: boolean;
+  onOptimize: () => void;
+  optimizing: boolean;
+}) {
+  const [nameInput, setNameInput] = useState(file.name);
+  useEffect(() => setNameInput(file.name), [file.name]);
+  const mt = (file.mimetype ?? "").toLowerCase();
+  const canOptimize = mt.startsWith("image/") && !OPTIMIZED_TYPES.has(mt);
+  const busy = deleting || renaming || optimizing;
   const flags = optimizationFlags(file);
   return (
     <div style={overlay()} onClick={onClose}>
