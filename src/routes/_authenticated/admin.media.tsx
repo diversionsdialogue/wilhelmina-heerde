@@ -189,10 +189,60 @@ function Page() {
             }
           }}
           deleting={delMut.isPending}
+          onRename={(newName) => {
+            renameMut.mutate(
+              { bucket: active.bucket, path: active.path, newName },
+              {
+                onSuccess: () => setActive(null),
+                onError: (e: unknown) => alert(e instanceof Error ? e.message : "Hernoemen mislukt"),
+              },
+            );
+          }}
+          renaming={renameMut.isPending}
+          onOptimize={async () => {
+            try {
+              const { base64, contentType, newName } = await convertToWebp(active);
+              replaceMut.mutate(
+                { bucket: active.bucket, path: active.path, newName, contentType, dataBase64: base64 },
+                {
+                  onSuccess: () => setActive(null),
+                  onError: (e: unknown) => alert(e instanceof Error ? e.message : "Optimaliseren mislukt"),
+                },
+              );
+            } catch (e) {
+              alert(e instanceof Error ? e.message : "Conversie mislukt");
+            }
+          }}
+          optimizing={replaceMut.isPending}
         />
       )}
     </AdminPage>
   );
+}
+
+async function convertToWebp(file: MediaFile): Promise<{ base64: string; contentType: string; newName: string }> {
+  const res = await fetch(file.publicUrl);
+  if (!res.ok) throw new Error("Kon bestand niet ophalen");
+  const blob = await res.blob();
+  const bitmap = await createImageBitmap(blob);
+  const canvas = document.createElement("canvas");
+  const MAX = 2000;
+  const scale = Math.min(1, MAX / Math.max(bitmap.width, bitmap.height));
+  canvas.width = Math.round(bitmap.width * scale);
+  canvas.height = Math.round(bitmap.height * scale);
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas niet beschikbaar");
+  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  const webpBlob: Blob = await new Promise((resolve, reject) =>
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("WebP-conversie mislukt"))), "image/webp", 0.85),
+  );
+  const buf = new Uint8Array(await webpBlob.arrayBuffer());
+  let bin = "";
+  for (let i = 0; i < buf.length; i++) bin += String.fromCharCode(buf[i]);
+  const base64 = btoa(bin);
+  const baseName = file.name.replace(/\.[^.]+$/, "");
+  const safeBase = baseName.replace(/[^a-zA-Z0-9._-]/g, "-").replace(/-+/g, "-");
+  return { base64, contentType: "image/webp", newName: `${safeBase}.webp` };
 }
 
 function Detail({ file, onClose, onDelete, deleting }: { file: MediaFile; onClose: () => void; onDelete: () => void; deleting: boolean }) {
