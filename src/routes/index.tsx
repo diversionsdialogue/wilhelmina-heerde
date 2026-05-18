@@ -109,9 +109,9 @@ function HomePage() {
                 {banner.text && <p className="w-promo__dek">{banner.text}</p>}
               </div>
               {banner.button_label && (
-                <Link className="w-btn w-btn--primary w-promo__cta" to={banner.button_href || "/"}>
+                <a className="w-btn w-btn--primary w-promo__cta" href={banner.button_href || "/"}>
                   {banner.button_label} {arrow}
-                </Link>
+                </a>
               )}
             </div>
             <div className="w-promo__media" aria-hidden="true">
