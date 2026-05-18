@@ -320,7 +320,7 @@ function Page() {
 
           {err && <p style={errStyle()}>{err}</p>}
 
-          <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+          <div style={{ display: "flex", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
             <button
               style={btnPrimary()}
               disabled={!draft.title.trim() || saveMut.isPending || uploading}
@@ -328,6 +328,25 @@ function Page() {
             >
               {saveMut.isPending ? "Opslaan…" : draft.id ? "Wijzigingen opslaan" : "Bericht aanmaken"}
             </button>
+            {draft.id && (
+              <button
+                style={{ ...btnDanger(), marginLeft: "auto" }}
+                disabled={delMut.isPending}
+                onClick={() => {
+                  if (!draft.id) return;
+                  if (confirm(`Bericht "${draft.title}" verwijderen?`)) {
+                    delMut.mutate(draft.id, {
+                      onSuccess: () => {
+                        setShowForm(false);
+                        setDraft(EMPTY);
+                      },
+                    });
+                  }
+                }}
+              >
+                {delMut.isPending ? "Verwijderen…" : "Verwijder bericht"}
+              </button>
+            )}
           </div>
         </section>
       )}
