@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      agenda_items: {
+        Row: {
+          category: Database["public"]["Enums"]["agenda_category"]
+          created_at: string
+          created_by: string | null
+          description: string | null
+          hide_on_homepage: boolean
+          id: string
+          image_url: string | null
+          location: string | null
+          starts_at: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["agenda_category"]
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          hide_on_homepage?: boolean
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          starts_at: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["agenda_category"]
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          hide_on_homepage?: boolean
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          starts_at?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       home_sections: {
         Row: {
           key: string
@@ -176,6 +218,7 @@ export type Database = {
       is_content_editor: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
+      agenda_category: "concert" | "educatie" | "optreden"
       app_role: "admin" | "content_manager"
       content_status: "draft" | "published"
     }
@@ -305,6 +348,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      agenda_category: ["concert", "educatie", "optreden"],
       app_role: ["admin", "content_manager"],
       content_status: ["draft", "published"],
     },
