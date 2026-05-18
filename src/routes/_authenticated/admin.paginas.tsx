@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { AdminPage } from "@/components/admin/AdminPage";
+import { optimizeImageForUpload } from "@/lib/optimizeImage";
 import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
 import { supabase } from "@/integrations/supabase/client";
 import { deletePage, listPages, upsertPage, type PageRow, type PageStatus } from "@/lib/pages.functions";
@@ -147,11 +148,11 @@ function Page() {
     setErr(null);
     setUploading(true);
     try {
-      const ext = file.name.split(".").pop() || "jpg";
+      const { blob, contentType, ext } = await optimizeImageForUpload(file);
       const path = `${crypto.randomUUID()}.${ext}`;
       const { error } = await supabase.storage
         .from("page-media")
-        .upload(path, file, { upsert: false, contentType: file.type });
+        .upload(path, blob, { upsert: false, contentType });
       if (error) throw error;
       const { data } = supabase.storage.from("page-media").getPublicUrl(path);
       setDraft((d) => ({ ...d, cover_image_url: data.publicUrl }));
