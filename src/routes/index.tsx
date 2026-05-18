@@ -4,15 +4,17 @@ import { NewsletterForm } from "@/components/site/NewsletterForm";
 import { getHomeSections } from "@/lib/home.functions";
 import { getPublicSponsors } from "@/lib/sponsors.functions";
 import { getUpcomingAgenda, type AgendaItem } from "@/lib/agenda.functions";
+import { fetchPublishedNews, type NewsRow } from "@/lib/news";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const [home, sponsors, upcoming] = await Promise.all([
+    const [home, sponsors, upcoming, news] = await Promise.all([
       getHomeSections(),
       getPublicSponsors(),
       getUpcomingAgenda(),
+      fetchPublishedNews(),
     ]);
-    return { ...home, sponsors, upcoming };
+    return { ...home, sponsors, upcoming, news: news.slice(0, 3) };
   },
   head: () => ({
     meta: [
@@ -44,14 +46,8 @@ function formatAgendaDate(iso: string) {
 
 
 
-const stories = [
-  { eyebrow: "Interview", title: "Anouk Veldman: 'Een fanfare kan fluisteren'", dek: "In haar derde seizoen als chef-dirigent zoekt Anouk Veldman naar ingetogenheid binnen een traditie van groot blazersgeluid.", ph: "ph--portrait-warm", slug: "anouk-veldman-fanfare-fluisteren" },
-  { eyebrow: "Achtergrond", title: "Hoe het leerlingenorkest een nieuwe generatie vormt", dek: "Achttien jonge musici, één dirigent en de luxe om wekelijks te repeteren met gepokte en gemazelde fanfaremusici.", ph: "ph--portrait-cool", slug: "leerlingenorkest-nieuwe-generatie" },
-  { eyebrow: "Achtergrond", title: "125 jaar later, terug naar de Markt", dek: "Wilhelmina speelde haar eerste noten in 1898 op de Markt in Heerde. Op Koningsdag 2026 keert het orkest naar die plek terug.", ph: "ph--score", slug: "terug-naar-de-markt" },
-];
-
 function HomePage() {
-  const { hero, banner, sponsors, upcoming } = Route.useLoaderData();
+  const { hero, banner, sponsors, upcoming, news } = Route.useLoaderData();
   return (
     <SiteLayout overDark>
       {/* HERO */}
@@ -199,18 +195,26 @@ function HomePage() {
 
           <div className="w-row">
             <div className="w-row__grid">
-              {stories.map((s) => (
-                <Link key={s.title} className="w-card" to="/nieuws/$slug" params={{ slug: s.slug }}>
-                  <div className="w-edcard__media">
-                    <span className={`ph ${s.ph}`} aria-hidden="true" />
-                  </div>
-                  <div className="w-card__body">
-                    <p className="w-edcard__eyebrow">{s.eyebrow}</p>
-                    <h3 className="w-card__title">{s.title}</h3>
-                    <p className="w-card__dek">{s.dek}</p>
-                  </div>
-                </Link>
-              ))}
+              {news.length === 0 ? (
+                <p style={{ color: "#666" }}>Nog geen nieuwsberichten gepubliceerd.</p>
+              ) : (
+                news.map((n: NewsRow) => (
+                  <Link key={n.id} className="w-card" to="/nieuws/$slug" params={{ slug: n.slug }}>
+                    <div className="w-edcard__media">
+                      {n.cover_image_url ? (
+                        <img src={n.cover_image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                      ) : (
+                        <span className={`ph ${n.cover_placeholder || "ph--score"}`} aria-hidden="true" />
+                      )}
+                    </div>
+                    <div className="w-card__body">
+                      {n.eyebrow && <p className="w-edcard__eyebrow">{n.eyebrow}</p>}
+                      <h3 className="w-card__title">{n.title}</h3>
+                      {n.excerpt && <p className="w-card__dek">{n.excerpt}</p>}
+                    </div>
+                  </Link>
+                ))
+              )}
             </div>
           </div>
         </div>
