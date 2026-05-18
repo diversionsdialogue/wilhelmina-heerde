@@ -3,14 +3,18 @@ import { useQuery } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { NewsletterBand } from "@/components/site/NewsletterBand";
 import { MarkdownArticle, parseArticleBody, buildFaqJsonLd } from "@/components/site/MarkdownArticle";
-import { fetchNewsBySlug } from "@/lib/news";
+import { fetchNewsBySlug, fetchPublishedNews, type NewsRow } from "@/lib/news";
 import { formatDutchDate } from "@/lib/format";
 
 export const Route = createFileRoute("/nieuws/$slug")({
   loader: async ({ params }) => {
-    const item = await fetchNewsBySlug(params.slug);
+    const [item, all] = await Promise.all([
+      fetchNewsBySlug(params.slug),
+      fetchPublishedNews(),
+    ]);
     if (!item) throw notFound();
-    return { item };
+    const related = all.filter((n) => n.slug !== params.slug).slice(0, 3);
+    return { item, related };
   },
   head: ({ loaderData }) => {
     const item = loaderData?.item;
