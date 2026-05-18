@@ -4,15 +4,17 @@ import { NewsletterForm } from "@/components/site/NewsletterForm";
 import { getHomeSections } from "@/lib/home.functions";
 import { getPublicSponsors } from "@/lib/sponsors.functions";
 import { getUpcomingAgenda, type AgendaItem } from "@/lib/agenda.functions";
+import { fetchPublishedNews, type NewsRow } from "@/lib/news";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const [home, sponsors, upcoming] = await Promise.all([
+    const [home, sponsors, upcoming, news] = await Promise.all([
       getHomeSections(),
       getPublicSponsors(),
       getUpcomingAgenda(),
+      fetchPublishedNews(),
     ]);
-    return { ...home, sponsors, upcoming };
+    return { ...home, sponsors, upcoming, news: news.slice(0, 3) };
   },
   head: () => ({
     meta: [
