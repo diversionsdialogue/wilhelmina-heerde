@@ -2,9 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { NewsletterForm } from "@/components/site/NewsletterForm";
 import { getHomeSections } from "@/lib/home.functions";
+import { getPublicSponsors } from "@/lib/sponsors.functions";
 
 export const Route = createFileRoute("/")({
-  loader: () => getHomeSections(),
+  loader: async () => {
+    const [home, sponsors] = await Promise.all([getHomeSections(), getPublicSponsors()]);
+    return { ...home, sponsors };
+  },
   head: () => ({
     meta: [
       { title: "Koninklijk Fanfarekorps Wilhelmina — Heerde" },
