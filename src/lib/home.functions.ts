@@ -21,6 +21,13 @@ export type BannerPayload = {
   button_href: string;
 };
 
+export type MenuBannerPayload = {
+  image_url: string;
+  title: string;
+  cta_label: string;
+  href: string;
+};
+
 const HERO_DEFAULTS: HeroPayload = {
   eyebrow: "Koninklijk Fanfarekorps Wilhelmina",
   title: "Seizoen 2026",
