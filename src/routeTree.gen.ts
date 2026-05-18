@@ -77,9 +77,9 @@ const NieuwsIndexRoute = NieuwsIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const NieuwsSlugRoute = NieuwsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => NieuwsRoute,
+  id: '/nieuws/$slug',
+  path: '/nieuws/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
@@ -301,6 +301,7 @@ export interface RootRouteChildren {
   OrkestenRoute: typeof OrkestenRoute
   OverRoute: typeof OverRoute
   SteunRoute: typeof SteunRoute
+  NieuwsSlugRoute: typeof NieuwsSlugRoute
   NieuwsIndexRoute: typeof NieuwsIndexRoute
 }
 
@@ -371,10 +372,10 @@ declare module '@tanstack/react-router' {
     }
     '/nieuws/$slug': {
       id: '/nieuws/$slug'
-      path: '/$slug'
+      path: '/nieuws/$slug'
       fullPath: '/nieuws/$slug'
       preLoaderRoute: typeof NieuwsSlugRouteImport
-      parentRoute: typeof NieuwsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
@@ -515,6 +516,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrkestenRoute: OrkestenRoute,
   OverRoute: OverRoute,
   SteunRoute: SteunRoute,
+  NieuwsSlugRoute: NieuwsSlugRoute,
   NieuwsIndexRoute: NieuwsIndexRoute,
 }
 export const routeTree = rootRouteImport
