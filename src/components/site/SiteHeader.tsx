@@ -1,43 +1,17 @@
-import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import logoWhite from "@/assets/wilhelmina-logo-white.png";
 
 type Props = {
-  /** When true, the header starts in "over dark hero" mode and switches on scroll. */
   overDark?: boolean;
   onOpenMenu?: () => void;
 };
 
-export function SiteHeader({ overDark = false, onOpenMenu }: Props) {
-  const [scrolled, setScrolled] = useState(!overDark);
-
-  useEffect(() => {
-    if (!overDark) {
-      setScrolled(true);
-      return;
-    }
-    const hero = document.querySelector(".w-hero") as HTMLElement | null;
-    const onScroll = () => {
-      const threshold = hero ? hero.offsetHeight - 80 : 80;
-      setScrolled(window.scrollY > threshold);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [overDark]);
-
-  const classes = ["w-header"];
-  if (!scrolled && overDark) classes.push("is-over-dark");
-  if (scrolled) classes.push("is-scrolled");
-
+export function SiteHeader({ onOpenMenu }: Props) {
   return (
-    <header className={classes.join(" ")} id="site-header">
+    <header className="w-header w-header--black" id="site-header">
       <div className="w-header__inner">
         <Link className="w-header__brand" to="/" aria-label="Wilhelmina — home">
-          <span className="w-header__mark" aria-hidden="true" />
-          <span className="w-header__wordmark">
-            <span>WILHELMINA</span>
-            <span>HEERDE · SINDS 1898</span>
-          </span>
+          <img src={logoWhite} alt="Koninklijk Fanfarekorps Wilhelmina Heerde" className="w-header__logo" />
         </Link>
 
         <div className="w-header__actions">

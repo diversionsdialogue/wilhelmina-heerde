@@ -1,7 +1,5 @@
 import { Link } from "@tanstack/react-router";
-
-const crestPath =
-  "M797.07,24.11c-25.22-2.72-46.95,6.93-48.53,21.55c-1.58,14.62,17.59,28.69,42.81,31.41 c6.95,0.75,13.61,0.53,19.68-0.44v153.3l-113.83,16.16V75.31c1.58-14.62-17.59-28.69-42.81-31.41 c-25.22-2.72-46.95,6.93-48.53,21.55c-1.58,14.62,17.59,28.69,42.81,31.41c6.95,0.75,13.61,0.53,19.68-0.44v153.76l-112.71,16 V96.46c1.58-14.62-17.59-28.69-42.81-31.41c-25.22-2.72-46.95,6.93-48.53,21.55c-1.58,14.62,17.59,28.69,42.81,31.41c6.95,0.75,13.61,0.53,19.68-0.44v152.71v38.84v40.71l313.08-40.71v-40.94v-42.35V55.52C841.46,40.89,822.29,26.83,797.07,24.11z";
+import noirLogo from "@/assets/wilhelmina-noir.svg";
 
 type Sponsor = { name: string; website_url?: string | null };
 
@@ -24,15 +22,7 @@ export function SiteFooter({ sponsors }: Props) {
       <div className="w-container">
         <div className="w-footer__grid">
           <div className="w-footer__brand">
-            <div className="w-footer__crest" aria-hidden="true">
-              <svg viewBox="490 20 360 320">
-                <path fill="currentColor" d={crestPath} />
-              </svg>
-            </div>
-            <p className="w-footer__wordmark">
-              KONINKLIJK FANFAREKORPS<br />
-              WILHELMINA — HEERDE
-            </p>
+            <img src={noirLogo} alt="Koninklijk Fanfarekorps Wilhelmina Heerde" className="w-footer__logo" />
           </div>
 
           <ul className="w-footer__col">
