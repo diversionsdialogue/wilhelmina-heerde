@@ -309,11 +309,11 @@ function Page() {
           </Field>
 
           <Field label="Inhoud (Markdown)">
-            <textarea
-              style={{ ...input(), height: 360, padding: 12, fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", fontSize: 13, lineHeight: 1.55, resize: "vertical" }}
-              placeholder={"## Kop\n\nTekst in **Markdown**.\n\n![alt](https://...)\n"}
+            <MarkdownEditor
               value={draft.body_md}
-              onChange={(e) => setDraft({ ...draft, body_md: e.target.value })}
+              onChange={(v) => setDraft({ ...draft, body_md: v })}
+              placeholder={"## Kop\n\nTekst in **Markdown**.\n\n![alt](https://...)\n"}
+              textareaStyle={{ ...input(), height: 360, padding: 12, fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", fontSize: 13, lineHeight: 1.55, resize: "vertical" }}
             />
           </Field>
 
