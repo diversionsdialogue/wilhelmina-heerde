@@ -13,11 +13,11 @@ import { Route as SteunRouteImport } from './routes/steun'
 import { Route as OverRouteImport } from './routes/over'
 import { Route as OrkestenRouteImport } from './routes/orkesten'
 import { Route as OptredensRouteImport } from './routes/optredens'
-import { Route as NieuwsRouteImport } from './routes/nieuws'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as NieuwsIndexRouteImport } from './routes/nieuws.index'
 import { Route as NieuwsSlugRouteImport } from './routes/nieuws.$slug'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
@@ -52,11 +52,6 @@ const OptredensRoute = OptredensRouteImport.update({
   path: '/optredens',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NieuwsRoute = NieuwsRouteImport.update({
-  id: '/nieuws',
-  path: '/nieuws',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -74,6 +69,11 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NieuwsIndexRoute = NieuwsIndexRouteImport.update({
+  id: '/nieuws/',
+  path: '/nieuws/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NieuwsSlugRoute = NieuwsSlugRouteImport.update({
@@ -154,13 +154,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
-  '/nieuws': typeof NieuwsRouteWithChildren
   '/optredens': typeof OptredensRoute
   '/orkesten': typeof OrkestenRoute
   '/over': typeof OverRoute
   '/steun': typeof SteunRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/nieuws/$slug': typeof NieuwsSlugRoute
+  '/nieuws/': typeof NieuwsIndexRoute
   '/admin/agenda': typeof AuthenticatedAdminAgendaRoute
   '/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
@@ -177,12 +177,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
-  '/nieuws': typeof NieuwsRouteWithChildren
   '/optredens': typeof OptredensRoute
   '/orkesten': typeof OrkestenRoute
   '/over': typeof OverRoute
   '/steun': typeof SteunRoute
   '/nieuws/$slug': typeof NieuwsSlugRoute
+  '/nieuws': typeof NieuwsIndexRoute
   '/admin/agenda': typeof AuthenticatedAdminAgendaRoute
   '/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
@@ -201,13 +201,13 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
-  '/nieuws': typeof NieuwsRouteWithChildren
   '/optredens': typeof OptredensRoute
   '/orkesten': typeof OrkestenRoute
   '/over': typeof OverRoute
   '/steun': typeof SteunRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/nieuws/$slug': typeof NieuwsSlugRoute
+  '/nieuws/': typeof NieuwsIndexRoute
   '/_authenticated/admin/agenda': typeof AuthenticatedAdminAgendaRoute
   '/_authenticated/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
   '/_authenticated/admin/homepage': typeof AuthenticatedAdminHomepageRoute
@@ -226,13 +226,13 @@ export interface FileRouteTypes {
     | '/'
     | '/contact'
     | '/login'
-    | '/nieuws'
     | '/optredens'
     | '/orkesten'
     | '/over'
     | '/steun'
     | '/admin'
     | '/nieuws/$slug'
+    | '/nieuws/'
     | '/admin/agenda'
     | '/admin/gebruikers'
     | '/admin/homepage'
@@ -249,12 +249,12 @@ export interface FileRouteTypes {
     | '/'
     | '/contact'
     | '/login'
-    | '/nieuws'
     | '/optredens'
     | '/orkesten'
     | '/over'
     | '/steun'
     | '/nieuws/$slug'
+    | '/nieuws'
     | '/admin/agenda'
     | '/admin/gebruikers'
     | '/admin/homepage'
@@ -272,13 +272,13 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/contact'
     | '/login'
-    | '/nieuws'
     | '/optredens'
     | '/orkesten'
     | '/over'
     | '/steun'
     | '/_authenticated/admin'
     | '/nieuws/$slug'
+    | '/nieuws/'
     | '/_authenticated/admin/agenda'
     | '/_authenticated/admin/gebruikers'
     | '/_authenticated/admin/homepage'
@@ -297,11 +297,11 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   ContactRoute: typeof ContactRoute
   LoginRoute: typeof LoginRoute
-  NieuwsRoute: typeof NieuwsRouteWithChildren
   OptredensRoute: typeof OptredensRoute
   OrkestenRoute: typeof OrkestenRoute
   OverRoute: typeof OverRoute
   SteunRoute: typeof SteunRoute
+  NieuwsIndexRoute: typeof NieuwsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -334,13 +334,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OptredensRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/nieuws': {
-      id: '/nieuws'
-      path: '/nieuws'
-      fullPath: '/nieuws'
-      preLoaderRoute: typeof NieuwsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -367,6 +360,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nieuws/': {
+      id: '/nieuws/'
+      path: '/nieuws'
+      fullPath: '/nieuws/'
+      preLoaderRoute: typeof NieuwsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/nieuws/$slug': {
@@ -506,28 +506,27 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
-interface NieuwsRouteChildren {
-  NieuwsSlugRoute: typeof NieuwsSlugRoute
-}
-
-const NieuwsRouteChildren: NieuwsRouteChildren = {
-  NieuwsSlugRoute: NieuwsSlugRoute,
-}
-
-const NieuwsRouteWithChildren =
-  NieuwsRoute._addFileChildren(NieuwsRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   ContactRoute: ContactRoute,
   LoginRoute: LoginRoute,
-  NieuwsRoute: NieuwsRouteWithChildren,
   OptredensRoute: OptredensRoute,
   OrkestenRoute: OrkestenRoute,
   OverRoute: OverRoute,
   SteunRoute: SteunRoute,
+  NieuwsIndexRoute: NieuwsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
