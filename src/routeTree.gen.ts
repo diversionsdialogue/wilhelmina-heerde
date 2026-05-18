@@ -16,8 +16,10 @@ import { Route as OptredensRouteImport } from './routes/optredens'
 import { Route as NieuwsRouteImport } from './routes/nieuws'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as NieuwsSlugRouteImport } from './routes/nieuws.$slug'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
 const SteunRoute = SteunRouteImport.update({
   id: '/steun',
@@ -54,6 +56,10 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -63,6 +69,11 @@ const NieuwsSlugRoute = NieuwsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => NieuwsRoute,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -74,6 +85,7 @@ export interface FileRoutesByFullPath {
   '/orkesten': typeof OrkestenRoute
   '/over': typeof OverRoute
   '/steun': typeof SteunRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/nieuws/$slug': typeof NieuwsSlugRoute
 }
 export interface FileRoutesByTo {
@@ -85,11 +97,13 @@ export interface FileRoutesByTo {
   '/orkesten': typeof OrkestenRoute
   '/over': typeof OverRoute
   '/steun': typeof SteunRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/nieuws/$slug': typeof NieuwsSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/nieuws': typeof NieuwsRouteWithChildren
@@ -97,6 +111,7 @@ export interface FileRoutesById {
   '/orkesten': typeof OrkestenRoute
   '/over': typeof OverRoute
   '/steun': typeof SteunRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/nieuws/$slug': typeof NieuwsSlugRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +125,7 @@ export interface FileRouteTypes {
     | '/orkesten'
     | '/over'
     | '/steun'
+    | '/admin'
     | '/nieuws/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,10 +137,12 @@ export interface FileRouteTypes {
     | '/orkesten'
     | '/over'
     | '/steun'
+    | '/admin'
     | '/nieuws/$slug'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/contact'
     | '/login'
     | '/nieuws'
@@ -132,11 +150,13 @@ export interface FileRouteTypes {
     | '/orkesten'
     | '/over'
     | '/steun'
+    | '/_authenticated/admin'
     | '/nieuws/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   ContactRoute: typeof ContactRoute
   LoginRoute: typeof LoginRoute
   NieuwsRoute: typeof NieuwsRouteWithChildren
@@ -197,6 +217,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -211,8 +238,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NieuwsSlugRouteImport
       parentRoute: typeof NieuwsRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
+
+interface AuthenticatedRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
 
 interface NieuwsRouteChildren {
   NieuwsSlugRoute: typeof NieuwsSlugRoute
@@ -227,6 +273,7 @@ const NieuwsRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   ContactRoute: ContactRoute,
   LoginRoute: LoginRoute,
   NieuwsRoute: NieuwsRouteWithChildren,
@@ -238,3 +285,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
