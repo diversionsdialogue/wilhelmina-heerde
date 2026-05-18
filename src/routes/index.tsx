@@ -23,9 +23,17 @@ const arrow = (
 );
 
 const upcoming = [
-  { date: "za 14 mrt 2026 · 20:00", title: "Voorjaarsconcert — Holst & Sparke", dek: "Wilhelmina opent het seizoen met werk van Gustav Holst, Philip Sparke en een nieuwe compositie van huiscomponist Anouk Veldman in de Dorpskerk.", ph: "ph--strings" },
-  { date: "zo 19 apr 2026 · 15:00", title: "Veldman: Verstilling — wereldpremière", dek: "Dirigent Anouk Veldman leidt de wereldpremière van haar eigen compositie voor fanfareorkest en solo trompet, geschreven voor Wilhelmina.", ph: "ph--portrait-warm" },
-  { date: "vr 24 apr 2026 · 20:30", title: "Slagwerkgroep — Resonance II", dek: "De Wilhelmina-slagwerkgroep speelt nieuw werk van Reich, Veldman en jonge Nederlandse componisten in De Vlasakkers.", ph: "ph--brass" },
+  { date: "za 14 mrt 2026", title: "Voorjaarsconcert — Holst & Sparke", dek: "Wilhelmina opent het seizoen met werk van Gustav Holst, Philip Sparke en een nieuwe compositie van huiscomponist Anouk Veldman in de Dorpskerk.", ph: "ph--strings" },
+  { date: "zo 19 apr 2026", title: "Veldman: Verstilling — wereldpremière", dek: "Dirigent Anouk Veldman leidt de wereldpremière van haar eigen compositie voor fanfareorkest en solo trompet, geschreven voor Wilhelmina.", ph: "ph--portrait-warm" },
+  { date: "vr 24 apr 2026", title: "Slagwerkgroep — Resonance II", dek: "De Wilhelmina-slagwerkgroep speelt nieuw werk van Reich, Veldman en jonge Nederlandse componisten in De Vlasakkers.", ph: "ph--brass" },
+];
+
+const sponsors = [
+  { name: "Koninklijke van der Most" },
+  { name: "KOLE Makelaars" },
+  { name: "Slagerij van Guilik" },
+  { name: "Lagemaat" },
+  { name: "'t Soerel" },
 ];
 
 const stories = [
