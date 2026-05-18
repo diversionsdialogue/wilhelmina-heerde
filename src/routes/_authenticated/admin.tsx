@@ -40,30 +40,50 @@ function AdminShell() {
   const router = useRouter();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const fetchRole = useServerFn(getMyRole);
+  const [hasSession, setHasSession] = useState<boolean | null>(null);
+
+  // Wait for the Supabase session to hydrate before firing any server fn.
+  useEffect(() => {
+    let active = true;
+    supabase.auth.getSession().then(({ data }) => {
+      if (!active) return;
+      if (!data.session) {
+        router.navigate({ to: "/login", search: { redirect: "/admin" } as never });
+      } else {
+        setHasSession(true);
+      }
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT" || !session) {
+        router.navigate({ to: "/login" });
+      } else {
+        setHasSession(true);
+        router.invalidate();
+      }
+    });
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
+  }, [router]);
+
   const roleQuery = useQuery({
     queryKey: ["my-role"],
     queryFn: () => fetchRole(),
-    enabled: typeof window !== "undefined",
+    enabled: hasSession === true,
   });
   const [collapsed, setCollapsed] = useState(false);
 
-  // Live auth changes (signout from another tab, token refresh, etc.)
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "SIGNED_OUT") router.navigate({ to: "/login" });
-      router.invalidate();
-    });
-    return () => subscription.unsubscribe();
-  }, [router]);
 
   async function logout() {
     await supabase.auth.signOut();
     router.navigate({ to: "/login" });
   }
 
-  if (roleQuery.isLoading) {
+  if (hasSession === null || roleQuery.isLoading || roleQuery.isPending) {
     return <FullPageMessage>Laden…</FullPageMessage>;
   }
+
 
   if (roleQuery.error || !roleQuery.data) {
     return <FullPageMessage>Kon je toegang niet ophalen. Log opnieuw in.</FullPageMessage>;
