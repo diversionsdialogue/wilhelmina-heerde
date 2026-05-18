@@ -266,7 +266,6 @@ function Page() {
           </Field>
 
           <Field label="Inhoud (Markdown)">
-          <Field label="Inhoud (Markdown)">
             <MarkdownEditor
               value={draft.body_md}
               onChange={(v) => setDraft({ ...draft, body_md: v })}
