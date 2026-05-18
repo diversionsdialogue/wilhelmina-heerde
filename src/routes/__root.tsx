@@ -76,6 +76,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Sinds 1898 het muzikale hart van Heerde. Drie orkesten, ruim tachtig musici, één traditie." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "Koninklijk Fanfarekorps Wilhelmina — Heerde" },
+      { name: "twitter:title", content: "Koninklijk Fanfarekorps Wilhelmina — Heerde" },
+      { property: "og:description", content: "Sinds 1898 het muzikale hart van Heerde. Drie orkesten, ruim tachtig musici, één traditie." },
+      { name: "twitter:description", content: "Sinds 1898 het muzikale hart van Heerde. Drie orkesten, ruim tachtig musici, één traditie." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f72b1095-0d57-4674-a98e-0980c8aef05d/id-preview-b7ba03c9--9dced5fa-0dbf-4d68-b917-0e6025b887df.lovable.app-1779117873495.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f72b1095-0d57-4674-a98e-0980c8aef05d/id-preview-b7ba03c9--9dced5fa-0dbf-4d68-b917-0e6025b887df.lovable.app-1779117873495.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
