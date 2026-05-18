@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { AdminPage } from "@/components/admin/AdminPage";
+import { optimizeImageForUpload } from "@/lib/optimizeImage";
 import { supabase } from "@/integrations/supabase/client";
 import {
   deleteSponsor,
