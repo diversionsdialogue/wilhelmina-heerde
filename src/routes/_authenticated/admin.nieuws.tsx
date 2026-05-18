@@ -449,6 +449,12 @@ function Page() {
           </table>
         )}
       </section>
+      <MediaPickerDialog
+        open={showPicker}
+        onClose={() => setShowPicker(false)}
+        defaultBucket="news-media"
+        onSelect={(url) => setDraft((d) => ({ ...d, cover_image_url: url }))}
+      />
     </AdminPage>
   );
 }
