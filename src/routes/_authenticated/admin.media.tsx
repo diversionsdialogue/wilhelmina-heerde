@@ -1,9 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { AdminPage } from "@/components/admin/AdminPage";
-import { deleteMediaFile, listMedia, MEDIA_BUCKETS, type MediaBucket, type MediaFile } from "@/lib/media.functions";
+import {
+  deleteMediaFile,
+  listMedia,
+  renameMediaFile,
+  replaceMediaFile,
+  MEDIA_BUCKETS,
+  type MediaBucket,
+  type MediaFile,
+} from "@/lib/media.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/media")({
   component: Page,
