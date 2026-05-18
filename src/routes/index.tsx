@@ -31,11 +31,17 @@ const arrow = (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
 );
 
-const upcoming = [
-  { date: "za 14 mrt 2026", title: "Voorjaarsconcert — Holst & Sparke", dek: "Wilhelmina opent het seizoen met werk van Gustav Holst, Philip Sparke en een nieuwe compositie van huiscomponist Anouk Veldman in de Dorpskerk.", ph: "ph--strings" },
-  { date: "zo 19 apr 2026", title: "Veldman: Verstilling — wereldpremière", dek: "Dirigent Anouk Veldman leidt de wereldpremière van haar eigen compositie voor fanfareorkest en solo trompet, geschreven voor Wilhelmina.", ph: "ph--portrait-warm" },
-  { date: "vr 24 apr 2026", title: "Slagwerkgroep — Resonance II", dek: "De Wilhelmina-slagwerkgroep speelt nieuw werk van Reich, Veldman en jonge Nederlandse componisten in De Vlasakkers.", ph: "ph--brass" },
-];
+const DATE_FMT = new Intl.DateTimeFormat("nl-NL", {
+  weekday: "short",
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+});
+function formatAgendaDate(iso: string) {
+  return DATE_FMT.format(new Date(iso)).replace(/\.$/, "");
+}
+
+
 
 
 const stories = [
