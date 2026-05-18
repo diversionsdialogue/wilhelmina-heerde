@@ -28,24 +28,52 @@ const SHORTCODE_NAMES = [
   "icon_list_item", "split_line_heading",
 ];
 
+/** Haal de waarde van attr="…" uit een shortcode-tag. */
+function getAttr(tag: string, name: string): string | null {
+  const m = tag.match(new RegExp(`${name}\\s*=\\s*"([^"]*)"`, "i"));
+  return m ? m[1].trim() : null;
+}
+
 function clean(input: string): string {
   if (!input) return input;
   let s = input;
 
   // 1) Unescape markdown-escaped chars die uit WP-import komen.
   s = s.replace(/\\([_\[\](){}#*+\-.!|>`~])/g, "$1");
+  s = s.replace(/\r\n?/g, "\n");
 
-  // 2) Strip alle bekende shortcodes (open, sluit, self-closing, met attrs).
+  // 2) Bewaar inhoud die in attributen is opgeslagen vóór we strippen.
+  //    team_member → "- **Naam** — functie"
+  s = s.replace(/\[team_member\b[^\]]*\]/gi, (tag) => {
+    const name = getAttr(tag, "name");
+    const pos = getAttr(tag, "job_position") || getAttr(tag, "position") || getAttr(tag, "title");
+    if (!name) return "";
+    return `\n- **${name.trim()}**${pos ? ` — ${pos}` : ""}`;
+  });
+
+  //    image_with_animation / vc_single_image → ![](url)
+  s = s.replace(/\[(?:image_with_animation|vc_single_image)\b[^\]]*\]/gi, (tag) => {
+    const url = getAttr(tag, "image_url") || getAttr(tag, "image") || getAttr(tag, "src");
+    return url ? `\n\n![](${url})\n\n` : "";
+  });
+
+  //    button / nectar_btn / vc_btn → [tekst](url)
+  s = s.replace(/\[(?:button|nectar_btn|vc_btn)\b[^\]]*\]/gi, (tag) => {
+    const text = getAttr(tag, "text") || getAttr(tag, "title") || "Lees meer";
+    const url = getAttr(tag, "url") || getAttr(tag, "link");
+    return url ? ` [${text}](${url}) ` : "";
+  });
+
+  // 3) Strip alle bekende shortcodes (open, sluit, self-closing, met attrs).
   const namesAlt = SHORTCODE_NAMES.join("|");
   const tag = new RegExp(`\\[\\/?(?:${namesAlt})(?:\\s+[^\\]]*)?\\/?\\]`, "gi");
   s = s.replace(tag, "");
 
-  // 3) Generieke fallback: [foo_bar attr="x"] of [/foo_bar] — mits niet gevolgd
-  // door "(" (anders is het een markdown-link).
+  // 4) Generieke fallback: [foo_bar attr="x"] of [/foo_bar] — mits niet gevolgd
+  //    door "(" (anders is het een markdown-link).
   s = s.replace(/\[\/?[a-z][a-z0-9_]*(?:\s+[^\]]*)?\](?!\()/gi, "");
 
-  // 4) Whitespace opschonen.
-  s = s.replace(/\r\n/g, "\n");
+  // 5) Whitespace opschonen.
   s = s.replace(/[ \t]+\n/g, "\n");
   s = s.replace(/\n{3,}/g, "\n\n");
   return s.trim();
