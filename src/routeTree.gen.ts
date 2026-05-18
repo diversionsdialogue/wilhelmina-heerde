@@ -21,6 +21,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as NieuwsSlugRouteImport } from './routes/nieuws.$slug'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminHomepageRouteImport } from './routes/_authenticated/admin.homepage'
 
 const SteunRoute = SteunRouteImport.update({
   id: '/steun',
@@ -81,6 +82,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminHomepageRoute =
+  AuthenticatedAdminHomepageRouteImport.update({
+    id: '/homepage',
+    path: '/homepage',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -93,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/steun': typeof SteunRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/nieuws/$slug': typeof NieuwsSlugRoute
+  '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -105,6 +113,7 @@ export interface FileRoutesByTo {
   '/over': typeof OverRoute
   '/steun': typeof SteunRoute
   '/nieuws/$slug': typeof NieuwsSlugRoute
+  '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
@@ -120,6 +129,7 @@ export interface FileRoutesById {
   '/steun': typeof SteunRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/nieuws/$slug': typeof NieuwsSlugRoute
+  '/_authenticated/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -135,6 +145,7 @@ export interface FileRouteTypes {
     | '/steun'
     | '/admin'
     | '/nieuws/$slug'
+    | '/admin/homepage'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -147,6 +158,7 @@ export interface FileRouteTypes {
     | '/over'
     | '/steun'
     | '/nieuws/$slug'
+    | '/admin/homepage'
     | '/admin'
   id:
     | '__root__'
@@ -161,6 +173,7 @@ export interface FileRouteTypes {
     | '/steun'
     | '/_authenticated/admin'
     | '/nieuws/$slug'
+    | '/_authenticated/admin/homepage'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -262,14 +275,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/homepage': {
+      id: '/_authenticated/admin/homepage'
+      path: '/homepage'
+      fullPath: '/admin/homepage'
+      preLoaderRoute: typeof AuthenticatedAdminHomepageRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminHomepageRoute: typeof AuthenticatedAdminHomepageRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminHomepageRoute: AuthenticatedAdminHomepageRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
@@ -313,3 +335,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
