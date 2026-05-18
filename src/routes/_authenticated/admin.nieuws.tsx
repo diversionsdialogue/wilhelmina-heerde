@@ -170,11 +170,11 @@ function Page() {
     setErr(null);
     setUploading(true);
     try {
-      const ext = file.name.split(".").pop() || "jpg";
+      const { blob, contentType, ext } = await optimizeImageForUpload(file);
       const path = `${crypto.randomUUID()}.${ext}`;
       const { error } = await supabase.storage
         .from("news-media")
-        .upload(path, file, { upsert: false, contentType: file.type });
+        .upload(path, blob, { upsert: false, contentType });
       if (error) throw error;
       const { data } = supabase.storage.from("news-media").getPublicUrl(path);
       setDraft((d) => ({ ...d, cover_image_url: data.publicUrl }));
