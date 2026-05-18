@@ -114,18 +114,36 @@ export function MobileMenu({ open, onClose }: Props) {
           ))}
         </nav>
 
-        <Link to="/orkesten" onClick={onClose} className="w-megamenu__feature">
-          <span className="w-megamenu__feature-media" aria-hidden="true">
-            <span className="ph ph--portrait-warm ph--no-mark" />
+        <a
+          href={banner.data?.href || "/orkesten"}
+          onClick={onClose}
+          className="w-megamenu__feature"
+        >
+          <span
+            className="w-megamenu__feature-media"
+            aria-hidden="true"
+            style={
+              banner.data?.image_url
+                ? {
+                    backgroundImage: `url(${JSON.stringify(banner.data.image_url)})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }
+                : undefined
+            }
+          >
+            {!banner.data?.image_url && <span className="ph ph--portrait-warm ph--no-mark" />}
           </span>
           <span className="w-megamenu__feature-body">
-            <span className="w-megamenu__feature-title">Zelf muziek maken</span>
+            <span className="w-megamenu__feature-title">
+              {banner.data?.title || "Zelf muziek maken"}
+            </span>
             <span className="w-megamenu__feature-cta">
-              Start direct
+              {banner.data?.cta_label || "Start direct"}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
             </span>
           </span>
-        </Link>
+        </a>
       </div>
     </aside>
   );
