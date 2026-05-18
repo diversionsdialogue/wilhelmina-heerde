@@ -7,13 +7,6 @@ type Props = {
   onOpenMenu?: () => void;
 };
 
-const navItems = [
-  { to: "/optredens", label: "Agenda" },
-  { to: "/orkesten", label: "Orkesten" },
-  { to: "/nieuws", label: "Nieuws" },
-  { to: "/steun", label: "Steun ons" },
-] as const;
-
 export function SiteHeader({ overDark = false, onOpenMenu }: Props) {
   const [scrolled, setScrolled] = useState(!overDark);
 
@@ -47,27 +40,18 @@ export function SiteHeader({ overDark = false, onOpenMenu }: Props) {
           </span>
         </Link>
 
-        <nav className="w-header__nav" aria-label="Hoofdmenu">
-          {navItems.map((n) => (
-            <Link key={n.to} className="nav-link" to={n.to}>
-              {n.label}
-            </Link>
-          ))}
-          <span className="w-header__rule" aria-hidden="true" />
-          <a className="lang is-active" href="#" aria-current="true">NL</a>
-          <a className="lang" href="#">EN</a>
-          <span className="w-header__rule" aria-hidden="true" />
-          <button className="w-header__icon" aria-label="Zoeken" type="button">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
-          </button>
+        <div className="w-header__actions">
+          <Link className="w-header__quick" to="/optredens">Agenda</Link>
           <Link className="w-header__icon" to="/login" aria-label="Inloggen">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
           </Link>
-        </nav>
-
-        <button className="w-header__menu" aria-label="Menu openen" type="button" onClick={onOpenMenu}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16" /><path d="M4 12h16" /><path d="M4 18h16" /></svg>
-        </button>
+          <button className="w-header__icon" aria-label="Zoeken" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
+          </button>
+          <button className="w-header__burger" aria-label="Menu openen" type="button" onClick={onOpenMenu}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h16" /><path d="M4 17h16" /></svg>
+          </button>
+        </div>
       </div>
     </header>
   );
