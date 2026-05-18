@@ -346,6 +346,12 @@ function Page() {
           </div>
         </section>
       </div>
+      <MediaPickerDialog
+        open={showPicker}
+        onClose={() => setShowPicker(false)}
+        defaultBucket="agenda-media"
+        onSelect={(url) => setDraft((d) => ({ ...d, image_url: url }))}
+      />
     </AdminPage>
   );
 }
