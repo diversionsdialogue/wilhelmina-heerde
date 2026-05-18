@@ -1511,6 +1511,32 @@ img { display: block; max-width: 100%; }
   color: var(--w-gold);
 }
 
+/* FAQ accordeon binnen artikel */
+.w-article__faq {
+  margin: 40px 0;
+  border-top: 1px solid color-mix(in oklab, var(--w-black) 12%, transparent);
+}
+.w-article__faq > * {
+  border-bottom: 1px solid color-mix(in oklab, var(--w-black) 12%, transparent);
+}
+.w-article__faq button[data-state] {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--w-black);
+  padding: 18px 0;
+  text-align: left;
+}
+.w-article__faq [data-state] p {
+  font-family: var(--font-text);
+  font-size: 16px;
+  line-height: 1.65;
+  color: color-mix(in oklab, var(--w-black) 80%, transparent);
+  margin: 0 0 12px;
+}
+
+
+
 /* Section break — gold rule */
 .w-article__rule {
   display: block;
