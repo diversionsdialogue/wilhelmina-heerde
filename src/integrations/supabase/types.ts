@@ -125,6 +125,54 @@ export type Database = {
         }
         Relationships: []
       }
+      pages: {
+        Row: {
+          author_id: string | null
+          body_md: string | null
+          cover_image_url: string | null
+          cover_placeholder: string | null
+          created_at: string
+          excerpt: string | null
+          eyebrow: string | null
+          id: string
+          published_at: string | null
+          slug: string
+          status: Database["public"]["Enums"]["content_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_id?: string | null
+          body_md?: string | null
+          cover_image_url?: string | null
+          cover_placeholder?: string | null
+          created_at?: string
+          excerpt?: string | null
+          eyebrow?: string | null
+          id?: string
+          published_at?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["content_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string | null
+          body_md?: string | null
+          cover_image_url?: string | null
+          cover_placeholder?: string | null
+          created_at?: string
+          excerpt?: string | null
+          eyebrow?: string | null
+          id?: string
+          published_at?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["content_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
