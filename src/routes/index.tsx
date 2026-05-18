@@ -2,9 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { NewsletterForm } from "@/components/site/NewsletterForm";
 import { getHomeSections } from "@/lib/home.functions";
+import { getPublicSponsors } from "@/lib/sponsors.functions";
 
 export const Route = createFileRoute("/")({
-  loader: () => getHomeSections(),
+  loader: async () => {
+    const [home, sponsors] = await Promise.all([getHomeSections(), getPublicSponsors()]);
+    return { ...home, sponsors };
+  },
   head: () => ({
     meta: [
       { title: "Koninklijk Fanfarekorps Wilhelmina — Heerde" },
@@ -28,13 +32,6 @@ const upcoming = [
   { date: "vr 24 apr 2026", title: "Slagwerkgroep — Resonance II", dek: "De Wilhelmina-slagwerkgroep speelt nieuw werk van Reich, Veldman en jonge Nederlandse componisten in De Vlasakkers.", ph: "ph--brass" },
 ];
 
-const sponsors = [
-  { name: "Koninklijke van der Most" },
-  { name: "KOLE Makelaars" },
-  { name: "Slagerij van Guilik" },
-  { name: "Lagemaat" },
-  { name: "'t Soerel" },
-];
 
 const stories = [
   { eyebrow: "Interview", title: "Anouk Veldman: 'Een fanfare kan fluisteren'", dek: "In haar derde seizoen als chef-dirigent zoekt Anouk Veldman naar ingetogenheid binnen een traditie van groot blazersgeluid.", ph: "ph--portrait-warm", slug: "anouk-veldman-fanfare-fluisteren" },
@@ -43,7 +40,7 @@ const stories = [
 ];
 
 function HomePage() {
-  const { hero, banner } = Route.useLoaderData();
+  const { hero, banner, sponsors } = Route.useLoaderData();
   return (
     <SiteLayout overDark>
       {/* HERO */}
@@ -108,18 +105,43 @@ function HomePage() {
           </div>
 
           {/* SPONSORS */}
-          <div className="w-sponsors" aria-label="Onze sponsors">
-            <h2 className="w-sponsors__title">Onze sponsors</h2>
-            <div className="w-sponsors__viewport">
-              <div className="w-sponsors__track">
-                {[...sponsors, ...sponsors].map((s, i) => (
-                  <div className="w-sponsors__item" key={`${s.name}-${i}`} aria-hidden={i >= sponsors.length || undefined}>
-                    <span className="w-sponsors__logo">{s.name}</span>
-                  </div>
-                ))}
+          {sponsors.length > 0 && (
+            <div className="w-sponsors" aria-label="Onze sponsors">
+              <h2 className="w-sponsors__title">Onze sponsors</h2>
+              <div className="w-sponsors__viewport">
+                <div className="w-sponsors__track">
+                  {[...sponsors, ...sponsors].map((s, i) => {
+                    const inner = s.logo_url ? (
+                      <img className="w-sponsors__img" src={s.logo_url} alt={s.name} loading="lazy" />
+                    ) : (
+                      <span className="w-sponsors__logo">{s.name}</span>
+                    );
+                    return (
+                      <div
+                        className="w-sponsors__item"
+                        key={`${s.id}-${i}`}
+                        aria-hidden={i >= sponsors.length || undefined}
+                      >
+                        {s.website_url ? (
+                          <a
+                            href={s.website_url}
+                            target="_blank"
+                            rel="noopener noreferrer sponsored"
+                            aria-label={s.name}
+                            className="w-sponsors__link"
+                          >
+                            {inner}
+                          </a>
+                        ) : (
+                          inner
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* PROMO / BANNER */}
           <div className="w-promo">
