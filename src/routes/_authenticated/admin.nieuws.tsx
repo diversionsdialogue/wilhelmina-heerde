@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { AdminPage } from "@/components/admin/AdminPage";
+import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
 import { supabase } from "@/integrations/supabase/client";
 import { deleteNews, listNews, upsertNews, type NewsAdminRow, type NewsStatus } from "@/lib/news.functions";
 
@@ -309,11 +310,11 @@ function Page() {
           </Field>
 
           <Field label="Inhoud (Markdown)">
-            <textarea
-              style={{ ...input(), height: 360, padding: 12, fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", fontSize: 13, lineHeight: 1.55, resize: "vertical" }}
-              placeholder={"## Kop\n\nTekst in **Markdown**.\n\n![alt](https://...)\n"}
+            <MarkdownEditor
               value={draft.body_md}
-              onChange={(e) => setDraft({ ...draft, body_md: e.target.value })}
+              onChange={(v) => setDraft({ ...draft, body_md: v })}
+              placeholder={"## Kop\n\nTekst in **Markdown**.\n\n![alt](https://...)\n"}
+              textareaStyle={{ ...input(), height: 360, padding: 12, fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", fontSize: 13, lineHeight: 1.55, resize: "vertical" }}
             />
           </Field>
 
