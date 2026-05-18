@@ -40,7 +40,11 @@ function AdminShell() {
   const router = useRouter();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const fetchRole = useServerFn(getMyRole);
-  const roleQuery = useQuery({ queryKey: ["my-role"], queryFn: () => fetchRole() });
+  const roleQuery = useQuery({
+    queryKey: ["my-role"],
+    queryFn: () => fetchRole(),
+    enabled: typeof window !== "undefined",
+  });
   const [collapsed, setCollapsed] = useState(false);
 
   // Live auth changes (signout from another tab, token refresh, etc.)
