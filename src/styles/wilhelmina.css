@@ -1372,13 +1372,44 @@ img { display: block; max-width: 100%; }
   font-style: italic;
   color: var(--w-black);
 }
+.w-article__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin: 0 0 28px;
+}
 .w-article__date {
   font-family: var(--font-primary);
   font-weight: 500;
   font-size: 13px;
   color: var(--w-ink-50);
-  margin: 0 0 28px;
+  margin: 0;
   letter-spacing: 0.04em;
+}
+.w-article__crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-primary);
+  font-size: 13px;
+  color: var(--w-ink-50);
+  letter-spacing: 0.02em;
+}
+.w-article__crumbs a {
+  color: var(--w-ink-50);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color .2s ease, border-color .2s ease;
+}
+.w-article__crumbs a:hover { color: var(--w-black); border-bottom-color: currentColor; }
+.w-article__crumbs span[aria-current] {
+  color: var(--w-ink-90);
+  max-width: 36ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .w-article__lead {
   font-family: var(--font-text);
