@@ -46,14 +46,8 @@ function formatAgendaDate(iso: string) {
 
 
 
-const stories = [
-  { eyebrow: "Interview", title: "Anouk Veldman: 'Een fanfare kan fluisteren'", dek: "In haar derde seizoen als chef-dirigent zoekt Anouk Veldman naar ingetogenheid binnen een traditie van groot blazersgeluid.", ph: "ph--portrait-warm", slug: "anouk-veldman-fanfare-fluisteren" },
-  { eyebrow: "Achtergrond", title: "Hoe het leerlingenorkest een nieuwe generatie vormt", dek: "Achttien jonge musici, één dirigent en de luxe om wekelijks te repeteren met gepokte en gemazelde fanfaremusici.", ph: "ph--portrait-cool", slug: "leerlingenorkest-nieuwe-generatie" },
-  { eyebrow: "Achtergrond", title: "125 jaar later, terug naar de Markt", dek: "Wilhelmina speelde haar eerste noten in 1898 op de Markt in Heerde. Op Koningsdag 2026 keert het orkest naar die plek terug.", ph: "ph--score", slug: "terug-naar-de-markt" },
-];
-
 function HomePage() {
-  const { hero, banner, sponsors, upcoming } = Route.useLoaderData();
+  const { hero, banner, sponsors, upcoming, news } = Route.useLoaderData();
   return (
     <SiteLayout overDark>
       {/* HERO */}
