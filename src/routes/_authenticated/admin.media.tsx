@@ -1,9 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { AdminPage } from "@/components/admin/AdminPage";
-import { deleteMediaFile, listMedia, MEDIA_BUCKETS, type MediaBucket, type MediaFile } from "@/lib/media.functions";
+import {
+  deleteMediaFile,
+  listMedia,
+  renameMediaFile,
+  replaceMediaFile,
+  MEDIA_BUCKETS,
+  type MediaBucket,
+  type MediaFile,
+} from "@/lib/media.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/media")({
   component: Page,
@@ -29,6 +37,8 @@ type Sort = "newest" | "oldest" | "largest" | "name";
 function Page() {
   const list = useServerFn(listMedia);
   const remove = useServerFn(deleteMediaFile);
+  const rename = useServerFn(renameMediaFile);
+  const replace = useServerFn(replaceMediaFile);
   const qc = useQueryClient();
 
   const query = useQuery({
@@ -39,6 +49,22 @@ function Page() {
 
   const delMut = useMutation({
     mutationFn: (f: { bucket: MediaBucket; path: string }) => remove({ data: f }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin-media"] }),
+  });
+
+  const renameMut = useMutation({
+    mutationFn: (f: { bucket: MediaBucket; path: string; newName: string }) => rename({ data: f }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin-media"] }),
+  });
+
+  const replaceMut = useMutation({
+    mutationFn: (f: {
+      bucket: MediaBucket;
+      path: string;
+      newName: string;
+      contentType: string;
+      dataBase64: string;
+    }) => replace({ data: f }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["admin-media"] }),
   });
 
@@ -163,13 +189,86 @@ function Page() {
             }
           }}
           deleting={delMut.isPending}
+          onRename={(newName) => {
+            renameMut.mutate(
+              { bucket: active.bucket, path: active.path, newName },
+              {
+                onSuccess: () => setActive(null),
+                onError: (e: unknown) => alert(e instanceof Error ? e.message : "Hernoemen mislukt"),
+              },
+            );
+          }}
+          renaming={renameMut.isPending}
+          onOptimize={async () => {
+            try {
+              const { base64, contentType, newName } = await convertToWebp(active);
+              replaceMut.mutate(
+                { bucket: active.bucket, path: active.path, newName, contentType, dataBase64: base64 },
+                {
+                  onSuccess: () => setActive(null),
+                  onError: (e: unknown) => alert(e instanceof Error ? e.message : "Optimaliseren mislukt"),
+                },
+              );
+            } catch (e) {
+              alert(e instanceof Error ? e.message : "Conversie mislukt");
+            }
+          }}
+          optimizing={replaceMut.isPending}
         />
       )}
     </AdminPage>
   );
 }
 
-function Detail({ file, onClose, onDelete, deleting }: { file: MediaFile; onClose: () => void; onDelete: () => void; deleting: boolean }) {
+async function convertToWebp(file: MediaFile): Promise<{ base64: string; contentType: string; newName: string }> {
+  const res = await fetch(file.publicUrl);
+  if (!res.ok) throw new Error("Kon bestand niet ophalen");
+  const blob = await res.blob();
+  const bitmap = await createImageBitmap(blob);
+  const canvas = document.createElement("canvas");
+  const MAX = 2000;
+  const scale = Math.min(1, MAX / Math.max(bitmap.width, bitmap.height));
+  canvas.width = Math.round(bitmap.width * scale);
+  canvas.height = Math.round(bitmap.height * scale);
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas niet beschikbaar");
+  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  const webpBlob: Blob = await new Promise((resolve, reject) =>
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("WebP-conversie mislukt"))), "image/webp", 0.85),
+  );
+  const buf = new Uint8Array(await webpBlob.arrayBuffer());
+  let bin = "";
+  for (let i = 0; i < buf.length; i++) bin += String.fromCharCode(buf[i]);
+  const base64 = btoa(bin);
+  const baseName = file.name.replace(/\.[^.]+$/, "");
+  const safeBase = baseName.replace(/[^a-zA-Z0-9._-]/g, "-").replace(/-+/g, "-");
+  return { base64, contentType: "image/webp", newName: `${safeBase}.webp` };
+}
+
+function Detail({
+  file,
+  onClose,
+  onDelete,
+  deleting,
+  onRename,
+  renaming,
+  onOptimize,
+  optimizing,
+}: {
+  file: MediaFile;
+  onClose: () => void;
+  onDelete: () => void;
+  deleting: boolean;
+  onRename: (newName: string) => void;
+  renaming: boolean;
+  onOptimize: () => void;
+  optimizing: boolean;
+}) {
+  const [nameInput, setNameInput] = useState(file.name);
+  useEffect(() => setNameInput(file.name), [file.name]);
+  const mt = (file.mimetype ?? "").toLowerCase();
+  const canOptimize = mt.startsWith("image/") && !OPTIMIZED_TYPES.has(mt);
+  const busy = deleting || renaming || optimizing;
   const flags = optimizationFlags(file);
   return (
     <div style={overlay()} onClick={onClose}>
@@ -205,6 +304,41 @@ function Detail({ file, onClose, onDelete, deleting }: { file: MediaFile; onClos
                 </div>
               )}
             </div>
+
+            <div>
+              <p style={{ fontSize: 12, color: "#666", margin: "0 0 6px" }}>Bestandsnaam</p>
+              <div style={{ display: "flex", gap: 6 }}>
+                <input
+                  value={nameInput}
+                  onChange={(e) => setNameInput(e.target.value)}
+                  style={{ ...input(), flex: 1, fontSize: 12 }}
+                  placeholder="naam.jpg"
+                />
+                <button
+                  style={btn()}
+                  disabled={busy || nameInput.trim() === file.name || !nameInput.trim()}
+                  onClick={() => onRename(nameInput.trim())}
+                >
+                  {renaming ? "Opslaan…" : "Hernoem"}
+                </button>
+              </div>
+              <p style={{ fontSize: 10, color: "#999", margin: "4px 0 0" }}>
+                Alleen letters, cijfers, punt, _ en -. Vergeet de extensie niet (bv. .webp).
+              </p>
+            </div>
+
+            {canOptimize && (
+              <div>
+                <p style={{ fontSize: 12, color: "#666", margin: "0 0 6px" }}>Optimaliseren</p>
+                <button style={btn()} disabled={busy} onClick={onOptimize}>
+                  {optimizing ? "Converteren…" : "Converteer naar WebP"}
+                </button>
+                <p style={{ fontSize: 10, color: "#999", margin: "4px 0 0" }}>
+                  Maakt een WebP (max 2000px, kwaliteit 85) en vervangt het origineel.
+                  Let op: bestaande verwijzingen naar de oude bestandsnaam werken daarna niet meer.
+                </p>
+              </div>
+            )}
 
             <div>
               <p style={{ fontSize: 12, color: "#666", margin: "0 0 6px" }}>Publieke URL</p>
