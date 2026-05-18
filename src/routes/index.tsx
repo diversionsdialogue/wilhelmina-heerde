@@ -35,6 +35,7 @@ const stories = [
 ];
 
 function HomePage() {
+  const { hero, banner } = Route.useLoaderData();
   return (
     <SiteLayout overDark>
       {/* HERO */}
@@ -45,21 +46,23 @@ function HomePage() {
         <div className="w-hero__diamonds" aria-hidden="true"><i /><i /><i /><i /></div>
 
         <div className="w-hero__content is-in">
-          <p className="w-hero__eyebrow">Koninklijk Fanfarekorps Wilhelmina</p>
+          {hero.eyebrow && <p className="w-hero__eyebrow">{hero.eyebrow}</p>}
           <h1 className="w-hero__title">
-            Seizoen 2026
-            <em>Verstilling &amp; vuur</em>
+            {hero.title}
+            {hero.subtitle && <em>{hero.subtitle}</em>}
           </h1>
-          <p className="w-hero__lead">
-            Drie orkesten, twaalf concerten en een nieuwe compositie van huiscomponist Anouk Veldman — een seizoen tussen ingetogen kamermuziek en groot fanfaregeluid.
-          </p>
+          {hero.text && <p className="w-hero__lead">{hero.text}</p>}
           <div className="w-hero__ctas">
-            <Link className="w-btn w-btn--primary" to="/optredens">
-              Concertagenda {arrow}
-            </Link>
-            <Link className="w-btn w-btn--ghost-light" to="/nieuws">
-              Bekijk de series
-            </Link>
+            {hero.primary_label && (
+              <Link className="w-btn w-btn--primary" to={hero.primary_href || "/"}>
+                {hero.primary_label} {arrow}
+              </Link>
+            )}
+            {hero.secondary_label && (
+              <Link className="w-btn w-btn--ghost-light" to={hero.secondary_href || "/"}>
+                {hero.secondary_label}
+              </Link>
+            )}
           </div>
         </div>
         <div className="w-hero__scroll" aria-hidden="true">Scroll</div>
