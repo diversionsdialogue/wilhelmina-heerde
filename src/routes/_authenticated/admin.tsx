@@ -80,9 +80,10 @@ function AdminShell() {
     router.navigate({ to: "/login" });
   }
 
-  if (roleQuery.isLoading) {
+  if (hasSession === null || roleQuery.isLoading || roleQuery.isPending) {
     return <FullPageMessage>Laden…</FullPageMessage>;
   }
+
 
   if (roleQuery.error || !roleQuery.data) {
     return <FullPageMessage>Kon je toegang niet ophalen. Log opnieuw in.</FullPageMessage>;
