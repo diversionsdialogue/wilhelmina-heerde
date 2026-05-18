@@ -44,6 +44,21 @@ export const getUpcomingAgenda = createServerFn({ method: "GET" }).handler(async
   return (data ?? []) as AgendaItem[];
 });
 
+/** Volledige publieke agenda. Items verdwijnen automatisch de dag na het optreden. */
+export const listPublicAgenda = createServerFn({ method: "GET" }).handler(async () => {
+  // Start van vandaag in lokale tijd (Europe/Amsterdam ~ UTC).
+  const now = new Date();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+
+  const { data, error } = await supabaseAdmin
+    .from("agenda_items")
+    .select("id, starts_at, image_url, category, location, title, description, hide_on_homepage")
+    .gte("starts_at", startOfToday)
+    .order("starts_at", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as AgendaItem[];
+});
+
 const UpsertSchema = z.object({
   id: z.string().uuid().optional(),
   starts_at: z.string().min(1),
