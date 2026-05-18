@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { NewsletterForm } from "@/components/site/NewsletterForm";
+import { getHomeSections } from "@/lib/home.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
