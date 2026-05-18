@@ -31,6 +31,14 @@ const colTertiary = [
 ] as const;
 
 export function MobileMenu({ open, onClose }: Props) {
+  const fetchBanner = useServerFn(getMenuBanner);
+  const banner = useQuery({
+    queryKey: ["menu-banner"],
+    queryFn: () => fetchBanner(),
+    enabled: typeof window !== "undefined",
+    staleTime: 60_000,
+  });
+
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
