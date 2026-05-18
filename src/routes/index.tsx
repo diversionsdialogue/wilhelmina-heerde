@@ -100,19 +100,19 @@ function HomePage() {
             </div>
           </div>
 
-          {/* PROMO */}
+          {/* PROMO / BANNER */}
           <div className="w-promo">
             <div className="w-promo__copy">
               <div className="w-promo__dots" aria-hidden="true"><i /><i /><i /></div>
               <div>
-                <h3 className="w-promo__title">Programmaboek 26/27</h3>
-                <p className="w-promo__dek">
-                  Een bijzondere kennismaking met het seizoen — dirigent, musici en het volledige programma van fanfareorkest, slagwerkensemble en opleidingsorkest.
-                </p>
+                <h3 className="w-promo__title">{banner.title}</h3>
+                {banner.text && <p className="w-promo__dek">{banner.text}</p>}
               </div>
-              <Link className="w-btn w-btn--primary w-promo__cta" to="/optredens">
-                Bekijk de concerten {arrow}
-              </Link>
+              {banner.button_label && (
+                <Link className="w-btn w-btn--primary w-promo__cta" to={banner.button_href || "/"}>
+                  {banner.button_label} {arrow}
+                </Link>
+              )}
             </div>
             <div className="w-promo__media" aria-hidden="true">
               <span className="ph ph--rehearsal" style={{ position: "absolute", inset: 0 }} />
