@@ -32,13 +32,6 @@ const upcoming = [
   { date: "vr 24 apr 2026", title: "Slagwerkgroep — Resonance II", dek: "De Wilhelmina-slagwerkgroep speelt nieuw werk van Reich, Veldman en jonge Nederlandse componisten in De Vlasakkers.", ph: "ph--brass" },
 ];
 
-const sponsors = [
-  { name: "Koninklijke van der Most" },
-  { name: "KOLE Makelaars" },
-  { name: "Slagerij van Guilik" },
-  { name: "Lagemaat" },
-  { name: "'t Soerel" },
-];
 
 const stories = [
   { eyebrow: "Interview", title: "Anouk Veldman: 'Een fanfare kan fluisteren'", dek: "In haar derde seizoen als chef-dirigent zoekt Anouk Veldman naar ingetogenheid binnen een traditie van groot blazersgeluid.", ph: "ph--portrait-warm", slug: "anouk-veldman-fanfare-fluisteren" },
