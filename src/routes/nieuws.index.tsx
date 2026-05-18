@@ -4,7 +4,7 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { NewsletterBand } from "@/components/site/NewsletterBand";
 import { fetchPublishedNews } from "@/lib/news";
 
-export const Route = createFileRoute("/nieuws")({
+export const Route = createFileRoute("/nieuws/")({
   head: () => ({
     meta: [
       { title: "Nieuws — Wilhelmina Heerde" },
