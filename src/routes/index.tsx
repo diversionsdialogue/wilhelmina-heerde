@@ -195,18 +195,26 @@ function HomePage() {
 
           <div className="w-row">
             <div className="w-row__grid">
-              {stories.map((s) => (
-                <Link key={s.title} className="w-card" to="/nieuws/$slug" params={{ slug: s.slug }}>
-                  <div className="w-edcard__media">
-                    <span className={`ph ${s.ph}`} aria-hidden="true" />
-                  </div>
-                  <div className="w-card__body">
-                    <p className="w-edcard__eyebrow">{s.eyebrow}</p>
-                    <h3 className="w-card__title">{s.title}</h3>
-                    <p className="w-card__dek">{s.dek}</p>
-                  </div>
-                </Link>
-              ))}
+              {news.length === 0 ? (
+                <p style={{ color: "#666" }}>Nog geen nieuwsberichten gepubliceerd.</p>
+              ) : (
+                news.map((n: NewsRow) => (
+                  <Link key={n.id} className="w-card" to="/nieuws/$slug" params={{ slug: n.slug }}>
+                    <div className="w-edcard__media">
+                      {n.cover_image_url ? (
+                        <img src={n.cover_image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                      ) : (
+                        <span className={`ph ${n.cover_placeholder || "ph--score"}`} aria-hidden="true" />
+                      )}
+                    </div>
+                    <div className="w-card__body">
+                      {n.eyebrow && <p className="w-edcard__eyebrow">{n.eyebrow}</p>}
+                      <h3 className="w-card__title">{n.title}</h3>
+                      {n.excerpt && <p className="w-card__dek">{n.excerpt}</p>}
+                    </div>
+                  </Link>
+                ))
+              )}
             </div>
           </div>
         </div>
