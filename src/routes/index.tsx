@@ -40,7 +40,7 @@ const stories = [
 ];
 
 function HomePage() {
-  const { hero, banner } = Route.useLoaderData();
+  const { hero, banner, sponsors } = Route.useLoaderData();
   return (
     <SiteLayout overDark>
       {/* HERO */}
