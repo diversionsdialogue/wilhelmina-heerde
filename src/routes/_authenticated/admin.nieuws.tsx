@@ -1,184 +1,442 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
 import { AdminPage } from "@/components/admin/AdminPage";
-import { importNewsBatch } from "@/lib/news.functions";
+import { supabase } from "@/integrations/supabase/client";
+import { deleteNews, listNews, upsertNews, type NewsAdminRow, type NewsStatus } from "@/lib/news.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/nieuws")({
   component: Page,
 });
 
-type Result = {
-  file: string;
-  status: "imported" | "skipped" | "error";
-  slug?: string;
-  reason?: string;
+type Draft = {
+  id?: string;
+  slug: string;
+  title: string;
+  eyebrow: string;
+  excerpt: string;
+  body_md: string;
+  cover_image_url: string | null;
+  status: NewsStatus;
+  published_at: string; // datetime-local
 };
 
-async function fileToBase64(file: File): Promise<string> {
-  const buf = await file.arrayBuffer();
-  const bytes = new Uint8Array(buf);
-  let bin = "";
-  const chunk = 0x8000;
-  for (let i = 0; i < bytes.length; i += chunk) {
-    bin += String.fromCharCode(...bytes.subarray(i, i + chunk));
-  }
-  return btoa(bin);
+const EMPTY: Draft = {
+  slug: "",
+  title: "",
+  eyebrow: "",
+  excerpt: "",
+  body_md: "",
+  cover_image_url: null,
+  status: "draft",
+  published_at: "",
+};
+
+type SortKey =
+  | "published_desc"
+  | "published_asc"
+  | "updated_desc"
+  | "title_asc"
+  | "title_desc"
+  | "status";
+
+function toLocalInput(iso: string | null): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function fmt(iso: string | null) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleString("nl-NL", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function Page() {
-  const runImport = useServerFn(importNewsBatch);
-  const [files, setFiles] = useState<File[]>([]);
-  const [busy, setBusy] = useState(false);
-  const [results, setResults] = useState<Result[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const list = useServerFn(listNews);
+  const save = useServerFn(upsertNews);
+  const remove = useServerFn(deleteNews);
+  const qc = useQueryClient();
 
-  const mdCount = files.filter((f) => f.name.toLowerCase().endsWith(".md")).length;
-  const imgCount = files.length - mdCount;
+  const query = useQuery({
+    queryKey: ["admin-news"],
+    queryFn: () => list(),
+    enabled: typeof window !== "undefined",
+  });
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!files.length) return;
-    setBusy(true);
-    setError(null);
-    setResults(null);
+  const [draft, setDraft] = useState<Draft>(EMPTY);
+  const [uploading, setUploading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<SortKey>("published_desc");
+
+  const filtered = useMemo(() => {
+    const items = query.data ?? [];
+    const q = search.trim().toLowerCase();
+    const out = q
+      ? items.filter(
+          (p) =>
+            p.title.toLowerCase().includes(q) ||
+            p.slug.toLowerCase().includes(q) ||
+            (p.excerpt ?? "").toLowerCase().includes(q),
+        )
+      : items.slice();
+    out.sort((a, b) => {
+      switch (sort) {
+        case "published_asc":
+          return (a.published_at ?? "").localeCompare(b.published_at ?? "");
+        case "published_desc":
+          return (b.published_at ?? "").localeCompare(a.published_at ?? "");
+        case "updated_desc":
+          return b.updated_at.localeCompare(a.updated_at);
+        case "title_asc":
+          return a.title.localeCompare(b.title, "nl");
+        case "title_desc":
+          return b.title.localeCompare(a.title, "nl");
+        case "status":
+          return a.status.localeCompare(b.status) || b.updated_at.localeCompare(a.updated_at);
+        default:
+          return 0;
+      }
+    });
+    return out;
+  }, [query.data, search, sort]);
+
+  const saveMut = useMutation({
+    mutationFn: (d: Draft) =>
+      save({
+        data: {
+          id: d.id,
+          slug: d.slug.trim() || null,
+          title: d.title.trim(),
+          eyebrow: d.eyebrow.trim() || null,
+          excerpt: d.excerpt.trim() || null,
+          body_md: d.body_md,
+          cover_image_url: d.cover_image_url || null,
+          status: d.status,
+          published_at:
+            d.status === "published" && d.published_at
+              ? new Date(d.published_at).toISOString()
+              : null,
+        },
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin-news"] });
+      setDraft(EMPTY);
+      setShowForm(false);
+      setErr(null);
+    },
+    onError: (e: Error) => setErr(e.message),
+  });
+
+  const delMut = useMutation({
+    mutationFn: (id: string) => remove({ data: { id } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin-news"] }),
+  });
+
+  function startEdit(item: NewsAdminRow) {
+    setDraft({
+      id: item.id,
+      slug: item.slug,
+      title: item.title,
+      eyebrow: item.eyebrow ?? "",
+      excerpt: item.excerpt ?? "",
+      body_md: item.body_md ?? "",
+      cover_image_url: item.cover_image_url,
+      status: item.status,
+      published_at: toLocalInput(item.published_at),
+    });
+    setShowForm(true);
+    setErr(null);
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function startNew() {
+    setDraft(EMPTY);
+    setShowForm(true);
+    setErr(null);
+  }
+
+  async function onUploadImage(file: File) {
+    setErr(null);
+    setUploading(true);
     try {
-      const payload = await Promise.all(
-        files.map(async (f) => ({
-          name: f.name,
-          type: f.type,
-          base64: await fileToBase64(f),
-        })),
-      );
-      const res = await runImport({ data: { files: payload } });
-      setResults(res.results);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `${crypto.randomUUID()}.${ext}`;
+      const { error } = await supabase.storage
+        .from("news-media")
+        .upload(path, file, { upsert: false, contentType: file.type });
+      if (error) throw error;
+      const { data } = supabase.storage.from("news-media").getPublicUrl(path);
+      setDraft((d) => ({ ...d, cover_image_url: data.publicUrl }));
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Upload mislukt");
     } finally {
-      setBusy(false);
+      setUploading(false);
     }
   }
+
+  useEffect(() => setErr(null), [draft.id]);
 
   return (
     <AdminPage
       title="Nieuws"
-      description="Importeer .md-bestanden + afbeeldingen. Editor met concepten en revisies volgt later."
+      description="Beheer nieuwsberichten."
+      actions={
+        <button style={btnPrimary()} onClick={startNew}>
+          + Nieuw bericht
+        </button>
+      }
     >
-      <form
-        onSubmit={onSubmit}
-        style={{
-          background: "#fff",
-          border: "1px solid #e5e5e5",
-          borderRadius: 12,
-          padding: 28,
-          display: "grid",
-          gap: 16,
-        }}
-      >
-        <div>
-          <h2 style={{ fontSize: 18, fontWeight: 600, margin: "0 0 6px" }}>
-            Bulk-import vanuit Markdown
-          </h2>
-          <p style={{ margin: 0, color: "#666", fontSize: 13, lineHeight: 1.6 }}>
-            Leest <code>title</code>, <code>slug</code> en <code>date</code> uit de frontmatter. Vervangt
-            relatieve <code>![alt](pad.jpg)</code>-verwijzingen door publieke URLs en gebruikt de eerste
-            afbeelding als header. Bestaande slugs worden overgeslagen.
-          </p>
-        </div>
+      {showForm && (
+        <section style={{ ...card(), marginBottom: 20 }}>
+          <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+            <h2 style={h2()}>{draft.id ? "Bericht bewerken" : "Nieuw bericht"}</h2>
+            <button
+              style={btn()}
+              onClick={() => {
+                setShowForm(false);
+                setDraft(EMPTY);
+                setErr(null);
+              }}
+            >
+              Sluiten
+            </button>
+          </header>
 
-        <label
-          style={{
-            border: "2px dashed #c9c9c9",
-            borderRadius: 12,
-            padding: 32,
-            textAlign: "center",
-            cursor: "pointer",
-            background: "#fafafa",
-          }}
-        >
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <Field label="Titel">
+              <input style={input()} value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
+            </Field>
+            <Field label="Slug (leeg = automatisch uit titel)">
+              <input
+                style={input()}
+                placeholder="seizoensopening-dorpskerk"
+                value={draft.slug}
+                onChange={(e) => setDraft({ ...draft, slug: e.target.value })}
+              />
+            </Field>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16 }}>
+            <Field label="Eyebrow (optioneel)">
+              <input style={input()} value={draft.eyebrow} onChange={(e) => setDraft({ ...draft, eyebrow: e.target.value })} />
+            </Field>
+            <Field label="Status">
+              <select
+                style={input()}
+                value={draft.status}
+                onChange={(e) =>
+                  setDraft((d) => ({
+                    ...d,
+                    status: e.target.value as NewsStatus,
+                    published_at:
+                      e.target.value === "published" && !d.published_at
+                        ? toLocalInput(new Date().toISOString())
+                        : d.published_at,
+                  }))
+                }
+              >
+                <option value="draft">Concept</option>
+                <option value="published">Gepubliceerd</option>
+              </select>
+            </Field>
+            <Field label="Publicatiedatum">
+              <input
+                type="datetime-local"
+                style={input()}
+                value={draft.published_at}
+                onChange={(e) => setDraft({ ...draft, published_at: e.target.value })}
+                disabled={draft.status !== "published"}
+              />
+            </Field>
+          </div>
+
+          <Field label="Korte introductie / excerpt">
+            <textarea
+              style={{ ...input(), height: 64, padding: 10, resize: "vertical" }}
+              value={draft.excerpt}
+              onChange={(e) => setDraft({ ...draft, excerpt: e.target.value })}
+            />
+          </Field>
+
+          <Field label="Cover-afbeelding">
+            <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+              <div
+                style={{
+                  width: 140,
+                  height: 92,
+                  background: "#f5f5f5",
+                  borderRadius: 8,
+                  overflow: "hidden",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flex: "0 0 auto",
+                }}
+              >
+                {draft.cover_image_url ? (
+                  <img src={draft.cover_image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : (
+                  <span style={{ fontSize: 11, color: "#999" }}>geen</span>
+                )}
+              </div>
+              <div style={{ display: "grid", gap: 6, flex: 1 }}>
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) void onUploadImage(f);
+                  }}
+                />
+                <input
+                  style={input()}
+                  placeholder="…of plak een afbeeldings-URL"
+                  value={draft.cover_image_url ?? ""}
+                  onChange={(e) => setDraft({ ...draft, cover_image_url: e.target.value })}
+                />
+                {uploading && <p style={muted()}>Uploaden…</p>}
+              </div>
+            </div>
+          </Field>
+
+          <Field label="Inhoud (Markdown)">
+            <textarea
+              style={{ ...input(), height: 360, padding: 12, fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", fontSize: 13, lineHeight: 1.55, resize: "vertical" }}
+              placeholder={"## Kop\n\nTekst in **Markdown**.\n\n![alt](https://...)\n"}
+              value={draft.body_md}
+              onChange={(e) => setDraft({ ...draft, body_md: e.target.value })}
+            />
+          </Field>
+
+          {err && <p style={errStyle()}>{err}</p>}
+
+          <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+            <button
+              style={btnPrimary()}
+              disabled={!draft.title.trim() || saveMut.isPending || uploading}
+              onClick={() => saveMut.mutate(draft)}
+            >
+              {saveMut.isPending ? "Opslaan…" : draft.id ? "Wijzigingen opslaan" : "Bericht aanmaken"}
+            </button>
+          </div>
+        </section>
+      )}
+
+      <section style={card()}>
+        <div style={{ display: "flex", gap: 12, marginBottom: 14, flexWrap: "wrap" }}>
           <input
-            type="file"
-            multiple
-            accept=".md,image/*"
-            onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
-            style={{ display: "none" }}
+            style={{ ...input(), flex: "1 1 240px" }}
+            placeholder="Zoek op titel, slug of intro…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
-          <div style={{ fontSize: 15, color: "#333", marginBottom: 6 }}>
-            Klik om bestanden te selecteren
-          </div>
-          <div style={{ fontSize: 13, color: "#777" }}>
-            .md-bestanden + .jpg/.png/.webp — relatieve paden in de markdown worden gematcht op bestandsnaam
-          </div>
-        </label>
-
-        {files.length > 0 && (
-          <div style={{ fontSize: 13, color: "#555" }}>
-            <strong>{files.length}</strong> bestand{files.length === 1 ? "" : "en"} geselecteerd —{" "}
-            {mdCount} markdown, {imgCount} afbeelding{imgCount === 1 ? "" : "en"}.
-          </div>
-        )}
-
-        <div>
-          <button
-            type="submit"
-            disabled={!mdCount || busy}
-            style={{
-              background: !mdCount || busy ? "#999" : "#0d0d0d",
-              color: "#fff",
-              padding: "10px 22px",
-              borderRadius: 8,
-              fontSize: 14,
-              fontWeight: 500,
-              border: 0,
-              cursor: !mdCount || busy ? "default" : "pointer",
-            }}
-          >
-            {busy ? "Bezig met importeren…" : `Importeer ${mdCount || 0} bericht${mdCount === 1 ? "" : "en"}`}
-          </button>
+          <select style={{ ...input(), width: 240, flex: "0 0 auto" }} value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
+            <option value="published_desc">Publicatiedatum (nieuw → oud)</option>
+            <option value="published_asc">Publicatiedatum (oud → nieuw)</option>
+            <option value="updated_desc">Laatst bijgewerkt</option>
+            <option value="title_asc">Titel A → Z</option>
+            <option value="title_desc">Titel Z → A</option>
+            <option value="status">Status</option>
+          </select>
         </div>
 
-        {error && (
-          <div style={{ background: "#fef2f2", border: "1px solid #fecaca", color: "#991b1b", padding: 12, borderRadius: 8, fontSize: 14 }}>
-            {error}
-          </div>
+        {query.isLoading && <p style={muted()}>Laden…</p>}
+        {query.error && <p style={errStyle()}>Kon nieuwsberichten niet laden.</p>}
+        {query.data && filtered.length === 0 && (
+          <p style={muted()}>
+            {query.data.length === 0 ? "Nog geen berichten. Klik rechtsboven op " : "Geen berichten gevonden voor "}
+            {query.data.length === 0 ? <strong>+ Nieuw bericht</strong> : <strong>“{search}”</strong>}.
+          </p>
         )}
 
-        {results && (
-          <div style={{ marginTop: 8 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 600, margin: "0 0 12px" }}>Resultaat</h3>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-              <thead>
-                <tr style={{ textAlign: "left", color: "#666", borderBottom: "1px solid #eee" }}>
-                  <th style={{ padding: "8px 6px" }}>Bestand</th>
-                  <th style={{ padding: "8px 6px" }}>Status</th>
-                  <th style={{ padding: "8px 6px" }}>Slug / reden</th>
+        {filtered.length > 0 && (
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+            <thead>
+              <tr style={{ textAlign: "left", color: "#666", borderBottom: "1px solid #eee" }}>
+                <th style={th()}>Titel</th>
+                <th style={th()}>Slug</th>
+                <th style={th()}>Status</th>
+                <th style={th()}>Gepubliceerd</th>
+                <th style={{ ...th(), textAlign: "right" }}>Acties</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((p) => (
+                <tr key={p.id} style={{ borderBottom: "1px solid #f3f3f3" }}>
+                  <td style={td()}>
+                    <div style={{ fontWeight: 600, color: "#0d0d0d" }}>{p.title}</div>
+                    {p.eyebrow && <div style={{ color: "#888", fontSize: 12 }}>{p.eyebrow}</div>}
+                  </td>
+                  <td style={{ ...td(), color: "#555", fontFamily: "ui-monospace, monospace" }}>{p.slug}</td>
+                  <td style={td()}>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        padding: "2px 8px",
+                        borderRadius: 999,
+                        fontSize: 11,
+                        fontWeight: 600,
+                        background: p.status === "published" ? "#dcfce7" : "#f1f5f9",
+                        color: p.status === "published" ? "#166534" : "#475569",
+                      }}
+                    >
+                      {p.status === "published" ? "Gepubliceerd" : "Concept"}
+                    </span>
+                  </td>
+                  <td style={{ ...td(), color: "#666" }}>{fmt(p.published_at)}</td>
+                  <td style={{ ...td(), textAlign: "right", whiteSpace: "nowrap" }}>
+                    {p.status === "published" && (
+                      <a href={`/nieuws/${p.slug}`} target="_blank" rel="noreferrer" style={{ ...btn(), textDecoration: "none", marginRight: 6, display: "inline-block", lineHeight: "30px" }}>
+                        Bekijk
+                      </a>
+                    )}
+                    <button style={{ ...btn(), marginRight: 6 }} onClick={() => startEdit(p)}>
+                      Bewerk
+                    </button>
+                    <button
+                      style={btnDanger()}
+                      onClick={() => {
+                        if (confirm(`Bericht "${p.title}" verwijderen?`)) delMut.mutate(p.id);
+                      }}
+                    >
+                      Verwijder
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {results.map((r, i) => (
-                  <tr key={i} style={{ borderBottom: "1px solid #f3f3f3" }}>
-                    <td style={{ padding: "8px 6px", fontFamily: "monospace" }}>{r.file}</td>
-                    <td style={{ padding: "8px 6px" }}>
-                      {r.status === "imported" && <span style={{ color: "#15803d" }}>✓ geïmporteerd</span>}
-                      {r.status === "skipped" && <span style={{ color: "#a16207" }}>⚠ overgeslagen</span>}
-                      {r.status === "error" && <span style={{ color: "#b91c1c" }}>✗ fout</span>}
-                    </td>
-                    <td style={{ padding: "8px 6px", color: "#555" }}>
-                      {r.status === "imported" && r.slug ? (
-                        <a href={`/nieuws/${r.slug}`} target="_blank" rel="noreferrer" style={{ color: "#1d4ed8" }}>
-                          /nieuws/{r.slug}
-                        </a>
-                      ) : (
-                        r.reason ?? r.slug ?? ""
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         )}
-      </form>
+      </section>
     </AdminPage>
   );
 }
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label style={{ display: "grid", gap: 6, marginBottom: 12 }}>
+      <span style={{ fontSize: 12, fontWeight: 600, color: "#555" }}>{label}</span>
+      {children}
+    </label>
+  );
+}
+
+const card = (): React.CSSProperties => ({ background: "#fff", border: "1px solid #eee", borderRadius: 12, padding: 20 });
+const h2 = (): React.CSSProperties => ({ fontSize: 16, fontWeight: 700, margin: 0 });
+const input = (): React.CSSProperties => ({ minHeight: 38, padding: "0 12px", border: "1px solid #ddd", borderRadius: 8, fontSize: 14, width: "100%", background: "#fff" });
+const btn = (): React.CSSProperties => ({ height: 32, padding: "0 12px", border: "1px solid #ddd", borderRadius: 8, background: "#fff", fontSize: 13, cursor: "pointer", color: "#333" });
+const btnPrimary = (): React.CSSProperties => ({ ...btn(), background: "#0d0d0d", color: "#fff", border: "1px solid #0d0d0d", height: 38, padding: "0 18px", fontWeight: 600 });
+const btnDanger = (): React.CSSProperties => ({ ...btn(), color: "#b00020", borderColor: "#f1c0c7" });
+const muted = (): React.CSSProperties => ({ color: "#888", fontSize: 13, margin: 0 });
+const errStyle = (): React.CSSProperties => ({ color: "#b00020", fontSize: 13, margin: "8px 0 0" });
+const th = (): React.CSSProperties => ({ padding: "10px 8px", fontWeight: 600, fontSize: 12, textTransform: "uppercase", letterSpacing: 0.4 });
+const td = (): React.CSSProperties => ({ padding: "12px 8px", verticalAlign: "top" });
