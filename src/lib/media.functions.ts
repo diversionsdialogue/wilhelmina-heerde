@@ -37,7 +37,6 @@ async function listBucketRecursive(bucket: MediaBucket, prefix = ""): Promise<Me
   if (error) throw error;
   for (const entry of data ?? []) {
     const full = prefix ? `${prefix}/${entry.name}` : entry.name;
-    // Folders have null id (in supabase-js) — recurse
     if (!entry.id) {
       const nested = await listBucketRecursive(bucket, full);
       out.push(...nested);
@@ -89,4 +88,53 @@ export const deleteMediaFile = createServerFn({ method: "POST" })
     const { error } = await supabaseAdmin.storage.from(data.bucket).remove([data.path]);
     if (error) throw error;
     return { ok: true };
+  });
+
+const SAFE_NAME = /^[a-zA-Z0-9._-]+$/;
+
+const RenameSchema = z.object({
+  bucket: z.enum(MEDIA_BUCKETS),
+  path: z.string().min(1).max(1024),
+  newName: z.string().min(1).max(255).regex(SAFE_NAME, "Alleen letters, cijfers, . _ - toegestaan"),
+});
+
+export const renameMediaFile = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => RenameSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    await assertEditor(context.userId);
+    const dir = data.path.includes("/") ? data.path.slice(0, data.path.lastIndexOf("/")) : "";
+    const newPath = dir ? `${dir}/${data.newName}` : data.newName;
+    if (newPath === data.path) return { ok: true, path: newPath };
+    const { error } = await supabaseAdmin.storage.from(data.bucket).move(data.path, newPath);
+    if (error) throw error;
+    return { ok: true, path: newPath };
+  });
+
+const ReplaceSchema = z.object({
+  bucket: z.enum(MEDIA_BUCKETS),
+  path: z.string().min(1).max(1024),
+  newName: z.string().min(1).max(255).regex(SAFE_NAME),
+  contentType: z.string().min(1).max(100),
+  dataBase64: z.string().min(1).max(20 * 1024 * 1024), // ~15 MB binary
+  deleteOriginal: z.boolean().default(true),
+});
+
+export const replaceMediaFile = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => ReplaceSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    await assertEditor(context.userId);
+    const dir = data.path.includes("/") ? data.path.slice(0, data.path.lastIndexOf("/")) : "";
+    const newPath = dir ? `${dir}/${data.newName}` : data.newName;
+    const bytes = Uint8Array.from(atob(data.dataBase64), (c) => c.charCodeAt(0));
+    const { error: upErr } = await supabaseAdmin.storage
+      .from(data.bucket)
+      .upload(newPath, bytes, { contentType: data.contentType, upsert: true });
+    if (upErr) throw upErr;
+    if (data.deleteOriginal && newPath !== data.path) {
+      const { error: delErr } = await supabaseAdmin.storage.from(data.bucket).remove([data.path]);
+      if (delErr) throw delErr;
+    }
+    return { ok: true, path: newPath };
   });
