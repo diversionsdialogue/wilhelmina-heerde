@@ -105,18 +105,43 @@ function HomePage() {
           </div>
 
           {/* SPONSORS */}
-          <div className="w-sponsors" aria-label="Onze sponsors">
-            <h2 className="w-sponsors__title">Onze sponsors</h2>
-            <div className="w-sponsors__viewport">
-              <div className="w-sponsors__track">
-                {[...sponsors, ...sponsors].map((s, i) => (
-                  <div className="w-sponsors__item" key={`${s.name}-${i}`} aria-hidden={i >= sponsors.length || undefined}>
-                    <span className="w-sponsors__logo">{s.name}</span>
-                  </div>
-                ))}
+          {sponsors.length > 0 && (
+            <div className="w-sponsors" aria-label="Onze sponsors">
+              <h2 className="w-sponsors__title">Onze sponsors</h2>
+              <div className="w-sponsors__viewport">
+                <div className="w-sponsors__track">
+                  {[...sponsors, ...sponsors].map((s, i) => {
+                    const inner = s.logo_url ? (
+                      <img className="w-sponsors__img" src={s.logo_url} alt={s.name} loading="lazy" />
+                    ) : (
+                      <span className="w-sponsors__logo">{s.name}</span>
+                    );
+                    return (
+                      <div
+                        className="w-sponsors__item"
+                        key={`${s.id}-${i}`}
+                        aria-hidden={i >= sponsors.length || undefined}
+                      >
+                        {s.website_url ? (
+                          <a
+                            href={s.website_url}
+                            target="_blank"
+                            rel="noopener noreferrer sponsored"
+                            aria-label={s.name}
+                            className="w-sponsors__link"
+                          >
+                            {inner}
+                          </a>
+                        ) : (
+                          inner
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* PROMO / BANNER */}
           <div className="w-promo">
