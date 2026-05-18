@@ -107,39 +107,32 @@ function NieuwsDetail() {
 
 function RelatedNews({ items }: { items: NewsRow[] }) {
   return (
-    <section className="w-section w-section--sand">
-      <div className="w-container">
-        <header className="w-section__head">
-          <div>
-            <p className="w-eyebrow">Nieuws</p>
-            <h2 className="w-section__title" style={{ marginTop: 14 }}>Meer nieuws</h2>
-          </div>
-          <Link className="w-link-arrow" to="/nieuws">
-            <span className="w-link-arrow__bar" />
-            Bekijk alles
-          </Link>
+    <section className="w-related">
+      <div className="w-article__container">
+        <header className="w-related__head">
+          <p className="w-eyebrow">Lees ook</p>
         </header>
 
-        <div className="w-row">
-          <div className="w-row__grid">
-            {items.map((s) => (
-              <Link key={s.id} className="w-card" to="/nieuws/$slug" params={{ slug: s.slug }}>
-                <div className="w-edcard__media">
+        <ul className="w-related__list">
+          {items.map((s) => (
+            <li key={s.id}>
+              <Link className="w-related__card" to="/nieuws/$slug" params={{ slug: s.slug }}>
+                <div className="w-related__media">
                   {s.cover_image_url ? (
-                    <img src={s.cover_image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    <img src={s.cover_image_url} alt="" loading="lazy" />
                   ) : (
                     <span className={`ph ${s.cover_placeholder ?? "ph--portrait-warm"}`} aria-hidden="true" />
                   )}
                 </div>
-                <div className="w-card__body">
-                  {s.eyebrow && <p className="w-edcard__eyebrow">{s.eyebrow}</p>}
-                  <h3 className="w-card__title">{s.title}</h3>
-                  {s.excerpt && <p className="w-card__dek">{s.excerpt}</p>}
+                <div className="w-related__body">
+                  {s.eyebrow && <p className="w-related__eyebrow">{s.eyebrow}</p>}
+                  <h3 className="w-related__title">{s.title}</h3>
+                  {s.excerpt && <p className="w-related__dek">{s.excerpt}</p>}
                 </div>
               </Link>
-            ))}
-          </div>
-        </div>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
