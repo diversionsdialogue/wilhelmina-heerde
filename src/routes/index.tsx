@@ -4,6 +4,7 @@ import { NewsletterForm } from "@/components/site/NewsletterForm";
 import { getHomeSections } from "@/lib/home.functions";
 
 export const Route = createFileRoute("/")({
+  loader: () => getHomeSections(),
   head: () => ({
     meta: [
       { title: "Koninklijk Fanfarekorps Wilhelmina — Heerde" },
