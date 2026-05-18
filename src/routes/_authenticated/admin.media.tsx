@@ -37,6 +37,8 @@ type Sort = "newest" | "oldest" | "largest" | "name";
 function Page() {
   const list = useServerFn(listMedia);
   const remove = useServerFn(deleteMediaFile);
+  const rename = useServerFn(renameMediaFile);
+  const replace = useServerFn(replaceMediaFile);
   const qc = useQueryClient();
 
   const query = useQuery({
@@ -47,6 +49,22 @@ function Page() {
 
   const delMut = useMutation({
     mutationFn: (f: { bucket: MediaBucket; path: string }) => remove({ data: f }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin-media"] }),
+  });
+
+  const renameMut = useMutation({
+    mutationFn: (f: { bucket: MediaBucket; path: string; newName: string }) => rename({ data: f }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin-media"] }),
+  });
+
+  const replaceMut = useMutation({
+    mutationFn: (f: {
+      bucket: MediaBucket;
+      path: string;
+      newName: string;
+      contentType: string;
+      dataBase64: string;
+    }) => replace({ data: f }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["admin-media"] }),
   });
 
