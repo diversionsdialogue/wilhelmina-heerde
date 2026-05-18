@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import ReactMarkdown from "react-markdown";
 import { SiteLayout } from "@/components/site/SiteLayout";
