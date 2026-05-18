@@ -54,14 +54,14 @@ function HomePage() {
           {hero.text && <p className="w-hero__lead">{hero.text}</p>}
           <div className="w-hero__ctas">
             {hero.primary_label && (
-              <Link className="w-btn w-btn--primary" to={hero.primary_href || "/"}>
+              <a className="w-btn w-btn--primary" href={hero.primary_href || "/"}>
                 {hero.primary_label} {arrow}
-              </Link>
+              </a>
             )}
             {hero.secondary_label && (
-              <Link className="w-btn w-btn--ghost-light" to={hero.secondary_href || "/"}>
+              <a className="w-btn w-btn--ghost-light" href={hero.secondary_href || "/"}>
                 {hero.secondary_label}
-              </Link>
+              </a>
             )}
           </div>
         </div>
