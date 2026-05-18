@@ -320,7 +320,8 @@
 /* Footer logo (noir svg) */
 .w-footer__logo {
   width: 100%;
-  max-width: 280px;
+  max-width: 260px;
   height: auto;
   display: block;
+  margin-top: -12px;
 }
