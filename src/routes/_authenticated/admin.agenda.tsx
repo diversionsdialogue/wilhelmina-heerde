@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { AdminPage } from "@/components/admin/AdminPage";
 import { optimizeImageForUpload } from "@/lib/optimizeImage";
+import { MediaPickerDialog } from "@/components/admin/MediaPickerDialog";
 import { supabase } from "@/integrations/supabase/client";
 import {
   deleteAgendaItem,
