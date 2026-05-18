@@ -3,7 +3,7 @@ import { NewsletterForm } from "@/components/site/NewsletterForm";
 
 function NewsletterBand() {
   return (
-    <section className="w-news">
+    <section className="w-news" id="nieuwsbrief">
       <div className="w-container">
         <div className="w-news__inner">
           <div>
