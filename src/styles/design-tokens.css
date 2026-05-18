@@ -1,0 +1,322 @@
+/* ============================================================
+   Wilhelmina Design System — Foundations
+   Koninklijk Fanfarekorps Wilhelmina, Heerde
+   ============================================================ */
+
+/* ---------- Webfonts ---------- */
+@font-face {
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("/fonts/RobotoSlab-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("/fonts/RobotoSlab-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("/fonts/RobotoSlab-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================================
+   :root tokens
+   ============================================================ */
+:root {
+  /* ---------- Brand colors (from supplied palette) ---------- */
+  --w-black:        #141414;   /* "zwart" — primary ink, headlines, dark surfaces */
+  --w-gold:         #9B804A;   /* "goud" — single brand accent, CTAs, labels      */
+  --w-bg-warm:      #F7F5F3;   /* default page background — warm off-white         */
+  --w-bg-sand:      #E4DED3;   /* secondary background — section banding, cards    */
+  --w-hover:        #A7A7A7;   /* neutral hover / divider mid-tone                 */
+  --w-placeholder:  #757575;   /* form placeholder, captions, meta text            */
+
+  /* ---------- Derived neutrals ---------- */
+  --w-white:        #FFFFFF;
+  --w-ink-90:       #141414;
+  --w-ink-70:       #3A3A3A;   /* body                                              */
+  --w-ink-50:       #757575;   /* meta                                              */
+  --w-ink-30:       #A7A7A7;   /* low-contrast / disabled                           */
+  --w-ink-15:       #D6D2C8;   /* hairline border on warm bg                        */
+  --w-ink-08:       #E4DED3;   /* surface alt                                       */
+
+  /* ---------- Gold variants ---------- */
+  --w-gold-hover:   #876D3D;   /* gold +pressed/hover                               */
+  --w-gold-soft:    #EFE6D5;   /* gold tint background, badges                      */
+  --w-gold-line:    #C8B488;   /* gold hairline                                     */
+
+  /* ---------- Semantic foreground ---------- */
+  --fg-1: var(--w-ink-90);     /* primary text                                      */
+  --fg-2: var(--w-ink-70);     /* body                                              */
+  --fg-3: var(--w-ink-50);     /* meta, captions                                    */
+  --fg-4: var(--w-ink-30);     /* disabled, low priority                            */
+  --fg-on-dark: var(--w-bg-warm);
+  --fg-accent: var(--w-gold);
+
+  /* ---------- Semantic background ---------- */
+  --bg-page:    var(--w-bg-warm);
+  --bg-surface: var(--w-white);
+  --bg-banded:  var(--w-bg-sand);
+  --bg-inverse: var(--w-black);
+  --bg-accent-soft: var(--w-gold-soft);
+
+  /* ---------- Borders & rules ---------- */
+  --border-hairline: 1px solid var(--w-ink-15);
+  --border-rule:     1px solid var(--w-ink-30);
+  --border-strong:   1px solid var(--w-black);
+  --border-gold:     1px solid var(--w-gold);
+
+  /* ---------- Radii (very restrained — premium feel) ---------- */
+  --radius-0: 0px;            /* default: edges are sharp                           */
+  --radius-1: 2px;            /* inputs, subtle                                     */
+  --radius-2: 4px;            /* small chips                                        */
+  --radius-pill: 999px;       /* pill labels only                                   */
+
+  /* ---------- Spacing scale (8pt) ---------- */
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-5:  24px;
+  --s-6:  32px;
+  --s-7:  48px;
+  --s-8:  64px;
+  --s-9:  96px;
+  --s-10: 128px;
+  --s-11: 160px;
+
+  /* ---------- Layout ---------- */
+  --container-max:   1280px;
+  --container-pad:   clamp(20px, 5vw, 80px);
+  --gutter:          24px;
+  --section-y:       clamp(56px, 9vw, 128px);
+
+  /* ---------- Shadows (extremely subtle — luxe) ---------- */
+  --shadow-0: none;
+  --shadow-1: 0 1px 2px rgba(20, 20, 20, 0.04);
+  --shadow-2: 0 8px 24px -12px rgba(20, 20, 20, 0.12);
+  --shadow-3: 0 24px 48px -24px rgba(20, 20, 20, 0.18);
+
+  /* ---------- Motion ---------- */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast:  140ms;
+  --dur-base:  220ms;
+  --dur-slow:  420ms;
+
+  /* ---------- Type families ---------- */
+  --font-primary:   "Roboto", "Helvetica Neue", Arial, sans-serif;       /* UI + headings — 600                  */
+  --font-secondary: "Roboto Slab", "Roboto Slab Fallback", Georgia, serif; /* editorial accents / quotes — 400     */
+  --font-text:      "Roboto", "Helvetica Neue", Arial, sans-serif;       /* body — 400                          */
+  --font-accent:    "Roboto", "Helvetica Neue", Arial, sans-serif;       /* labels & meta — 500 uppercase       */
+
+  /* ---------- Type scale (modular, conservative) ---------- */
+  --t-display-1: clamp(56px, 8vw, 96px);   /* hero, programme covers                */
+  --t-display-2: clamp(40px, 5vw, 64px);   /* section openers                        */
+  --t-h1:        clamp(32px, 3.6vw, 48px);
+  --t-h2:        clamp(24px, 2.4vw, 32px);
+  --t-h3:        20px;
+  --t-h4:        18px;
+  --t-body-lg:   18px;
+  --t-body:      16px;
+  --t-body-sm:   14px;
+  --t-meta:      13px;
+  --t-label:     12px;        /* uppercase eyebrows                                 */
+  --t-quote:     clamp(22px, 2.4vw, 32px);
+
+  /* ---------- Line heights ---------- */
+  --lh-tight:  1.04;
+  --lh-snug:   1.18;
+  --lh-base:   1.55;
+  --lh-loose:  1.7;
+
+  /* ---------- Tracking ---------- */
+  --tr-tight:    -0.01em;
+  --tr-normal:    0;
+  --tr-loose:     0.06em;
+  --tr-eyebrow:   0.18em;   /* uppercase labels                                     */
+}
+
+/* ============================================================
+   Base / element styles (opt-in by class — no resets)
+   ============================================================ */
+.w-app, .w-page {
+  background: var(--bg-page);
+  color: var(--fg-1);
+  font-family: var(--font-text);
+  font-weight: 400;
+  font-size: var(--t-body);
+  line-height: var(--lh-base);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- Headings ---------- */
+.w-display-1 {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: var(--t-display-1);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tr-tight);
+  color: var(--fg-1);
+  text-wrap: balance;
+}
+.w-display-2 {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: var(--t-display-2);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tr-tight);
+  color: var(--fg-1);
+  text-wrap: balance;
+}
+.w-h1 {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: var(--t-h1);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tr-tight);
+  color: var(--fg-1);
+  text-wrap: balance;
+}
+.w-h2 {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: var(--t-h2);
+  line-height: var(--lh-snug);
+  color: var(--fg-1);
+  text-wrap: balance;
+}
+.w-h3 {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: var(--t-h3);
+  line-height: 1.3;
+  color: var(--fg-1);
+}
+.w-h4 {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: var(--t-h4);
+  line-height: 1.35;
+  color: var(--fg-1);
+}
+
+/* ---------- Body ---------- */
+.w-lead {
+  font-family: var(--font-text);
+  font-weight: 400;
+  font-size: var(--t-body-lg);
+  line-height: var(--lh-loose);
+  color: var(--fg-2);
+  text-wrap: pretty;
+}
+.w-p {
+  font-family: var(--font-text);
+  font-weight: 400;
+  font-size: var(--t-body);
+  line-height: var(--lh-loose);
+  color: var(--fg-2);
+  text-wrap: pretty;
+}
+.w-small {
+  font-size: var(--t-body-sm);
+  line-height: 1.55;
+  color: var(--fg-3);
+}
+
+/* ---------- Editorial / quote (Roboto Slab) ---------- */
+.w-quote, .w-editorial {
+  font-family: var(--font-secondary);
+  font-weight: 400;
+  font-size: var(--t-quote);
+  line-height: 1.35;
+  color: var(--fg-1);
+  letter-spacing: var(--tr-tight);
+  text-wrap: balance;
+}
+.w-byline {
+  font-family: var(--font-secondary);
+  font-weight: 400;
+  font-style: italic;
+  font-size: var(--t-body-sm);
+  color: var(--fg-3);
+}
+
+/* ---------- Eyebrow / label (Roboto Medium uppercase) ---------- */
+.w-eyebrow, .w-label {
+  font-family: var(--font-accent);
+  font-weight: 500;
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-eyebrow);
+  text-transform: uppercase;
+  color: var(--fg-accent);
+  line-height: 1;
+}
+.w-eyebrow--ink { color: var(--fg-1); }
+.w-eyebrow--muted { color: var(--fg-3); }
+
+/* ---------- Meta (data, locations, dates) ---------- */
+.w-meta {
+  font-family: var(--font-primary);
+  font-weight: 500;
+  font-size: var(--t-meta);
+  color: var(--fg-3);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Inline link ---------- */
+.w-link {
+  color: var(--fg-1);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--w-gold);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.w-link:hover { color: var(--w-gold); }
+
+/* ---------- Selection ---------- */
+::selection { background: var(--w-gold-soft); color: var(--w-black); }
