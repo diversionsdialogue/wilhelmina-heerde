@@ -16,8 +16,21 @@ import { Route as OptredensRouteImport } from './routes/optredens'
 import { Route as NieuwsRouteImport } from './routes/nieuws'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as NieuwsSlugRouteImport } from './routes/nieuws.$slug'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminSponsorsRouteImport } from './routes/_authenticated/admin.sponsors'
+import { Route as AuthenticatedAdminRedirectsRouteImport } from './routes/_authenticated/admin.redirects'
+import { Route as AuthenticatedAdminPaginasRouteImport } from './routes/_authenticated/admin.paginas'
+import { Route as AuthenticatedAdminNieuwsRouteImport } from './routes/_authenticated/admin.nieuws'
+import { Route as AuthenticatedAdminMenuRouteImport } from './routes/_authenticated/admin.menu'
+import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
+import { Route as AuthenticatedAdminInstellingenRouteImport } from './routes/_authenticated/admin.instellingen'
+import { Route as AuthenticatedAdminHomepageRouteImport } from './routes/_authenticated/admin.homepage'
+import { Route as AuthenticatedAdminGebruikersRouteImport } from './routes/_authenticated/admin.gebruikers'
+import { Route as AuthenticatedAdminAgendaRouteImport } from './routes/_authenticated/admin.agenda'
 
 const SteunRoute = SteunRouteImport.update({
   id: '/steun',
@@ -54,6 +67,10 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -64,6 +81,74 @@ const NieuwsSlugRoute = NieuwsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => NieuwsRoute,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminSponsorsRoute =
+  AuthenticatedAdminSponsorsRouteImport.update({
+    id: '/sponsors',
+    path: '/sponsors',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminRedirectsRoute =
+  AuthenticatedAdminRedirectsRouteImport.update({
+    id: '/redirects',
+    path: '/redirects',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminPaginasRoute =
+  AuthenticatedAdminPaginasRouteImport.update({
+    id: '/paginas',
+    path: '/paginas',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminNieuwsRoute =
+  AuthenticatedAdminNieuwsRouteImport.update({
+    id: '/nieuws',
+    path: '/nieuws',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminMenuRoute = AuthenticatedAdminMenuRouteImport.update({
+  id: '/menu',
+  path: '/menu',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminMediaRoute = AuthenticatedAdminMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminInstellingenRoute =
+  AuthenticatedAdminInstellingenRouteImport.update({
+    id: '/instellingen',
+    path: '/instellingen',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminHomepageRoute =
+  AuthenticatedAdminHomepageRouteImport.update({
+    id: '/homepage',
+    path: '/homepage',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminGebruikersRoute =
+  AuthenticatedAdminGebruikersRouteImport.update({
+    id: '/gebruikers',
+    path: '/gebruikers',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminAgendaRoute =
+  AuthenticatedAdminAgendaRouteImport.update({
+    id: '/agenda',
+    path: '/agenda',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -74,7 +159,19 @@ export interface FileRoutesByFullPath {
   '/orkesten': typeof OrkestenRoute
   '/over': typeof OverRoute
   '/steun': typeof SteunRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/nieuws/$slug': typeof NieuwsSlugRoute
+  '/admin/agenda': typeof AuthenticatedAdminAgendaRoute
+  '/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
+  '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
+  '/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
+  '/admin/media': typeof AuthenticatedAdminMediaRoute
+  '/admin/menu': typeof AuthenticatedAdminMenuRoute
+  '/admin/nieuws': typeof AuthenticatedAdminNieuwsRoute
+  '/admin/paginas': typeof AuthenticatedAdminPaginasRoute
+  '/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
+  '/admin/sponsors': typeof AuthenticatedAdminSponsorsRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,10 +183,22 @@ export interface FileRoutesByTo {
   '/over': typeof OverRoute
   '/steun': typeof SteunRoute
   '/nieuws/$slug': typeof NieuwsSlugRoute
+  '/admin/agenda': typeof AuthenticatedAdminAgendaRoute
+  '/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
+  '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
+  '/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
+  '/admin/media': typeof AuthenticatedAdminMediaRoute
+  '/admin/menu': typeof AuthenticatedAdminMenuRoute
+  '/admin/nieuws': typeof AuthenticatedAdminNieuwsRoute
+  '/admin/paginas': typeof AuthenticatedAdminPaginasRoute
+  '/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
+  '/admin/sponsors': typeof AuthenticatedAdminSponsorsRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/nieuws': typeof NieuwsRouteWithChildren
@@ -97,7 +206,19 @@ export interface FileRoutesById {
   '/orkesten': typeof OrkestenRoute
   '/over': typeof OverRoute
   '/steun': typeof SteunRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/nieuws/$slug': typeof NieuwsSlugRoute
+  '/_authenticated/admin/agenda': typeof AuthenticatedAdminAgendaRoute
+  '/_authenticated/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
+  '/_authenticated/admin/homepage': typeof AuthenticatedAdminHomepageRoute
+  '/_authenticated/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
+  '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
+  '/_authenticated/admin/menu': typeof AuthenticatedAdminMenuRoute
+  '/_authenticated/admin/nieuws': typeof AuthenticatedAdminNieuwsRoute
+  '/_authenticated/admin/paginas': typeof AuthenticatedAdminPaginasRoute
+  '/_authenticated/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
+  '/_authenticated/admin/sponsors': typeof AuthenticatedAdminSponsorsRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -110,7 +231,19 @@ export interface FileRouteTypes {
     | '/orkesten'
     | '/over'
     | '/steun'
+    | '/admin'
     | '/nieuws/$slug'
+    | '/admin/agenda'
+    | '/admin/gebruikers'
+    | '/admin/homepage'
+    | '/admin/instellingen'
+    | '/admin/media'
+    | '/admin/menu'
+    | '/admin/nieuws'
+    | '/admin/paginas'
+    | '/admin/redirects'
+    | '/admin/sponsors'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,9 +255,21 @@ export interface FileRouteTypes {
     | '/over'
     | '/steun'
     | '/nieuws/$slug'
+    | '/admin/agenda'
+    | '/admin/gebruikers'
+    | '/admin/homepage'
+    | '/admin/instellingen'
+    | '/admin/media'
+    | '/admin/menu'
+    | '/admin/nieuws'
+    | '/admin/paginas'
+    | '/admin/redirects'
+    | '/admin/sponsors'
+    | '/admin'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/contact'
     | '/login'
     | '/nieuws'
@@ -132,11 +277,24 @@ export interface FileRouteTypes {
     | '/orkesten'
     | '/over'
     | '/steun'
+    | '/_authenticated/admin'
     | '/nieuws/$slug'
+    | '/_authenticated/admin/agenda'
+    | '/_authenticated/admin/gebruikers'
+    | '/_authenticated/admin/homepage'
+    | '/_authenticated/admin/instellingen'
+    | '/_authenticated/admin/media'
+    | '/_authenticated/admin/menu'
+    | '/_authenticated/admin/nieuws'
+    | '/_authenticated/admin/paginas'
+    | '/_authenticated/admin/redirects'
+    | '/_authenticated/admin/sponsors'
+    | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   ContactRoute: typeof ContactRoute
   LoginRoute: typeof LoginRoute
   NieuwsRoute: typeof NieuwsRouteWithChildren
@@ -197,6 +355,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -211,8 +376,135 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NieuwsSlugRouteImport
       parentRoute: typeof NieuwsRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/sponsors': {
+      id: '/_authenticated/admin/sponsors'
+      path: '/sponsors'
+      fullPath: '/admin/sponsors'
+      preLoaderRoute: typeof AuthenticatedAdminSponsorsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/redirects': {
+      id: '/_authenticated/admin/redirects'
+      path: '/redirects'
+      fullPath: '/admin/redirects'
+      preLoaderRoute: typeof AuthenticatedAdminRedirectsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/paginas': {
+      id: '/_authenticated/admin/paginas'
+      path: '/paginas'
+      fullPath: '/admin/paginas'
+      preLoaderRoute: typeof AuthenticatedAdminPaginasRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/nieuws': {
+      id: '/_authenticated/admin/nieuws'
+      path: '/nieuws'
+      fullPath: '/admin/nieuws'
+      preLoaderRoute: typeof AuthenticatedAdminNieuwsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/menu': {
+      id: '/_authenticated/admin/menu'
+      path: '/menu'
+      fullPath: '/admin/menu'
+      preLoaderRoute: typeof AuthenticatedAdminMenuRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/media': {
+      id: '/_authenticated/admin/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AuthenticatedAdminMediaRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/instellingen': {
+      id: '/_authenticated/admin/instellingen'
+      path: '/instellingen'
+      fullPath: '/admin/instellingen'
+      preLoaderRoute: typeof AuthenticatedAdminInstellingenRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/homepage': {
+      id: '/_authenticated/admin/homepage'
+      path: '/homepage'
+      fullPath: '/admin/homepage'
+      preLoaderRoute: typeof AuthenticatedAdminHomepageRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/gebruikers': {
+      id: '/_authenticated/admin/gebruikers'
+      path: '/gebruikers'
+      fullPath: '/admin/gebruikers'
+      preLoaderRoute: typeof AuthenticatedAdminGebruikersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/agenda': {
+      id: '/_authenticated/admin/agenda'
+      path: '/agenda'
+      fullPath: '/admin/agenda'
+      preLoaderRoute: typeof AuthenticatedAdminAgendaRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
+
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminAgendaRoute: typeof AuthenticatedAdminAgendaRoute
+  AuthenticatedAdminGebruikersRoute: typeof AuthenticatedAdminGebruikersRoute
+  AuthenticatedAdminHomepageRoute: typeof AuthenticatedAdminHomepageRoute
+  AuthenticatedAdminInstellingenRoute: typeof AuthenticatedAdminInstellingenRoute
+  AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
+  AuthenticatedAdminMenuRoute: typeof AuthenticatedAdminMenuRoute
+  AuthenticatedAdminNieuwsRoute: typeof AuthenticatedAdminNieuwsRoute
+  AuthenticatedAdminPaginasRoute: typeof AuthenticatedAdminPaginasRoute
+  AuthenticatedAdminRedirectsRoute: typeof AuthenticatedAdminRedirectsRoute
+  AuthenticatedAdminSponsorsRoute: typeof AuthenticatedAdminSponsorsRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminAgendaRoute: AuthenticatedAdminAgendaRoute,
+  AuthenticatedAdminGebruikersRoute: AuthenticatedAdminGebruikersRoute,
+  AuthenticatedAdminHomepageRoute: AuthenticatedAdminHomepageRoute,
+  AuthenticatedAdminInstellingenRoute: AuthenticatedAdminInstellingenRoute,
+  AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
+  AuthenticatedAdminMenuRoute: AuthenticatedAdminMenuRoute,
+  AuthenticatedAdminNieuwsRoute: AuthenticatedAdminNieuwsRoute,
+  AuthenticatedAdminPaginasRoute: AuthenticatedAdminPaginasRoute,
+  AuthenticatedAdminRedirectsRoute: AuthenticatedAdminRedirectsRoute,
+  AuthenticatedAdminSponsorsRoute: AuthenticatedAdminSponsorsRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
+interface AuthenticatedRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
 
 interface NieuwsRouteChildren {
   NieuwsSlugRoute: typeof NieuwsSlugRoute
@@ -227,6 +519,7 @@ const NieuwsRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   ContactRoute: ContactRoute,
   LoginRoute: LoginRoute,
   NieuwsRoute: NieuwsRouteWithChildren,
@@ -238,3 +531,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
