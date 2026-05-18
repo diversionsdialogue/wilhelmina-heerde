@@ -93,11 +93,11 @@ function Page() {
     setErr(null);
     setUploading(true);
     try {
-      const ext = file.name.split(".").pop() || "png";
+      const { blob, contentType, ext } = await optimizeImageForUpload(file);
       const path = `${crypto.randomUUID()}.${ext}`;
       const { error } = await supabase.storage
         .from("sponsor-logos")
-        .upload(path, file, { upsert: false, contentType: file.type });
+        .upload(path, blob, { upsert: false, contentType });
       if (error) throw error;
       const { data } = supabase.storage.from("sponsor-logos").getPublicUrl(path);
       setDraft((d) => ({ ...d, logo_url: data.publicUrl }));
