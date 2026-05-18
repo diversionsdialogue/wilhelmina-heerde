@@ -100,19 +100,27 @@ function HomePage() {
 
           <div className="w-row">
             <div className="w-row__grid">
+              {upcoming.length === 0 && (
+                <p style={{ color: "#888" }}>Er staan op dit moment geen geplande optredens in de agenda.</p>
+              )}
               {upcoming.map((c) => (
-                <Link key={c.title} className="w-card" to="/optredens">
+                <Link key={c.id} className="w-card" to="/optredens">
                   <div className="w-card__media">
-                    <span className={`ph ${c.ph}`} aria-hidden="true" />
+                    {c.image_url ? (
+                      <img src={c.image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    ) : (
+                      <span className="ph ph--strings" aria-hidden="true" />
+                    )}
                   </div>
                   <div className="w-card__body">
-                    <p className="w-card__date">{c.date}</p>
+                    <p className="w-card__date">{formatAgendaDate(c.starts_at)}</p>
                     <h3 className="w-card__title">{c.title}</h3>
-                    <p className="w-card__dek">{c.dek}</p>
+                    {c.description && <p className="w-card__dek">{c.description}</p>}
                   </div>
                 </Link>
               ))}
             </div>
+
           </div>
 
           {/* SPONSORS */}
