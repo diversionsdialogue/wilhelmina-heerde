@@ -5,6 +5,7 @@ export function NewsletterForm() {
   return (
     <form
       className="w-news__form"
+      suppressHydrationWarning
       onSubmit={(e) => {
         e.preventDefault();
         // TODO: POST to n8n webhook (server function) — wired later
