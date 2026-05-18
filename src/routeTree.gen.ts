@@ -32,7 +32,6 @@ import { Route as AuthenticatedAdminInstellingenRouteImport } from './routes/_au
 import { Route as AuthenticatedAdminHomepageRouteImport } from './routes/_authenticated/admin.homepage'
 import { Route as AuthenticatedAdminGebruikersRouteImport } from './routes/_authenticated/admin.gebruikers'
 import { Route as AuthenticatedAdminAgendaRouteImport } from './routes/_authenticated/admin.agenda'
-import { Route as AuthenticatedAdminNieuwsImportRouteImport } from './routes/_authenticated/admin.nieuws.import'
 
 const SteunRoute = SteunRouteImport.update({
   id: '/steun',
@@ -156,12 +155,6 @@ const AuthenticatedAdminAgendaRoute =
     path: '/agenda',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
-const AuthenticatedAdminNieuwsImportRoute =
-  AuthenticatedAdminNieuwsImportRouteImport.update({
-    id: '/import',
-    path: '/import',
-    getParentRoute: () => AuthenticatedAdminNieuwsRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -181,12 +174,11 @@ export interface FileRoutesByFullPath {
   '/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/menu': typeof AuthenticatedAdminMenuRoute
-  '/admin/nieuws': typeof AuthenticatedAdminNieuwsRouteWithChildren
+  '/admin/nieuws': typeof AuthenticatedAdminNieuwsRoute
   '/admin/paginas': typeof AuthenticatedAdminPaginasRoute
   '/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
   '/admin/sponsors': typeof AuthenticatedAdminSponsorsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
-  '/admin/nieuws/import': typeof AuthenticatedAdminNieuwsImportRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -205,12 +197,11 @@ export interface FileRoutesByTo {
   '/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/menu': typeof AuthenticatedAdminMenuRoute
-  '/admin/nieuws': typeof AuthenticatedAdminNieuwsRouteWithChildren
+  '/admin/nieuws': typeof AuthenticatedAdminNieuwsRoute
   '/admin/paginas': typeof AuthenticatedAdminPaginasRoute
   '/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
   '/admin/sponsors': typeof AuthenticatedAdminSponsorsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
-  '/admin/nieuws/import': typeof AuthenticatedAdminNieuwsImportRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -232,12 +223,11 @@ export interface FileRoutesById {
   '/_authenticated/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/menu': typeof AuthenticatedAdminMenuRoute
-  '/_authenticated/admin/nieuws': typeof AuthenticatedAdminNieuwsRouteWithChildren
+  '/_authenticated/admin/nieuws': typeof AuthenticatedAdminNieuwsRoute
   '/_authenticated/admin/paginas': typeof AuthenticatedAdminPaginasRoute
   '/_authenticated/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
   '/_authenticated/admin/sponsors': typeof AuthenticatedAdminSponsorsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
-  '/_authenticated/admin/nieuws/import': typeof AuthenticatedAdminNieuwsImportRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -264,7 +254,6 @@ export interface FileRouteTypes {
     | '/admin/redirects'
     | '/admin/sponsors'
     | '/admin/'
-    | '/admin/nieuws/import'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -288,7 +277,6 @@ export interface FileRouteTypes {
     | '/admin/redirects'
     | '/admin/sponsors'
     | '/admin'
-    | '/admin/nieuws/import'
   id:
     | '__root__'
     | '/'
@@ -314,7 +302,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/redirects'
     | '/_authenticated/admin/sponsors'
     | '/_authenticated/admin/'
-    | '/_authenticated/admin/nieuws/import'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -494,29 +481,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAgendaRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/_authenticated/admin/nieuws/import': {
-      id: '/_authenticated/admin/nieuws/import'
-      path: '/import'
-      fullPath: '/admin/nieuws/import'
-      preLoaderRoute: typeof AuthenticatedAdminNieuwsImportRouteImport
-      parentRoute: typeof AuthenticatedAdminNieuwsRoute
-    }
   }
 }
-
-interface AuthenticatedAdminNieuwsRouteChildren {
-  AuthenticatedAdminNieuwsImportRoute: typeof AuthenticatedAdminNieuwsImportRoute
-}
-
-const AuthenticatedAdminNieuwsRouteChildren: AuthenticatedAdminNieuwsRouteChildren =
-  {
-    AuthenticatedAdminNieuwsImportRoute: AuthenticatedAdminNieuwsImportRoute,
-  }
-
-const AuthenticatedAdminNieuwsRouteWithChildren =
-  AuthenticatedAdminNieuwsRoute._addFileChildren(
-    AuthenticatedAdminNieuwsRouteChildren,
-  )
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAgendaRoute: typeof AuthenticatedAdminAgendaRoute
@@ -525,7 +491,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminInstellingenRoute: typeof AuthenticatedAdminInstellingenRoute
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
   AuthenticatedAdminMenuRoute: typeof AuthenticatedAdminMenuRoute
-  AuthenticatedAdminNieuwsRoute: typeof AuthenticatedAdminNieuwsRouteWithChildren
+  AuthenticatedAdminNieuwsRoute: typeof AuthenticatedAdminNieuwsRoute
   AuthenticatedAdminPaginasRoute: typeof AuthenticatedAdminPaginasRoute
   AuthenticatedAdminRedirectsRoute: typeof AuthenticatedAdminRedirectsRoute
   AuthenticatedAdminSponsorsRoute: typeof AuthenticatedAdminSponsorsRoute
@@ -539,7 +505,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminInstellingenRoute: AuthenticatedAdminInstellingenRoute,
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
   AuthenticatedAdminMenuRoute: AuthenticatedAdminMenuRoute,
-  AuthenticatedAdminNieuwsRoute: AuthenticatedAdminNieuwsRouteWithChildren,
+  AuthenticatedAdminNieuwsRoute: AuthenticatedAdminNieuwsRoute,
   AuthenticatedAdminPaginasRoute: AuthenticatedAdminPaginasRoute,
   AuthenticatedAdminRedirectsRoute: AuthenticatedAdminRedirectsRoute,
   AuthenticatedAdminSponsorsRoute: AuthenticatedAdminSponsorsRoute,
