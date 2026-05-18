@@ -18,6 +18,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as NieuwsIndexRouteImport } from './routes/nieuws.index'
+import { Route as PSlugRouteImport } from './routes/p.$slug'
 import { Route as NieuwsSlugRouteImport } from './routes/nieuws.$slug'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
@@ -75,6 +76,11 @@ const IndexRoute = IndexRouteImport.update({
 const NieuwsIndexRoute = NieuwsIndexRouteImport.update({
   id: '/nieuws/',
   path: '/nieuws/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PSlugRoute = PSlugRouteImport.update({
+  id: '/p/$slug',
+  path: '/p/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NieuwsSlugRoute = NieuwsSlugRouteImport.update({
@@ -167,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/steun': typeof SteunRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/nieuws/$slug': typeof NieuwsSlugRoute
+  '/p/$slug': typeof PSlugRoute
   '/nieuws/': typeof NieuwsIndexRoute
   '/admin/agenda': typeof AuthenticatedAdminAgendaRoute
   '/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
@@ -190,6 +197,7 @@ export interface FileRoutesByTo {
   '/over': typeof OverRoute
   '/steun': typeof SteunRoute
   '/nieuws/$slug': typeof NieuwsSlugRoute
+  '/p/$slug': typeof PSlugRoute
   '/nieuws': typeof NieuwsIndexRoute
   '/admin/agenda': typeof AuthenticatedAdminAgendaRoute
   '/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
@@ -216,6 +224,7 @@ export interface FileRoutesById {
   '/steun': typeof SteunRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/nieuws/$slug': typeof NieuwsSlugRoute
+  '/p/$slug': typeof PSlugRoute
   '/nieuws/': typeof NieuwsIndexRoute
   '/_authenticated/admin/agenda': typeof AuthenticatedAdminAgendaRoute
   '/_authenticated/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
@@ -242,6 +251,7 @@ export interface FileRouteTypes {
     | '/steun'
     | '/admin'
     | '/nieuws/$slug'
+    | '/p/$slug'
     | '/nieuws/'
     | '/admin/agenda'
     | '/admin/gebruikers'
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/over'
     | '/steun'
     | '/nieuws/$slug'
+    | '/p/$slug'
     | '/nieuws'
     | '/admin/agenda'
     | '/admin/gebruikers'
@@ -290,6 +301,7 @@ export interface FileRouteTypes {
     | '/steun'
     | '/_authenticated/admin'
     | '/nieuws/$slug'
+    | '/p/$slug'
     | '/nieuws/'
     | '/_authenticated/admin/agenda'
     | '/_authenticated/admin/gebruikers'
@@ -315,6 +327,7 @@ export interface RootRouteChildren {
   OverRoute: typeof OverRoute
   SteunRoute: typeof SteunRoute
   NieuwsSlugRoute: typeof NieuwsSlugRoute
+  PSlugRoute: typeof PSlugRoute
   NieuwsIndexRoute: typeof NieuwsIndexRoute
 }
 
@@ -381,6 +394,13 @@ declare module '@tanstack/react-router' {
       path: '/nieuws'
       fullPath: '/nieuws/'
       preLoaderRoute: typeof NieuwsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/p/$slug': {
+      id: '/p/$slug'
+      path: '/p/$slug'
+      fullPath: '/p/$slug'
+      preLoaderRoute: typeof PSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/nieuws/$slug': {
@@ -551,6 +571,7 @@ const rootRouteChildren: RootRouteChildren = {
   OverRoute: OverRoute,
   SteunRoute: SteunRoute,
   NieuwsSlugRoute: NieuwsSlugRoute,
+  PSlugRoute: PSlugRoute,
   NieuwsIndexRoute: NieuwsIndexRoute,
 }
 export const routeTree = rootRouteImport
