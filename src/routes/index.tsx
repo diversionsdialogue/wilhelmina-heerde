@@ -3,7 +3,7 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { NewsletterForm } from "@/components/site/NewsletterForm";
 import { getHomeSections } from "@/lib/home.functions";
 import { getPublicSponsors } from "@/lib/sponsors.functions";
-import { getUpcomingAgenda } from "@/lib/agenda.functions";
+import { getUpcomingAgenda, type AgendaItem } from "@/lib/agenda.functions";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
