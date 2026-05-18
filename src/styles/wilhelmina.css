@@ -2143,3 +2143,62 @@ img { display: block; max-width: 100%; }
   margin-top: 2px;
 }
 
+
+/* ============================================================
+   Sponsors strip — auto-scrolling marquee under "Binnenkort"
+   ============================================================ */
+.w-sponsors {
+  margin-top: 56px;
+  padding: 40px 0 8px;
+}
+.w-sponsors__title {
+  font-family: var(--font-primary);
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 700;
+  text-align: center;
+  color: var(--w-black);
+  margin: 0 0 28px;
+  letter-spacing: -0.005em;
+}
+.w-sponsors__viewport {
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.w-sponsors__track {
+  display: flex;
+  gap: 72px;
+  align-items: center;
+  width: max-content;
+  animation: w-sponsors-scroll 38s linear infinite;
+}
+.w-sponsors:hover .w-sponsors__track { animation-play-state: paused; }
+.w-sponsors__item {
+  flex: 0 0 auto;
+  height: 64px;
+  min-width: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.w-sponsors__logo {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--w-ink-70, #555);
+  opacity: 0.75;
+  transition: opacity var(--dur-base) var(--ease-out);
+  white-space: nowrap;
+}
+.w-sponsors__item:hover .w-sponsors__logo { opacity: 1; color: var(--w-black); }
+
+@keyframes w-sponsors-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .w-sponsors__track { animation: none; }
+}
