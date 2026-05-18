@@ -306,6 +306,41 @@ function Detail({
             </div>
 
             <div>
+              <p style={{ fontSize: 12, color: "#666", margin: "0 0 6px" }}>Bestandsnaam</p>
+              <div style={{ display: "flex", gap: 6 }}>
+                <input
+                  value={nameInput}
+                  onChange={(e) => setNameInput(e.target.value)}
+                  style={{ ...input(), flex: 1, fontSize: 12 }}
+                  placeholder="naam.jpg"
+                />
+                <button
+                  style={btn()}
+                  disabled={busy || nameInput.trim() === file.name || !nameInput.trim()}
+                  onClick={() => onRename(nameInput.trim())}
+                >
+                  {renaming ? "Opslaan…" : "Hernoem"}
+                </button>
+              </div>
+              <p style={{ fontSize: 10, color: "#999", margin: "4px 0 0" }}>
+                Alleen letters, cijfers, punt, _ en -. Vergeet de extensie niet (bv. .webp).
+              </p>
+            </div>
+
+            {canOptimize && (
+              <div>
+                <p style={{ fontSize: 12, color: "#666", margin: "0 0 6px" }}>Optimaliseren</p>
+                <button style={btn()} disabled={busy} onClick={onOptimize}>
+                  {optimizing ? "Converteren…" : "Converteer naar WebP"}
+                </button>
+                <p style={{ fontSize: 10, color: "#999", margin: "4px 0 0" }}>
+                  Maakt een WebP (max 2000px, kwaliteit 85) en vervangt het origineel.
+                  Let op: bestaande verwijzingen naar de oude bestandsnaam werken daarna niet meer.
+                </p>
+              </div>
+            )}
+
+            <div>
               <p style={{ fontSize: 12, color: "#666", margin: "0 0 6px" }}>Publieke URL</p>
               <div style={{ display: "flex", gap: 6 }}>
                 <input readOnly value={file.publicUrl} style={{ ...input(), flex: 1, fontSize: 11 }} onFocus={(e) => e.currentTarget.select()} />
