@@ -1,162 +1,75 @@
+# Nieuws — import, afbeeldingen, quote & FAQ
 
-# Beheeromgeving — definitief plan
+Doel: een serie Markdown-bestanden importeren naar `/nieuws`, met automatisch overgenomen afbeeldingen, plus een voorbeeld van een gestileerde quote en een FAQ-accordeon (schema-ready, maar voorlopig alleen als voorbeeld).
 
-Gekozen uitgangspunten (op basis van jouw antwoorden):
-- **Statistieken**: starten met wat Lovable Cloud / onze eigen tabel kan bieden (zie sectie 9). Later eventueel uitbreiden.
-- **Versiehistorie**: ja, **max 3 revisies** per item (oudste rolt eruit).
-- **Concept + geplande publicatie**: ja.
-- **Preview-link** voor concepten (signed, zonder login): ja.
-- **SEO per item**: ja (meta-titel, -omschrijving, OG-image, indexeerbaar).
-- **Afbeeldingen optimaliseren**: ja, automatisch bij upload (meerdere formaten + WebP).
-- **Meertaligheid**: nee.
-- **2FA**: nee.
-- Wél meenemen (geen extra vraag): **audit log**, **redirects**, **alt-tekst verplicht**, **back-up-export**.
+## 1. Afbeeldingen — formaat
 
----
+- Bron: **JPG, liggend 3:2, 1600×1067 px**, ±200–400 KB.
+- Header op de detailpagina rendert full-width tot ~1200 px; archive-kaart gebruikt dezelfde afbeelding gecropt naar 3:2 (al zo opgezet).
+- Alt-tekst verplicht (later, bij de admin-editor). Auto-varianten (640/960/1440 + WebP) komen later met het Media-blok.
 
-## 1. Toegang & rollen
+## 2. Markdown-import (`/admin/nieuws/import`)
 
-- `/login` (bestaat).
-- `/admin/*` afgeschermd via `_authenticated` + role-check.
-- Rollen: **admin** (alles) en **content_manager** (alle content; geen gebruikers/instellingen).
-- Eerste admin: `william@diversions.nl`.
+Beheerscherm met dropzone die accepteert:
+- één of meer `.md`-bestanden
+- één of meer afbeelding-bestanden (jpg/png/webp), in een map `images/` of los
 
-## 2. Layout van het beheer
+Verwerking per `.md`:
+1. Frontmatter parsen met `gray-matter` → `title`, `slug`, `date` (verplicht), optioneel `eyebrow`, `excerpt`.
+2. Body MD doorlopen op `![alt](relatief/pad.jpg)`-referenties.
+   - Elke relatieve afbeelding wordt geüpload naar bucket **`news-media`** onder `{slug}/{bestandsnaam}`.
+   - De referentie in de body wordt vervangen door de publieke URL.
+   - **Eerste afbeelding** in de body wordt automatisch `cover_image_url` (en uit de body gehaald, zodat hij niet dubbel verschijnt). Geen afbeelding → geen cover.
+3. Wegschrijven naar `news`:
+   - `status = 'published'`
+   - `published_at` = `date` uit frontmatter
+   - `excerpt` = frontmatter-excerpt, anders eerste ~180 tekens van de body
+4. **Bestaande slug → overslaan** (veilig). Per bestand resultaat in het rapport: ✓ geïmporteerd / ⚠ overgeslagen / ✗ fout + reden.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│  Wilhelmina · Beheer        zoek…    [naam ▾] uitloggen │
-├──────────────┬──────────────────────────────────────────┤
-│ Dashboard    │                                          │
-│ Homepage     │                                          │
-│ Menu         │            (inhoud per pagina)           │
-│ Nieuws       │                                          │
-│ Agenda       │                                          │
-│ Pagina's     │                                          │
-│ Sponsors     │                                          │
-│ Media        │                                          │
-│ Redirects    │                                          │
-│ ──────────── │                                          │
-│ Gebruikers   │  (alleen admin)                          │
-│ Instellingen │  (alleen admin)                          │
-└──────────────┴──────────────────────────────────────────┘
+Server-side: één `createServerFn` `importNewsBatch` met `requireSupabaseAuth` + role-check; afbeeldingen via `supabaseAdmin` naar storage.
+
+## 3. Quote-voorbeeld
+
+Werkt al via standaard Markdown:
+```md
+> Wat een onvergetelijke avond — het orkest speelde alsof het één ademde.
+> — Burgemeester Pijnenburg-Adriaenssen
 ```
+Rendert in de bestaande `w-article__quote`-stijl. Geen codewijziging nodig; we documenteren dit in een voorbeeldbericht.
 
-Eigen, strakke shadcn-stijl, los van de publieke site. Inklapbare sidebar, mobiel responsive.
+## 4. FAQ-blok (voorbeeld + SCHEMA, voor de toekomst)
 
-## 3. Dashboard
+Syntax in de MD:
+```md
+::: faq
+### Wanneer is de eerstvolgende uitvoering?
+Zie de [agenda](/optredens) voor alle data.
 
-Bovenaan een **periode-selector**: vandaag / 7 dagen / 30 dagen / 90 dagen / dit jaar / aangepast.
+### Kan ik lid worden?
+Ja — neem contact op via de [contactpagina](/contact).
+:::
+```
+Rendering:
+- Custom remark-achtige pre-processor splitst `::: faq … :::` uit de body.
+- Per blok een shadcn `<Accordion type="single" collapsible>` met `### Vraag` als trigger en de markdown daaronder als inhoud.
+- Tegelijk wordt een `<script type="application/ld+json">` met `@type: FAQPage` in de `<head>` van de detailpagina gezet (via TanStack `head()` + loader-data).
 
-- **Kerncijfers** (4 tegels): unieke bezoekers, paginaweergaves, gem. sessieduur, bouncepercentage — met % verandering t.o.v. vorige periode.
-- **Bezoekersgrafiek** (lijn over tijd).
-- **Meest bezochte pagina's** — top 10.
-- **Bronnen** — direct / zoekmachine / social / referrals.
-- **Apparaten** — desktop / mobiel / tablet.
-- **Snelle acties** — "Nieuw bericht", "Nieuwe agenda", "Nieuwe pagina".
-- **Recente activiteit** — laatste 10 wijzigingen (uit audit log).
+Scope nu: één **voorbeeldbericht** maken met quote + FAQ, en de render-laag inbouwen. De importer hoeft FAQ niet speciaal te behandelen — gewone tekst die de renderer herkent.
 
-## 4. Beheer per onderdeel
+## 5. Technische details
 
-### a) Homepage — blokken (drag-sort)
-Hero • Binnenkort (auto uit Agenda) • Nieuws-strook (auto, aantal instelbaar) • Promo-blokken (vrij) • Full-bleed-blok • Sponsors-strook • Nieuwsbrief-band. Per blok: zichtbaar/volgorde/payload.
+Nieuw / aan te passen:
+- Migratie: storage-bucket `news-media` (public read, editor write).
+- `src/lib/news.functions.ts` — `importNewsBatch({ files: [{ name, content, ... }] })`.
+- `src/routes/_authenticated/admin.nieuws.import.tsx` — UI met dropzone, voortgang, rapport.
+- `src/components/site/MarkdownArticle.tsx` — wrapper rond `ReactMarkdown` die `::: faq … :::` uit de body splitst, accordeon rendert en FAQ-schema teruggeeft.
+- `src/routes/nieuws.$slug.tsx` — gebruikt `MarkdownArticle`; injecteert FAQ JSON-LD via `head()`.
+- Voorbeeldbericht (handmatig of via eerste import) met quote- en FAQ-blok.
 
-### b) Menu
-Header (mega-menu kolommen) + footer-kolommen + de "Zelf muziek maken — start direct" banner. Drag-sort, label + URL of interne pagina-koppeling.
+Dependencies: `gray-matter` (frontmatter parsing). Geen Node-only packages.
 
-### c) Nieuws
-Lijst met filters; editor met titel/slug/eyebrow/excerpt/markdown-body/cover/publicatiedatum/status. Concept → plan-publicatie → gepubliceerd → depubliceren. SEO-veld + preview-link + revisies (max 3).
+## 6. Volgorde
 
-### d) Agenda (optredens)
-Lijst (komend/verleden, filter op ensemble); editor met titel/slug/datum+tijd/locatie/ensemble/beschrijving/cover/ticket-URL/status. Automatisch depubliceren na einddatum (optie).
-
-### e) Pagina's
-Vrije pagina's (over, orkesten, steun, bestuur, dirigent, opleiding, lid worden, beeld & geluid, contact, …): titel/slug/hero/body (markdown of blokken)/SEO/status.
-
-### f) Sponsors
-Naam, logo (upload), website, tier (hoofd/patron/overig), volgorde, zichtbaar. Automatisch in footer-strip + sponsorblok.
-
-### g) Media
-Bibliotheek (uploads), kopieer-URL, alt-tekst **verplicht**, vervangen, verwijderen. Bij upload: auto-resize naar meerdere breedtes + WebP-variant; origineel bewaard.
-
-### h) Redirects
-Tabel van → naar (301/302), zoekbaar. 404-rapport (top 20 niet-bestaande URL's van de afgelopen periode) met "maak redirect"-knop.
-
-## 5. Universele content-features (gelden voor Nieuws, Agenda, Pagina's)
-
-- **Status**: concept / gepland / gepubliceerd / gedepubliceerd.
-- **Geplande publicatie**: datum/tijd in de toekomst — cron-job zet status op gepubliceerd.
-- **Preview-link**: knop "Deel preview" → kopieert signed URL (`?preview=<token>`) die 7 dagen geldig is, geen login nodig.
-- **Revisies**: bij elke "Opslaan/Publiceren" wordt een snapshot bewaard. **Max 3** — bij de 4e rolt de oudste eruit. Knop "Herstel naar deze versie".
-- **SEO per item**: meta-titel, meta-omschrijving, OG-image override, indexeerbaar ja/nee.
-- **Audit log**: wie/wat/wanneer geregistreerd, zichtbaar onder elk item én op dashboard.
-
-## 6. Gebruikersbeheer (alleen admin)
-
-- Lijst (naam, e-mail, rol, laatste login).
-- Uitnodigen via e-mail (wachtwoord-set link).
-- Rol wijzigen, deactiveren, verwijderen.
-
-## 7. Instellingen (alleen admin)
-
-- Algemeen: sitenaam, contactgegevens, social links.
-- SEO defaults: title-suffix, default OG-image, favicon, `robots.txt`-toggle.
-- Integraties: webhook-URL voor nieuwsbrief (n8n) en contactformulier-ontvangers.
-- Back-up: knop "Exporteer alle content als JSON".
-
-## 8. UX-conventies
-
-Auto-save concept • ⌘S opslaan • ⌘K snel zoeken • bevestigingsdialoog bij verwijderen • lege-state-teksten ("Nog geen berichten — maak je eerste bericht") • toast bij opslaan/publiceren • preview-knop opent publieke pagina in nieuw tabblad.
-
-## 9. Statistieken — startaanpak (Lovable Cloud)
-
-Lovable Cloud biedt geen kant-en-klaar analytics-product voor eindbezoekers. Wat we wél kunnen doen, zonder externe tool en zonder cookiebanner:
-
-- **Eigen `page_view`-tabel** in onze database. Een minieme client-side tracker stuurt per paginabezoek: pad, timestamp, referrer (zonder query), user-agent (geparseerd naar device-type), geanonimiseerd IP (alleen om unieke bezoekers per dag te tellen — hash, niet opgeslagen).
-- Server function aggregeert dit naar de dashboard-cijfers (kerncijfers, top-pagina's, bronnen, apparaten, lijn over tijd).
-- AVG-vriendelijk (geen externe partij, geen cookie nodig), maar minder rijk dan Google Analytics (geen demografie, geen funnels). Voor jullie doel — "hoeveel mensen, welke pagina's, waar vandaan" — ruim voldoende.
-
-Als later blijkt dat je meer wilt (campagnes, conversies), kunnen we Plausible/Umami koppelen zonder iets aan de site te verbouwen — alleen het dashboard verandert van bron.
-
----
-
-## 10. Technische details (kort)
-
-Nieuwe tabellen die nog moeten:
-- `performances`, `pages`, `home_blocks`, `menu_items`, `sponsors`, `media`, `media_variants`
-- `redirects`, `not_found_log`
-- `audit_log`, `revisions` (met trigger die >3 snapshots per item opruimt)
-- `settings` (key/value)
-- `scheduled_publications` (cron-rij voor gepland publiceren/depubliceren)
-- `page_views` (statistieken — zie 9)
-- `preview_tokens` (token + item-ref + verloopdatum)
-
-Verder:
-- Storage bucket `media` (publiek read) + tweede bucket `media-private` voor concept-previews.
-- Beeld-optimalisatie: bij upload één server function die varianten genereert (320/640/960/1440 px + WebP). De `<img>` in de site krijgt `srcset`/`sizes` automatisch.
-- Server functions voor CRUD met `requireSupabaseAuth` + role-check (`is_content_editor` / `has_role`).
-- Cron (Supabase pg_cron of TanStack server route + extern scheduler): elke 5 min geplande publicaties verwerken; dagelijks `page_views` aggregeren.
-- Audit log via Postgres trigger op alle content-tabellen.
-
----
-
-## 11. Bouwvolgorde
-
-1. **Admin-skelet**: layout, sidebar, lege secties, role-check, dashboard met dummy-cijfers.
-2. **Statistieken-pijplijn**: `page_views`-tabel + tracker + aggregatie → echte cijfers op dashboard.
-3. **Nieuws** als referentie-implementatie (concept/gepland/preview/revisies/SEO — alles).
-4. **Agenda** (zelfde patroon, plus datum/tijd-logica).
-5. **Pagina's**.
-6. **Media + afbeelding-optimalisatie** (parallel aan 3–5 nodig zodra eerste upload binnenkomt).
-7. **Homepage-blokken** (drag-sort + payload-editors).
-8. **Menu**.
-9. **Sponsors**.
-10. **Redirects + 404-rapport**.
-11. **Gebruikersbeheer + Instellingen**.
-12. **Back-up-export** + audit-log-weergave verfijnen.
-
-Iedere stap is na oplevering bruikbaar zonder dat de volgende klaar hoeft te zijn.
-
----
-
-Klaar om te starten met stap 1 (admin-skelet + dashboard) zodra je dit plan goedkeurt.
+1. Bucket `news-media` + render-laag (`MarkdownArticle` + FAQ + JSON-LD) + voorbeeldbericht.
+2. Importer-serverfunctie + admin-importscherm.
+3. Eerste batch echte MD's importeren en steekproef nalopen.
