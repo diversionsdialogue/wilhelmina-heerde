@@ -1,7 +1,6 @@
-import { Link, Outlet, useRouter, useRouterState } from "@tanstack/react-router";
+import { Link, Outlet, useRouter, useRouterState, createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { getMyRole } from "@/lib/auth.functions";
