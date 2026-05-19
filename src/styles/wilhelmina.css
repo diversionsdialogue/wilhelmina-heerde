@@ -2233,8 +2233,8 @@ img { display: block; max-width: 100%; }
 .w-sponsors:hover .w-sponsors__track { animation-play-state: paused; }
 .w-sponsors__item {
   flex: 0 0 auto;
-  height: 96px;
-  min-width: 270px;
+  height: 136px;
+  min-width: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2261,8 +2261,8 @@ img { display: block; max-width: 100%; }
 }
 .w-sponsors__link { display: flex; align-items: center; justify-content: center; height: 100%; }
 .w-sponsors__img {
-  max-height: 84px;
-  max-width: 240px;
+  max-height: 120px;
+  max-width: none;
   width: auto;
   object-fit: contain;
   filter: grayscale(1);
