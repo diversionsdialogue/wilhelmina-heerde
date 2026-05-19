@@ -9,9 +9,9 @@ export const Route = createFileRoute("/optredens")({
   head: () => ({
     meta: [
       { title: "Agenda — Wilhelmina Heerde" },
-      { name: "description", content: "Het hele jaar fanfaremuziek op het hoogste niveau — concerten, premières en ceremoniële optredens van Wilhelmina." },
+      { name: "description", content: "Het hele jaar muziek: concerten en optredens in en rondom Heerde. Mis niets." },
       { property: "og:title", content: "Agenda — Wilhelmina Heerde" },
-      { property: "og:description", content: "Concerten, premières en ceremoniële optredens van Wilhelmina, het slagwerkensemble en het leerlingenorkest." },
+      { property: "og:description", content: "Het hele jaar muziek: concerten en optredens in en rondom Heerde. Mis niets." },
     ],
   }),
   component: OptredensPage,
@@ -64,7 +64,7 @@ function OptredensPage() {
         <div className="w-container">
           <h1 className="w-pgheader__title">Agenda</h1>
           <p className="w-pgheader__sub">
-            Het hele jaar fanfaremuziek op het hoogste niveau — concerten, premières en ceremoniële optredens van Wilhelmina, slagwerkensemble en leerlingenorkest.
+            Het hele jaar muziek: concerten en optredens in en rondom Heerde. Mis niets.
           </p>
         </div>
       </section>
