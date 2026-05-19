@@ -45,6 +45,7 @@ const BANNER_DEFAULTS: BannerPayload = {
   text: "Een bijzondere kennismaking met het seizoen — dirigent, musici en het volledige programma van fanfareorkest, slagwerkensemble en opleidingsorkest.",
   button_label: "Bekijk de concerten",
   button_href: "/optredens",
+  image_url: "",
 };
 
 /** Publiek leesbare home-content. Wordt zowel door de site als de admin gebruikt. */
