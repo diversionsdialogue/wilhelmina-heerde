@@ -7,15 +7,7 @@ type Props = {
   sponsors?: Sponsor[];
 };
 
-export function SiteFooter({ sponsors }: Props) {
-  const list = sponsors && sponsors.length > 0
-    ? sponsors
-    : [
-        { name: "Rabobank IJsseldelta" },
-        { name: "Gemeente Heerde" },
-        { name: "Prins Bernhard Cultuurfonds" },
-        { name: "Stichting Heerder Erf" },
-      ];
+export function SiteFooter(_props: Props) {
 
   return (
     <footer className="w-footer">
@@ -26,11 +18,11 @@ export function SiteFooter({ sponsors }: Props) {
           </div>
 
           <ul className="w-footer__col">
-            <li><Link to="/over">Organisatie</Link></li>
-            <li><Link to="/over">Bestuur</Link></li>
-            <li><Link to="/over">Vacatures</Link></li>
+            <li><Link to="/p/$slug" params={{ slug: "a-orkest" }}>Orkest</Link></li>
+            <li><Link to="/p/$slug" params={{ slug: "bestuur" }}>Bestuur</Link></li>
+            <li><Link to="/p/$slug" params={{ slug: "oud-papier-inzameling" }}>Oud papier</Link></li>
             <li><Link to="/contact">Veelgestelde vragen</Link></li>
-            <li><Link to="/contact">Contact</Link></li>
+            <li><Link to="/p/$slug" params={{ slug: "contact" }}>Contact</Link></li>
           </ul>
 
           <ul className="w-footer__col">
@@ -48,27 +40,6 @@ export function SiteFooter({ sponsors }: Props) {
             <li><a href="#"><Icon name="sp" /> Spotify</a></li>
             <li><a href="#"><Icon name="mail" /> Nieuwsbrief</a></li>
           </ul>
-        </div>
-
-        <div className="w-footer__patron">
-          <strong>Beschermheer</strong>
-          Burgemeester van Heerde — sinds 1923 verbonden aan de vereniging
-        </div>
-
-        <div className="w-footer__sponsors">
-          <span className="w-footer__sponsors-label">Hoofdsponsors seizoen 2026</span>
-          <div className="w-footer__sponsors-row">
-            {list.map((s, i) => (
-              <span key={s.name + i} style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
-                {s.website_url ? (
-                  <a href={s.website_url} target="_blank" rel="noopener noreferrer">{s.name}</a>
-                ) : (
-                  <span>{s.name}</span>
-                )}
-                {i < list.length - 1 && <em aria-hidden="true">·</em>}
-              </span>
-            ))}
-          </div>
         </div>
 
         <div className="w-footer__base">
