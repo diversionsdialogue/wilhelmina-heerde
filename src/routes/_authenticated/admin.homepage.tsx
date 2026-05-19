@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { AdminPage } from "@/components/admin/AdminPage";
+import { MediaPickerDialog } from "@/components/admin/MediaPickerDialog";
 import {
   getHomeSections,
   updateHomeSection,
