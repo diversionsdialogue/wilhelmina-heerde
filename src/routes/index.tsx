@@ -53,8 +53,22 @@ function HomePage() {
       {/* HERO */}
       <section className="w-hero">
         <div className="w-hero__bg" aria-hidden="true" />
-        <div className="w-hero__photo" aria-hidden="true" />
-        <div className="w-hero__scrim" aria-hidden="true" />
+        <div
+          className="w-hero__photo"
+          aria-hidden="true"
+          style={{
+            background:
+              "url('https://wuteknilahqymkocgiir.supabase.co/storage/v1/object/public/news-media/lammert-niessing-is-wilhelminas-maestro-2025/Koninklijk-Fanfarekorps-Wilhelmina') center/cover no-repeat",
+          }}
+        />
+        <div
+          className="w-hero__scrim"
+          aria-hidden="true"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.45) 70%, rgba(0,0,0,0.8) 100%)",
+          }}
+        />
         <div className="w-hero__diamonds" aria-hidden="true"><i /><i /><i /><i /></div>
 
         <div className="w-hero__content is-in">
