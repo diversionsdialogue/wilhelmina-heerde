@@ -79,6 +79,7 @@ const BannerSchema = z.object({
   text: z.string().max(1000),
   button_label: z.string().max(80),
   button_href: z.string().max(500),
+  image_url: z.string().max(1000).default(""),
 });
 
 const InputSchema = z.union([
