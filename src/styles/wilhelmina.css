@@ -2233,8 +2233,8 @@ img { display: block; max-width: 100%; }
 .w-sponsors:hover .w-sponsors__track { animation-play-state: paused; }
 .w-sponsors__item {
   flex: 0 0 auto;
-  height: 64px;
-  min-width: 180px;
+  height: 96px;
+  min-width: 270px;
   display: flex;
   align-items: center;
   justify-content: center;
