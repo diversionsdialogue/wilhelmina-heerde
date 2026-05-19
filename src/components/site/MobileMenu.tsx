@@ -91,8 +91,8 @@ export function MobileMenu({ open, onClose }: Props) {
           {colSecondary.map((n) => (
             <Link
               key={n.label}
-              to={n.to}
-              hash={"hash" in n ? n.hash : undefined}
+              to="/p/$slug"
+              params={{ slug: n.slug }}
               onClick={onClose}
               className="w-megamenu__link"
             >
@@ -103,8 +103,8 @@ export function MobileMenu({ open, onClose }: Props) {
           {colTertiary.map((n) => (
             <Link
               key={n.label}
-              to={n.to}
-              hash={"hash" in n ? n.hash : undefined}
+              to="/p/$slug"
+              params={{ slug: n.slug }}
               onClick={onClose}
               className="w-megamenu__link"
             >
