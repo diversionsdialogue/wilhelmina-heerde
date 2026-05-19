@@ -19,6 +19,7 @@ export type BannerPayload = {
   text: string;
   button_label: string;
   button_href: string;
+  image_url: string;
 };
 
 export type MenuBannerPayload = {
@@ -44,6 +45,7 @@ const BANNER_DEFAULTS: BannerPayload = {
   text: "Een bijzondere kennismaking met het seizoen — dirigent, musici en het volledige programma van fanfareorkest, slagwerkensemble en opleidingsorkest.",
   button_label: "Bekijk de concerten",
   button_href: "/optredens",
+  image_url: "",
 };
 
 /** Publiek leesbare home-content. Wordt zowel door de site als de admin gebruikt. */
@@ -77,6 +79,7 @@ const BannerSchema = z.object({
   text: z.string().max(1000),
   button_label: z.string().max(80),
   button_href: z.string().max(500),
+  image_url: z.string().max(1000).default(""),
 });
 
 const InputSchema = z.union([

@@ -173,7 +173,11 @@ function HomePage() {
               )}
             </div>
             <div className="w-promo__media" aria-hidden="true">
-              <span className="ph ph--rehearsal" style={{ position: "absolute", inset: 0 }} />
+              {banner.image_url ? (
+                <img className="w-promo__media-img" src={banner.image_url} alt="" loading="lazy" />
+              ) : (
+                <span className="ph ph--rehearsal" style={{ position: "absolute", inset: 0 }} />
+              )}
             </div>
           </div>
         </div>
