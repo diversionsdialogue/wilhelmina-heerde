@@ -7,15 +7,7 @@ type Props = {
   sponsors?: Sponsor[];
 };
 
-export function SiteFooter({ sponsors }: Props) {
-  const list = sponsors && sponsors.length > 0
-    ? sponsors
-    : [
-        { name: "Rabobank IJsseldelta" },
-        { name: "Gemeente Heerde" },
-        { name: "Prins Bernhard Cultuurfonds" },
-        { name: "Stichting Heerder Erf" },
-      ];
+export function SiteFooter(_props: Props) {
 
   return (
     <footer className="w-footer">
