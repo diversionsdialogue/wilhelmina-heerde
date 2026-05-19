@@ -16,18 +16,17 @@ const colPrimary = [
 ] as const;
 
 const colSecondary = [
-  { to: "/orkesten", label: "Orkest" },
-  { to: "/over", label: "Bestuur", hash: "bestuur" },
-  { to: "/over", label: "Dirigent", hash: "dirigent" },
-  { to: "/orkesten", label: "Opleiding", hash: "opleiding" },
-  { to: "/orkesten", label: "Lid worden", hash: "lid-worden" },
-  { to: "/nieuws", label: "Beeld en geluid" },
+  { slug: "a-orkest", label: "Orkest" },
+  { slug: "wilhelminaband", label: "Wilhelminaband" },
+  { slug: "bestuur", label: "Bestuur" },
+  { slug: "dirigent", label: "Dirigent" },
+  { slug: "wilhelmina-nieuw-talent", label: "Opleiding" },
+  { slug: "lid-worden", label: "Lid worden" },
 ] as const;
 
 const colTertiary = [
-  { to: "/steun", label: "Steun ons" },
-  { to: "/steun", label: "Onze sponsors", hash: "sponsors" },
-  { to: "/contact", label: "Contact" },
+  { slug: "sponsoren", label: "Onze sponsors" },
+  { slug: "contact", label: "Contact" },
 ] as const;
 
 export function MobileMenu({ open, onClose }: Props) {
