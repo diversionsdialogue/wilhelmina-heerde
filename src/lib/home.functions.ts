@@ -19,6 +19,7 @@ export type BannerPayload = {
   text: string;
   button_label: string;
   button_href: string;
+  image_url: string;
 };
 
 export type MenuBannerPayload = {
