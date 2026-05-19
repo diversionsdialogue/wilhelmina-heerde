@@ -96,6 +96,7 @@ function HeroEditor({ initial }: { initial: HeroPayload }) {
 
 function BannerEditor({ initial }: { initial: BannerPayload }) {
   const [form, setForm] = useState(initial);
+  const [pickerOpen, setPickerOpen] = useState(false);
   useEffect(() => setForm(initial), [initial]);
 
   const qc = useQueryClient();
@@ -108,22 +109,55 @@ function BannerEditor({ initial }: { initial: BannerPayload }) {
   const dirty = JSON.stringify(form) !== JSON.stringify(initial);
 
   return (
-    <SectionCard
-      title="Banner"
-      subtitle="Het promo-blok onder Binnenkort (bijvoorbeeld het programmaboek)."
-      onSave={() => mutation.mutate()}
-      saving={mutation.isPending}
-      dirty={dirty}
-      saved={mutation.isSuccess && !dirty}
-      error={mutation.error ? (mutation.error as Error).message : null}
-    >
-      <Field label="Titel" value={form.title} onChange={(v) => setForm({ ...form, title: v })} />
-      <Field label="Tekst" value={form.text} onChange={(v) => setForm({ ...form, text: v })} multiline />
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 8 }}>
-        <Field label="Knoplabel" value={form.button_label} onChange={(v) => setForm({ ...form, button_label: v })} />
-        <Field label="Bestemming (URL)" value={form.button_href} onChange={(v) => setForm({ ...form, button_href: v })} />
-      </div>
-    </SectionCard>
+    <>
+      <SectionCard
+        title="Banner"
+        subtitle="Het promo-blok onder Binnenkort (bijvoorbeeld het programmaboek)."
+        onSave={() => mutation.mutate()}
+        saving={mutation.isPending}
+        dirty={dirty}
+        saved={mutation.isSuccess && !dirty}
+        error={mutation.error ? (mutation.error as Error).message : null}
+      >
+        <Field label="Titel" value={form.title} onChange={(v) => setForm({ ...form, title: v })} />
+        <Field label="Tekst" value={form.text} onChange={(v) => setForm({ ...form, text: v })} multiline />
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 8 }}>
+          <Field label="Knoplabel" value={form.button_label} onChange={(v) => setForm({ ...form, button_label: v })} />
+          <Field label="Bestemming (URL)" value={form.button_href} onChange={(v) => setForm({ ...form, button_href: v })} />
+        </div>
+        <Group title="Afbeelding">
+          {form.image_url && (
+            <div style={{ position: "relative", aspectRatio: "16 / 10", overflow: "hidden", borderRadius: 8, background: "#0d0d0d" }}>
+              <img src={form.image_url} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+            </div>
+          )}
+          <div style={{ display: "flex", gap: 8 }}>
+            <button
+              type="button"
+              onClick={() => setPickerOpen(true)}
+              style={{ padding: "8px 14px", borderRadius: 999, border: "1px solid #d4d4d4", background: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+            >
+              {form.image_url ? "Afbeelding wijzigen" : "Afbeelding kiezen"}
+            </button>
+            {form.image_url && (
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, image_url: "" })}
+                style={{ padding: "8px 14px", borderRadius: 999, border: "1px solid #d4d4d4", background: "#fff", fontSize: 13, cursor: "pointer" }}
+              >
+                Verwijderen
+              </button>
+            )}
+          </div>
+        </Group>
+      </SectionCard>
+      <MediaPickerDialog
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        defaultBucket="page-media"
+        onSelect={(url) => setForm((f) => ({ ...f, image_url: url }))}
+      />
+    </>
   );
 }
 
