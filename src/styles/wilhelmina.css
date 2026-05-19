@@ -2261,8 +2261,8 @@ img { display: block; max-width: 100%; }
 }
 .w-sponsors__link { display: flex; align-items: center; justify-content: center; height: 100%; }
 .w-sponsors__img {
-  max-height: 84px;
-  max-width: 240px;
+  max-height: 120px;
+  max-width: none;
   width: auto;
   object-fit: contain;
   filter: grayscale(1);
