@@ -123,6 +123,10 @@ function Page() {
         <Stat label="Niet-geoptimaliseerd" value={String(stats.unoptimized)} tone={stats.unoptimized > 0 ? "warn" : undefined} />
       </section>
 
+      <Uploader
+        onDone={() => qc.invalidateQueries({ queryKey: ["admin-media"] })}
+      />
+
       <section style={card()}>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
           <input
