@@ -8,10 +8,12 @@ import {
   listMedia,
   renameMediaFile,
   replaceMediaFile,
+  uploadMediaFile,
   MEDIA_BUCKETS,
   type MediaBucket,
   type MediaFile,
 } from "@/lib/media.functions";
+import { optimizeImageForUpload } from "@/lib/optimizeImage";
 
 export const Route = createFileRoute("/_authenticated/admin/media")({
   component: Page,
