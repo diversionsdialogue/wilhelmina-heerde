@@ -423,6 +423,225 @@ function Stat({ label, value, tone }: { label: string; value: string; tone?: "wa
   );
 }
 
+type UploadRow = {
+  id: string;
+  file: File;
+  status: "pending" | "optimizing" | "uploading" | "done" | "error";
+  message?: string;
+  originalSize: number;
+  finalSize?: number;
+  publicUrl?: string;
+};
+
+function Uploader({ onDone }: { onDone: () => void }) {
+  const upload = useServerFn(uploadMediaFile);
+  const [bucket, setBucket] = useState<MediaBucket>("page-media");
+  const [prefix, setPrefix] = useState("");
+  const [rows, setRows] = useState<UploadRow[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+
+  function safeName(name: string) {
+    const dot = name.lastIndexOf(".");
+    const base = (dot > 0 ? name.slice(0, dot) : name).replace(/[^a-zA-Z0-9._-]/g, "-").replace(/-+/g, "-");
+    const ext = dot > 0 ? name.slice(dot + 1).replace(/[^a-zA-Z0-9]/g, "") : "";
+    return ext ? `${base}.${ext}` : base;
+  }
+
+  function addFiles(list: FileList | File[]) {
+    const arr = Array.from(list).filter((f) => f.size > 0);
+    setRows((prev) => [
+      ...prev,
+      ...arr.map((f) => ({
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${f.name}`,
+        file: f,
+        status: "pending" as const,
+        originalSize: f.size,
+      })),
+    ]);
+  }
+
+  async function fileToBase64(blob: Blob): Promise<string> {
+    const buf = new Uint8Array(await blob.arrayBuffer());
+    let bin = "";
+    const CHUNK = 0x8000;
+    for (let i = 0; i < buf.length; i += CHUNK) {
+      bin += String.fromCharCode(...buf.subarray(i, i + CHUNK));
+    }
+    return btoa(bin);
+  }
+
+  async function startUpload() {
+    if (busy || rows.length === 0) return;
+    setBusy(true);
+    const pendingIds = rows.filter((r) => r.status === "pending" || r.status === "error").map((r) => r.id);
+    for (const id of pendingIds) {
+      const current = (rs: UploadRow[]) => rs.find((r) => r.id === id);
+      setRows((rs) => rs.map((r) => (r.id === id ? { ...r, status: "optimizing", message: undefined } : r)));
+      const row = current(rows);
+      if (!row) continue;
+      try {
+        const optimized = await optimizeImageForUpload(row.file, { maxDimension: 2000, quality: 0.85 });
+        const ts = Date.now().toString(36);
+        const base = safeName(row.file.name.replace(/\.[^.]+$/, ""));
+        const newName = `${base}-${ts}.${optimized.ext}`;
+        const base64 = await fileToBase64(optimized.blob);
+        setRows((rs) =>
+          rs.map((r) =>
+            r.id === id ? { ...r, status: "uploading", finalSize: optimized.blob.size } : r,
+          ),
+        );
+        const result = await upload({
+          data: {
+            bucket,
+            prefix: prefix.trim(),
+            name: newName,
+            contentType: optimized.contentType,
+            dataBase64: base64,
+            upsert: false,
+          },
+        });
+        setRows((rs) =>
+          rs.map((r) =>
+            r.id === id ? { ...r, status: "done", publicUrl: result.publicUrl } : r,
+          ),
+        );
+      } catch (e) {
+        setRows((rs) =>
+          rs.map((r) =>
+            r.id === id ? { ...r, status: "error", message: e instanceof Error ? e.message : "Upload mislukt" } : r,
+          ),
+        );
+      }
+    }
+    setBusy(false);
+    onDone();
+  }
+
+  function clearDone() {
+    setRows((rs) => rs.filter((r) => r.status !== "done"));
+  }
+
+  const hasPending = rows.some((r) => r.status === "pending" || r.status === "error");
+
+  return (
+    <section style={{ ...card(), marginBottom: 20 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12, gap: 12, flexWrap: "wrap" }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 16, color: "#0d0d0d" }}>Bestanden uploaden</h2>
+          <p style={{ margin: "2px 0 0", fontSize: 12, color: "#888" }}>
+            Sleep meerdere afbeeldingen hierheen — ze worden automatisch geoptimaliseerd (WebP, max 2000px).
+          </p>
+        </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <select style={{ ...input(), width: 180 }} value={bucket} onChange={(e) => setBucket(e.target.value as MediaBucket)}>
+            {MEDIA_BUCKETS.map((b) => (
+              <option key={b} value={b}>{BUCKET_LABEL[b]}</option>
+            ))}
+          </select>
+          <input
+            style={{ ...input(), width: 200 }}
+            placeholder="Submap (optioneel)"
+            value={prefix}
+            onChange={(e) => setPrefix(e.target.value)}
+          />
+        </div>
+      </div>
+
+      <label
+        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragOver(false);
+          if (e.dataTransfer.files?.length) addFiles(e.dataTransfer.files);
+        }}
+        style={{
+          display: "block",
+          border: `2px dashed ${dragOver ? "#0d0d0d" : "#d4d4d4"}`,
+          background: dragOver ? "#fafafa" : "#fcfcfc",
+          borderRadius: 10,
+          padding: 24,
+          textAlign: "center",
+          cursor: "pointer",
+          color: "#555",
+          fontSize: 13,
+        }}
+      >
+        <input
+          type="file"
+          multiple
+          accept="image/*"
+          style={{ display: "none" }}
+          onChange={(e) => {
+            if (e.target.files?.length) addFiles(e.target.files);
+            e.target.value = "";
+          }}
+        />
+        Sleep bestanden hierheen of klik om te kiezen
+      </label>
+
+      {rows.length > 0 && (
+        <>
+          <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 8 }}>
+            {rows.map((r) => (
+              <div key={r.id} style={{ display: "grid", gridTemplateColumns: "1fr auto auto", gap: 12, alignItems: "center", padding: "8px 10px", border: "1px solid #eee", borderRadius: 8, background: "#fff" }}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 12, color: "#0d0d0d", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={r.file.name}>
+                    {r.file.name}
+                  </div>
+                  <div style={{ fontSize: 11, color: "#888" }}>
+                    {formatBytes(r.originalSize)}
+                    {r.finalSize !== undefined && r.finalSize !== r.originalSize && (
+                      <> → <strong style={{ color: r.finalSize < r.originalSize ? "#1b5e20" : "#9a5300" }}>{formatBytes(r.finalSize)}</strong>
+                      {r.originalSize > 0 && (
+                        <> ({Math.round((1 - r.finalSize / r.originalSize) * 100)}% kleiner)</>
+                      )}
+                      </>
+                    )}
+                    {r.message && <> — <span style={{ color: "#b00020" }}>{r.message}</span></>}
+                  </div>
+                </div>
+                <span style={pill(statusTone(r.status))}>{statusLabel(r.status)}</span>
+                <button style={btn()} disabled={busy && r.status !== "done" && r.status !== "error"} onClick={() => setRows((rs) => rs.filter((x) => x.id !== r.id))}>
+                  Verwijder
+                </button>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+            <button style={btn()} disabled={busy || !hasPending} onClick={startUpload}>
+              {busy ? "Bezig…" : `Start upload (${rows.filter((r) => r.status === "pending" || r.status === "error").length})`}
+            </button>
+            <button style={btn()} disabled={busy} onClick={() => setRows([])}>Lijst leegmaken</button>
+            <button style={btn()} disabled={busy || !rows.some((r) => r.status === "done")} onClick={clearDone}>Voltooid verbergen</button>
+          </div>
+        </>
+      )}
+    </section>
+  );
+}
+
+function statusLabel(s: UploadRow["status"]): string {
+  switch (s) {
+    case "pending": return "Wachten";
+    case "optimizing": return "Optimaliseren…";
+    case "uploading": return "Uploaden…";
+    case "done": return "Klaar";
+    case "error": return "Fout";
+  }
+}
+
+function statusTone(s: UploadRow["status"]): "ok" | "warn" | "danger" | "info" {
+  switch (s) {
+    case "done": return "ok";
+    case "error": return "danger";
+    case "optimizing":
+    case "uploading": return "info";
+    default: return "warn";
+  }
+}
+
 // Styles
 const statRow = (): React.CSSProperties => ({ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 20 });
 const card = (): React.CSSProperties => ({ background: "#fff", border: "1px solid #e8e8e8", borderRadius: 12, padding: 20 });
