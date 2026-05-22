@@ -111,6 +111,31 @@ export const renameMediaFile = createServerFn({ method: "POST" })
     return { ok: true, path: newPath };
   });
 
+const UploadSchema = z.object({
+  bucket: z.enum(MEDIA_BUCKETS),
+  name: z.string().min(1).max(255).regex(SAFE_NAME, "Alleen letters, cijfers, . _ - toegestaan"),
+  prefix: z.string().max(512).regex(/^[a-zA-Z0-9._/-]*$/).optional().default(""),
+  contentType: z.string().min(1).max(100),
+  dataBase64: z.string().min(1).max(20 * 1024 * 1024),
+  upsert: z.boolean().default(false),
+});
+
+export const uploadMediaFile = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => UploadSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    await assertEditor(context.userId);
+    const prefix = (data.prefix ?? "").replace(/^\/+|\/+$/g, "");
+    const path = prefix ? `${prefix}/${data.name}` : data.name;
+    const bytes = Uint8Array.from(atob(data.dataBase64), (c) => c.charCodeAt(0));
+    const { error } = await supabaseAdmin.storage
+      .from(data.bucket)
+      .upload(path, bytes, { contentType: data.contentType, upsert: data.upsert });
+    if (error) throw error;
+    const { data: pub } = supabaseAdmin.storage.from(data.bucket).getPublicUrl(path);
+    return { ok: true, path, publicUrl: pub.publicUrl };
+  });
+
 const ReplaceSchema = z.object({
   bucket: z.enum(MEDIA_BUCKETS),
   path: z.string().min(1).max(1024),
