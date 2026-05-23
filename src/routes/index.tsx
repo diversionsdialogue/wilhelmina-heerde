@@ -190,13 +190,13 @@ function HomePage() {
                 </a>
               )}
             </div>
-            <div className="w-promo__media" aria-hidden="true">
+            <a className="w-promo__media" href={banner.button_href || "/"} aria-label={banner.title}>
               {banner.image_url ? (
                 <img className="w-promo__media-img" src={banner.image_url} alt="" loading="lazy" />
               ) : (
                 <span className="ph ph--rehearsal" style={{ position: "absolute", inset: 0 }} />
               )}
-            </div>
+            </a>
           </div>
         </div>
       </section>
