@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SteunRouteImport } from './routes/steun'
+import { Route as QuickscanRouteImport } from './routes/quickscan'
 import { Route as OverRouteImport } from './routes/over'
 import { Route as OrkestenRouteImport } from './routes/orkesten'
 import { Route as OptredensRouteImport } from './routes/optredens'
@@ -36,6 +37,11 @@ import { Route as AuthenticatedAdminAgendaRouteImport } from './routes/_authenti
 const SteunRoute = SteunRouteImport.update({
   id: '/steun',
   path: '/steun',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuickscanRoute = QuickscanRouteImport.update({
+  id: '/quickscan',
+  path: '/quickscan',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OverRoute = OverRouteImport.update({
@@ -163,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/optredens': typeof OptredensRoute
   '/orkesten': typeof OrkestenRoute
   '/over': typeof OverRoute
+  '/quickscan': typeof QuickscanRoute
   '/steun': typeof SteunRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/nieuws/$slug': typeof NieuwsSlugRoute
@@ -187,6 +194,7 @@ export interface FileRoutesByTo {
   '/optredens': typeof OptredensRoute
   '/orkesten': typeof OrkestenRoute
   '/over': typeof OverRoute
+  '/quickscan': typeof QuickscanRoute
   '/steun': typeof SteunRoute
   '/nieuws/$slug': typeof NieuwsSlugRoute
   '/p/$slug': typeof PSlugRoute
@@ -212,6 +220,7 @@ export interface FileRoutesById {
   '/optredens': typeof OptredensRoute
   '/orkesten': typeof OrkestenRoute
   '/over': typeof OverRoute
+  '/quickscan': typeof QuickscanRoute
   '/steun': typeof SteunRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/nieuws/$slug': typeof NieuwsSlugRoute
@@ -238,6 +247,7 @@ export interface FileRouteTypes {
     | '/optredens'
     | '/orkesten'
     | '/over'
+    | '/quickscan'
     | '/steun'
     | '/admin'
     | '/nieuws/$slug'
@@ -262,6 +272,7 @@ export interface FileRouteTypes {
     | '/optredens'
     | '/orkesten'
     | '/over'
+    | '/quickscan'
     | '/steun'
     | '/nieuws/$slug'
     | '/p/$slug'
@@ -286,6 +297,7 @@ export interface FileRouteTypes {
     | '/optredens'
     | '/orkesten'
     | '/over'
+    | '/quickscan'
     | '/steun'
     | '/_authenticated/admin'
     | '/nieuws/$slug'
@@ -312,6 +324,7 @@ export interface RootRouteChildren {
   OptredensRoute: typeof OptredensRoute
   OrkestenRoute: typeof OrkestenRoute
   OverRoute: typeof OverRoute
+  QuickscanRoute: typeof QuickscanRoute
   SteunRoute: typeof SteunRoute
   NieuwsSlugRoute: typeof NieuwsSlugRoute
   PSlugRoute: typeof PSlugRoute
@@ -325,6 +338,13 @@ declare module '@tanstack/react-router' {
       path: '/steun'
       fullPath: '/steun'
       preLoaderRoute: typeof SteunRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quickscan': {
+      id: '/quickscan'
+      path: '/quickscan'
+      fullPath: '/quickscan'
+      preLoaderRoute: typeof QuickscanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/over': {
@@ -535,6 +555,7 @@ const rootRouteChildren: RootRouteChildren = {
   OptredensRoute: OptredensRoute,
   OrkestenRoute: OrkestenRoute,
   OverRoute: OverRoute,
+  QuickscanRoute: QuickscanRoute,
   SteunRoute: SteunRoute,
   NieuwsSlugRoute: NieuwsSlugRoute,
   PSlugRoute: PSlugRoute,
