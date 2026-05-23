@@ -197,6 +197,60 @@ export type Database = {
         }
         Relationships: []
       }
+      quickscan_leads: {
+        Row: {
+          audience: string
+          chosen_instrument: string | null
+          created_at: string
+          email: string
+          exit_type: string
+          experience: string | null
+          id: string
+          name: string | null
+          notes: string | null
+          phone: string | null
+          preference: string
+          prev_instrument: string | null
+          rejoin_choice: string | null
+          subject: string
+          switcher: boolean
+        }
+        Insert: {
+          audience: string
+          chosen_instrument?: string | null
+          created_at?: string
+          email: string
+          exit_type: string
+          experience?: string | null
+          id?: string
+          name?: string | null
+          notes?: string | null
+          phone?: string | null
+          preference: string
+          prev_instrument?: string | null
+          rejoin_choice?: string | null
+          subject: string
+          switcher?: boolean
+        }
+        Update: {
+          audience?: string
+          chosen_instrument?: string | null
+          created_at?: string
+          email?: string
+          exit_type?: string
+          experience?: string | null
+          id?: string
+          name?: string | null
+          notes?: string | null
+          phone?: string | null
+          preference?: string
+          prev_instrument?: string | null
+          rejoin_choice?: string | null
+          subject?: string
+          switcher?: boolean
+        }
+        Relationships: []
+      }
       sponsors: {
         Row: {
           created_at: string
