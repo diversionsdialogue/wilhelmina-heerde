@@ -28,6 +28,7 @@ export function SiteFooter(_props: Props) {
           <ul className="w-footer__col">
             <li><Link to="/p/$slug" params={{ slug: "opleiding" }}>Opleiding</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "lid-worden" }}>Lid worden</Link></li>
+            <li><Link to="/p/$slug" params={{ slug: "muziek-in-de-klas" }}>Meer muziek in de klas</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "sponsors" }}>Onze sponsors</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "donateur-worden" }}>Donateur worden</Link></li>
           </ul>
