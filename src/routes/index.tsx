@@ -86,7 +86,7 @@ function HomePage() {
             )}
             {hero.secondary_label && (
               <a className="w-btn w-btn--ghost-light" href={hero.secondary_href || "/"}>
-                {hero.secondary_label}
+                {hero.secondary_label} {arrow}
               </a>
             )}
           </div>
