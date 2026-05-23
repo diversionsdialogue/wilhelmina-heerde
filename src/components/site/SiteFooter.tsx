@@ -19,26 +19,24 @@ export function SiteFooter(_props: Props) {
 
           <ul className="w-footer__col">
             <li><Link to="/p/$slug" params={{ slug: "a-orkest" }}>Orkest</Link></li>
+            <li><Link to="/p/$slug" params={{ slug: "wilhelminaband" }}>Wilhelminaband</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "bestuur" }}>Bestuur</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "oud-papier-inzameling" }}>Oud papier</Link></li>
-            <li><Link to="/contact">Veelgestelde vragen</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "contact" }}>Contact</Link></li>
           </ul>
 
           <ul className="w-footer__col">
-            <li><a href="#">Pers</a></li>
-            <li><a href="#">Beeldmateriaal</a></li>
-            <li><a href="#">Programmaboeken</a></li>
-            <li><a href="#">Verhuur</a></li>
-            <li><a href="#">Repetitielocaties</a></li>
+            <li><Link to="/p/$slug" params={{ slug: "opleiding" }}>Opleiding</Link></li>
+            <li><Link to="/p/$slug" params={{ slug: "lid-worden" }}>Lid worden</Link></li>
+            <li><Link to="/p/$slug" params={{ slug: "sponsors" }}>Onze sponsors</Link></li>
+            <li><Link to="/p/$slug" params={{ slug: "donateur-worden" }}>Donateur worden</Link></li>
           </ul>
 
           <ul className="w-footer__col">
-            <li><a href="#"><Icon name="fb" /> Facebook</a></li>
-            <li><a href="#"><Icon name="ig" /> Instagram</a></li>
-            <li><a href="#"><Icon name="yt" /> YouTube</a></li>
-            <li><a href="#"><Icon name="sp" /> Spotify</a></li>
-            <li><a href="#"><Icon name="mail" /> Nieuwsbrief</a></li>
+            <li><a href="https://www.facebook.com/pages/Koninklijk-Fanfarekorps-Wilhelmina-Heerde/192984194222430?fref=ts" target="_blank" rel="noopener noreferrer"><Icon name="fb" /> Facebook</a></li>
+            <li><a href="https://www.instagram.com/wilhelmina_heerde/" target="_blank" rel="noopener noreferrer"><Icon name="ig" /> Instagram</a></li>
+            <li><a href="https://www.youtube.com/user/wilhelminaheerde10" target="_blank" rel="noopener noreferrer"><Icon name="yt" /> YouTube</a></li>
+            <li><a href="https://www.flickr.com/photos/137309108@N04/" target="_blank" rel="noopener noreferrer"><Icon name="fl" /> Flickr</a></li>
           </ul>
         </div>
 
@@ -57,7 +55,7 @@ export function SiteFooter(_props: Props) {
   );
 }
 
-function Icon({ name }: { name: "fb" | "ig" | "yt" | "sp" | "mail" }) {
+function Icon({ name }: { name: "fb" | "ig" | "yt" | "sp" | "mail" | "fl" }) {
   const common = {
     width: 14, height: 14, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor",
     strokeWidth: 1.5, strokeLinecap: "round" as const, strokeLinejoin: "round" as const,
@@ -68,5 +66,6 @@ function Icon({ name }: { name: "fb" | "ig" | "yt" | "sp" | "mail" }) {
     case "yt": return <svg {...common}><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" /><path d="m10 15 5-3-5-3z" /></svg>;
     case "sp": return <svg {...common}><circle cx="12" cy="12" r="10" /><path d="M8 11.5a8 8 0 0 1 9-1" /><path d="M7 14.5a6 6 0 0 1 7-1" /><path d="M8 17a4 4 0 0 1 5 0" /></svg>;
     case "mail": return <svg {...common}><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>;
+    case "fl": return <svg {...common}><circle cx="7" cy="12" r="4" /><circle cx="17" cy="12" r="4" /></svg>;
   }
 }
