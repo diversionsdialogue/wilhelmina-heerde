@@ -136,7 +136,11 @@ function HomePage() {
           {/* SPONSORS */}
           {sponsors.length > 0 && (
             <div className="w-sponsors" aria-label="Onze sponsors">
-              <h2 className="w-sponsors__title">Onze sponsors</h2>
+              <h2 className="w-sponsors__title">
+                <Link to="/p/$slug" params={{ slug: "sponsoren" }} style={{ color: "inherit", textDecoration: "none" }}>
+                  Onze sponsors
+                </Link>
+              </h2>
               <div className="w-sponsors__viewport">
                 <div className="w-sponsors__track">
                   {[...sponsors, ...sponsors].map((s, i) => {
@@ -186,13 +190,13 @@ function HomePage() {
                 </a>
               )}
             </div>
-            <div className="w-promo__media" aria-hidden="true">
+            <a className="w-promo__media" href={banner.button_href || "/"} aria-label={banner.title}>
               {banner.image_url ? (
                 <img className="w-promo__media-img" src={banner.image_url} alt="" loading="lazy" />
               ) : (
                 <span className="ph ph--rehearsal" style={{ position: "absolute", inset: 0 }} />
               )}
-            </div>
+            </a>
           </div>
         </div>
       </section>
@@ -208,6 +212,7 @@ function HomePage() {
             <Link className="w-link-arrow" to="/nieuws">
               <span className="w-link-arrow__bar" />
               Bekijk alles
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
             </Link>
           </header>
 
