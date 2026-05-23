@@ -1043,7 +1043,7 @@ img { display: block; max-width: 100%; }
 
 /* Page header */
 .w-pgheader {
-  padding: clamp(64px, 9vw, 128px) 0 clamp(40px, 5vw, 64px);
+  padding: clamp(112px, 12vw, 152px) 0 clamp(40px, 5vw, 64px);
   background: var(--w-bg-warm);
 }
 .w-pgheader__title {
