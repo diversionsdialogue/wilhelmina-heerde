@@ -136,7 +136,11 @@ function HomePage() {
           {/* SPONSORS */}
           {sponsors.length > 0 && (
             <div className="w-sponsors" aria-label="Onze sponsors">
-              <h2 className="w-sponsors__title">Onze sponsors</h2>
+              <h2 className="w-sponsors__title">
+                <Link to="/p/$slug" params={{ slug: "sponsoren" }} style={{ color: "inherit", textDecoration: "none" }}>
+                  Onze sponsors
+                </Link>
+              </h2>
               <div className="w-sponsors__viewport">
                 <div className="w-sponsors__track">
                   {[...sponsors, ...sponsors].map((s, i) => {
