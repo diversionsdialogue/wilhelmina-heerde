@@ -19,26 +19,24 @@ export function SiteFooter(_props: Props) {
 
           <ul className="w-footer__col">
             <li><Link to="/p/$slug" params={{ slug: "a-orkest" }}>Orkest</Link></li>
+            <li><Link to="/p/$slug" params={{ slug: "wilhelminaband" }}>Wilhelminaband</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "bestuur" }}>Bestuur</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "oud-papier-inzameling" }}>Oud papier</Link></li>
-            <li><Link to="/contact">Veelgestelde vragen</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "contact" }}>Contact</Link></li>
           </ul>
 
           <ul className="w-footer__col">
-            <li><a href="#">Pers</a></li>
-            <li><a href="#">Beeldmateriaal</a></li>
-            <li><a href="#">Programmaboeken</a></li>
-            <li><a href="#">Verhuur</a></li>
-            <li><a href="#">Repetitielocaties</a></li>
+            <li><Link to="/p/$slug" params={{ slug: "opleiding" }}>Opleiding</Link></li>
+            <li><Link to="/p/$slug" params={{ slug: "lid-worden" }}>Lid worden</Link></li>
+            <li><Link to="/p/$slug" params={{ slug: "sponsors" }}>Onze sponsors</Link></li>
+            <li><Link to="/p/$slug" params={{ slug: "donateur-worden" }}>Donateur worden</Link></li>
           </ul>
 
           <ul className="w-footer__col">
-            <li><a href="#"><Icon name="fb" /> Facebook</a></li>
-            <li><a href="#"><Icon name="ig" /> Instagram</a></li>
-            <li><a href="#"><Icon name="yt" /> YouTube</a></li>
-            <li><a href="#"><Icon name="sp" /> Spotify</a></li>
-            <li><a href="#"><Icon name="mail" /> Nieuwsbrief</a></li>
+            <li><a href="https://www.facebook.com/pages/Koninklijk-Fanfarekorps-Wilhelmina-Heerde/192984194222430?fref=ts" target="_blank" rel="noopener noreferrer"><Icon name="fb" /> Facebook</a></li>
+            <li><a href="https://www.instagram.com/wilhelmina_heerde/" target="_blank" rel="noopener noreferrer"><Icon name="ig" /> Instagram</a></li>
+            <li><a href="https://www.youtube.com/user/wilhelminaheerde10" target="_blank" rel="noopener noreferrer"><Icon name="yt" /> YouTube</a></li>
+            <li><a href="https://www.flickr.com/photos/137309108@N04/" target="_blank" rel="noopener noreferrer"><Icon name="fl" /> Flickr</a></li>
           </ul>
         </div>
 
