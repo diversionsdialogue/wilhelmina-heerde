@@ -789,7 +789,11 @@ img { display: block; max-width: 100%; }
 
 @media (max-width: 880px) {
   .w-news__inner { grid-template-columns: 1fr; gap: 28px; }
+  .w-news__form { flex-wrap: wrap; }
+  .w-news__input { width: 100%; flex: 1 1 100%; }
+  .w-news__submit { width: 100%; justify-content: center; padding: 16px 28px; box-sizing: border-box; }
 }
+
 
 /* ============================================================
    Footer
