@@ -66,5 +66,6 @@ function Icon({ name }: { name: "fb" | "ig" | "yt" | "sp" | "mail" | "fl" }) {
     case "yt": return <svg {...common}><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" /><path d="m10 15 5-3-5-3z" /></svg>;
     case "sp": return <svg {...common}><circle cx="12" cy="12" r="10" /><path d="M8 11.5a8 8 0 0 1 9-1" /><path d="M7 14.5a6 6 0 0 1 7-1" /><path d="M8 17a4 4 0 0 1 5 0" /></svg>;
     case "mail": return <svg {...common}><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>;
+    case "fl": return <svg {...common}><circle cx="7" cy="12" r="4" /><circle cx="17" cy="12" r="4" /></svg>;
   }
 }
