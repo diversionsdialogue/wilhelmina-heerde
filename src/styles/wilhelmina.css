@@ -812,7 +812,10 @@ img { display: block; max-width: 100%; }
   align-items: start;
 }
 @media (max-width: 980px) { .w-footer__grid { grid-template-columns: 1fr 1fr; gap: 32px; } }
-@media (max-width: 560px) { .w-footer__grid { grid-template-columns: 1fr; gap: 28px; } }
+@media (max-width: 560px) {
+  .w-footer__grid { grid-template-columns: 1fr; gap: 28px; }
+  .w-footer__brand { align-items: center; text-align: center; }
+}
 
 .w-footer__brand {
   display: flex; flex-direction: column; gap: 18px;
