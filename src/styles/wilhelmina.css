@@ -1343,7 +1343,7 @@ img { display: block; max-width: 100%; }
 
 .w-article {
   background: var(--w-bg-warm);
-  padding: clamp(48px, 6vw, 88px) 0 0;
+  padding: clamp(112px, 10vw, 144px) 0 0;
 }
 
 .w-article__container {
