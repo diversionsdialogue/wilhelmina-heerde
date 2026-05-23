@@ -117,6 +117,32 @@ const SNIPPETS: Snippet[] = [
       return { text, selStart: text.length - 9, selEnd: text.length - 1 };
     },
   },
+  {
+    label: "Button",
+    title: "Knop invoegen",
+    block: true,
+    build: (s) => {
+      const label = s || "Lees meer";
+      const text = `::: button href="https://" variant="primary"\n${label}\n:::\n\n`;
+      const selStart = text.indexOf('href="') + 6;
+      const selEnd = selStart + "https://".length;
+      return { text, selStart, selEnd };
+    },
+  },
+  {
+    label: "CTA",
+    title: "Call-to-action blok (kop, tekst, knop, afbeelding)",
+    block: true,
+    build: () => {
+      const text =
+        '::: cta href="https://" image="https://" button="Lees meer"\n' +
+        "## Titel van de CTA\n" +
+        "Korte begeleidende tekst die uitlegt waarom de lezer hier moet klikken.\n" +
+        ":::\n\n";
+      const selStart = text.indexOf("Titel van de CTA");
+      return { text, selStart, selEnd: selStart + "Titel van de CTA".length };
+    },
+  },
 ];
 
 function btn(): CSSProperties {

@@ -9,13 +9,28 @@ import {
 
 /**
  * Splits a markdown body into ordered segments of plain markdown and
- * `::: faq … :::` blocks. Each FAQ block is parsed into Q/A pairs from
- * `### Question` headings followed by markdown until the next heading.
+ * `::: <name> … :::` blocks (faq, button, cta).
  */
 type FaqPair = { q: string; a: string };
-type Segment = { type: "md"; content: string } | { type: "faq"; items: FaqPair[] };
+type ButtonAttrs = { href: string; label: string; variant: "primary" | "secondary" | "ink" };
+type CtaAttrs = { href: string; image: string; button: string; body: string };
+type Segment =
+  | { type: "md"; content: string }
+  | { type: "faq"; items: FaqPair[] }
+  | { type: "button"; attrs: ButtonAttrs }
+  | { type: "cta"; attrs: CtaAttrs };
 
-const FAQ_BLOCK_RE = /^:::\s*faq\s*$([\s\S]*?)^:::\s*$/gm;
+const BLOCK_RE = /^:::\s*(faq|button|cta)([^\n]*)\n([\s\S]*?)^:::\s*$/gm;
+
+function parseAttrs(raw: string): Record<string, string> {
+  const out: Record<string, string> = {};
+  const re = /(\w+)=("([^"]*)"|'([^']*)'|(\S+))/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(raw)) !== null) {
+    out[m[1]] = m[3] ?? m[4] ?? m[5] ?? "";
+  }
+  return out;
+}
 
 function parseFaqBlock(inner: string): FaqPair[] {
   const lines = inner.split("\n");
@@ -46,15 +61,36 @@ export function parseArticleBody(body: string): { segments: Segment[]; faqs: Faq
   const faqs: FaqPair[] = [];
   let lastIndex = 0;
   let match: RegExpExecArray | null;
-  FAQ_BLOCK_RE.lastIndex = 0;
-  while ((match = FAQ_BLOCK_RE.exec(body)) !== null) {
+  BLOCK_RE.lastIndex = 0;
+  while ((match = BLOCK_RE.exec(body)) !== null) {
     if (match.index > lastIndex) {
       segments.push({ type: "md", content: body.slice(lastIndex, match.index) });
     }
-    const items = parseFaqBlock(match[1]);
-    if (items.length) {
-      segments.push({ type: "faq", items });
-      faqs.push(...items);
+    const kind = match[1];
+    const attrsRaw = match[2] ?? "";
+    const inner = match[3] ?? "";
+    if (kind === "faq") {
+      const items = parseFaqBlock(inner);
+      if (items.length) {
+        segments.push({ type: "faq", items });
+        faqs.push(...items);
+      }
+    } else if (kind === "button") {
+      const a = parseAttrs(attrsRaw);
+      const label = (a.label || inner.trim() || "Lees meer").trim();
+      const variant = (a.variant === "secondary" || a.variant === "ink" ? a.variant : "primary") as ButtonAttrs["variant"];
+      segments.push({ type: "button", attrs: { href: a.href || "#", label, variant } });
+    } else if (kind === "cta") {
+      const a = parseAttrs(attrsRaw);
+      segments.push({
+        type: "cta",
+        attrs: {
+          href: a.href || "#",
+          image: a.image || "",
+          button: a.button || "Lees meer",
+          body: inner.trim(),
+        },
+      });
     }
     lastIndex = match.index + match[0].length;
   }
@@ -95,34 +131,98 @@ const mdComponents = {
   ),
 };
 
+function ArticleButton({ attrs }: { attrs: ButtonAttrs }) {
+  const cls = `w-btn w-btn--${attrs.variant}`;
+  const isExternal = /^https?:\/\//i.test(attrs.href);
+  return (
+    <p className="w-article__button" style={{ margin: "1.5em 0" }}>
+      <a
+        href={attrs.href}
+        className={cls}
+        target={isExternal ? "_blank" : undefined}
+        rel={isExternal ? "noopener noreferrer" : undefined}
+      >
+        {attrs.label}
+      </a>
+    </p>
+  );
+}
+
+function ArticleCta({ attrs }: { attrs: CtaAttrs }) {
+  const isExternal = /^https?:\/\//i.test(attrs.href);
+  const linkProps = {
+    href: attrs.href,
+    target: isExternal ? "_blank" : undefined,
+    rel: isExternal ? "noopener noreferrer" : undefined,
+  };
+  return (
+    <aside
+      className="w-article__cta"
+      style={{
+        display: "grid",
+        gridTemplateColumns: attrs.image ? "minmax(0, 1fr) minmax(0, 1fr)" : "1fr",
+        gap: 24,
+        alignItems: "stretch",
+        margin: "2em 0",
+        border: "1px solid var(--w-line, #e8e4dd)",
+        borderRadius: 12,
+        overflow: "hidden",
+        background: "var(--w-bg-soft, #faf8f5)",
+      }}
+    >
+      {attrs.image && (
+        <a {...linkProps} style={{ display: "block", minHeight: 200, position: "relative" }}>
+          <img
+            src={attrs.image}
+            alt=""
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        </a>
+      )}
+      <div style={{ padding: "28px 28px", display: "flex", flexDirection: "column", justifyContent: "center", gap: 12 }}>
+        <ReactMarkdown components={mdComponents}>{attrs.body}</ReactMarkdown>
+        <p style={{ margin: "8px 0 0" }}>
+          <a {...linkProps} className="w-btn w-btn--primary">
+            {attrs.button}
+          </a>
+        </p>
+      </div>
+    </aside>
+  );
+}
+
 export function MarkdownArticle({ body }: { body: string }) {
   const { segments } = useMemo(() => parseArticleBody(body), [body]);
 
   return (
     <div className="w-article__body">
-      {segments.map((seg, i) =>
-        seg.type === "md" ? (
-          <ReactMarkdown key={i} components={mdComponents}>
-            {seg.content}
-          </ReactMarkdown>
-        ) : (
-          <Accordion
-            key={i}
-            type="single"
-            collapsible
-            className="w-article__faq"
-          >
-            {seg.items.map((item, j) => (
-              <AccordionItem key={j} value={`faq-${i}-${j}`}>
-                <AccordionTrigger>{item.q}</AccordionTrigger>
-                <AccordionContent>
-                  <ReactMarkdown components={mdComponents}>{item.a}</ReactMarkdown>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        ),
-      )}
+      {segments.map((seg, i) => {
+        if (seg.type === "md") {
+          return (
+            <ReactMarkdown key={i} components={mdComponents}>
+              {seg.content}
+            </ReactMarkdown>
+          );
+        }
+        if (seg.type === "faq") {
+          return (
+            <Accordion key={i} type="single" collapsible className="w-article__faq">
+              {seg.items.map((item, j) => (
+                <AccordionItem key={j} value={`faq-${i}-${j}`}>
+                  <AccordionTrigger>{item.q}</AccordionTrigger>
+                  <AccordionContent>
+                    <ReactMarkdown components={mdComponents}>{item.a}</ReactMarkdown>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          );
+        }
+        if (seg.type === "button") {
+          return <ArticleButton key={i} attrs={seg.attrs} />;
+        }
+        return <ArticleCta key={i} attrs={seg.attrs} />;
+      })}
     </div>
   );
 }
