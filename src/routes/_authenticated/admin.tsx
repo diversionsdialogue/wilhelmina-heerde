@@ -20,6 +20,7 @@ const NAV: { group: string; items: NavItem[] }[] = [
       { to: "/admin/homepage", label: "Homepage" },
       { to: "/admin/menu", label: "Menu" },
       { to: "/admin/nieuws", label: "Nieuws" },
+      { to: "/admin/beeld-en-geluid", label: "Beeld en geluid" },
       { to: "/admin/agenda", label: "Agenda" },
       { to: "/admin/paginas", label: "Pagina's" },
       { to: "/admin/sponsors", label: "Sponsors" },
