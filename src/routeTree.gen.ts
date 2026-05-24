@@ -34,6 +34,7 @@ import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminInstellingenRouteImport } from './routes/_authenticated/admin.instellingen'
 import { Route as AuthenticatedAdminHomepageRouteImport } from './routes/_authenticated/admin.homepage'
 import { Route as AuthenticatedAdminGebruikersRouteImport } from './routes/_authenticated/admin.gebruikers'
+import { Route as AuthenticatedAdminBeeldEnGeluidRouteImport } from './routes/_authenticated/admin.beeld-en-geluid'
 import { Route as AuthenticatedAdminAgendaRouteImport } from './routes/_authenticated/admin.agenda'
 
 const SteunRoute = SteunRouteImport.update({
@@ -167,6 +168,12 @@ const AuthenticatedAdminGebruikersRoute =
     path: '/gebruikers',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminBeeldEnGeluidRoute =
+  AuthenticatedAdminBeeldEnGeluidRouteImport.update({
+    id: '/beeld-en-geluid',
+    path: '/beeld-en-geluid',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAgendaRoute =
   AuthenticatedAdminAgendaRouteImport.update({
     id: '/agenda',
@@ -190,6 +197,7 @@ export interface FileRoutesByFullPath {
   '/beeld-en-geluid/': typeof BeeldEnGeluidIndexRoute
   '/nieuws/': typeof NieuwsIndexRoute
   '/admin/agenda': typeof AuthenticatedAdminAgendaRoute
+  '/admin/beeld-en-geluid': typeof AuthenticatedAdminBeeldEnGeluidRoute
   '/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
@@ -216,6 +224,7 @@ export interface FileRoutesByTo {
   '/beeld-en-geluid': typeof BeeldEnGeluidIndexRoute
   '/nieuws': typeof NieuwsIndexRoute
   '/admin/agenda': typeof AuthenticatedAdminAgendaRoute
+  '/admin/beeld-en-geluid': typeof AuthenticatedAdminBeeldEnGeluidRoute
   '/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
@@ -245,6 +254,7 @@ export interface FileRoutesById {
   '/beeld-en-geluid/': typeof BeeldEnGeluidIndexRoute
   '/nieuws/': typeof NieuwsIndexRoute
   '/_authenticated/admin/agenda': typeof AuthenticatedAdminAgendaRoute
+  '/_authenticated/admin/beeld-en-geluid': typeof AuthenticatedAdminBeeldEnGeluidRoute
   '/_authenticated/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
   '/_authenticated/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/_authenticated/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
@@ -274,6 +284,7 @@ export interface FileRouteTypes {
     | '/beeld-en-geluid/'
     | '/nieuws/'
     | '/admin/agenda'
+    | '/admin/beeld-en-geluid'
     | '/admin/gebruikers'
     | '/admin/homepage'
     | '/admin/instellingen'
@@ -300,6 +311,7 @@ export interface FileRouteTypes {
     | '/beeld-en-geluid'
     | '/nieuws'
     | '/admin/agenda'
+    | '/admin/beeld-en-geluid'
     | '/admin/gebruikers'
     | '/admin/homepage'
     | '/admin/instellingen'
@@ -328,6 +340,7 @@ export interface FileRouteTypes {
     | '/beeld-en-geluid/'
     | '/nieuws/'
     | '/_authenticated/admin/agenda'
+    | '/_authenticated/admin/beeld-en-geluid'
     | '/_authenticated/admin/gebruikers'
     | '/_authenticated/admin/homepage'
     | '/_authenticated/admin/instellingen'
@@ -534,6 +547,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminGebruikersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/beeld-en-geluid': {
+      id: '/_authenticated/admin/beeld-en-geluid'
+      path: '/beeld-en-geluid'
+      fullPath: '/admin/beeld-en-geluid'
+      preLoaderRoute: typeof AuthenticatedAdminBeeldEnGeluidRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/agenda': {
       id: '/_authenticated/admin/agenda'
       path: '/agenda'
@@ -546,6 +566,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAgendaRoute: typeof AuthenticatedAdminAgendaRoute
+  AuthenticatedAdminBeeldEnGeluidRoute: typeof AuthenticatedAdminBeeldEnGeluidRoute
   AuthenticatedAdminGebruikersRoute: typeof AuthenticatedAdminGebruikersRoute
   AuthenticatedAdminHomepageRoute: typeof AuthenticatedAdminHomepageRoute
   AuthenticatedAdminInstellingenRoute: typeof AuthenticatedAdminInstellingenRoute
@@ -560,6 +581,7 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAgendaRoute: AuthenticatedAdminAgendaRoute,
+  AuthenticatedAdminBeeldEnGeluidRoute: AuthenticatedAdminBeeldEnGeluidRoute,
   AuthenticatedAdminGebruikersRoute: AuthenticatedAdminGebruikersRoute,
   AuthenticatedAdminHomepageRoute: AuthenticatedAdminHomepageRoute,
   AuthenticatedAdminInstellingenRoute: AuthenticatedAdminInstellingenRoute,
