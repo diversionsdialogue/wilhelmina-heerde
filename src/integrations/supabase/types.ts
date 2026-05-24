@@ -77,6 +77,89 @@ export type Database = {
         }
         Relationships: []
       }
+      media_album_photos: {
+        Row: {
+          album_id: string
+          caption: string | null
+          created_at: string
+          id: string
+          image_url: string
+          sort_order: number
+        }
+        Insert: {
+          album_id: string
+          caption?: string | null
+          created_at?: string
+          id?: string
+          image_url: string
+          sort_order?: number
+        }
+        Update: {
+          album_id?: string
+          caption?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_album_photos_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: false
+            referencedRelation: "media_albums"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      media_albums: {
+        Row: {
+          author_id: string | null
+          body_md: string | null
+          cover_image_url: string | null
+          created_at: string
+          excerpt: string | null
+          eyebrow: string | null
+          id: string
+          published_at: string | null
+          slug: string
+          status: Database["public"]["Enums"]["content_status"]
+          title: string
+          updated_at: string
+          youtube_url: string | null
+        }
+        Insert: {
+          author_id?: string | null
+          body_md?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          excerpt?: string | null
+          eyebrow?: string | null
+          id?: string
+          published_at?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["content_status"]
+          title: string
+          updated_at?: string
+          youtube_url?: string | null
+        }
+        Update: {
+          author_id?: string | null
+          body_md?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          excerpt?: string | null
+          eyebrow?: string | null
+          id?: string
+          published_at?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["content_status"]
+          title?: string
+          updated_at?: string
+          youtube_url?: string | null
+        }
+        Relationships: []
+      }
       news: {
         Row: {
           author_id: string | null
