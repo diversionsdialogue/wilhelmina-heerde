@@ -13,6 +13,7 @@ const colPrimary = [
   { to: "/optredens", label: "Agenda" },
   { to: "/over", label: "Over ons" },
   { to: "/nieuws", label: "Nieuws" },
+  { to: "/beeld-en-geluid", label: "Beeld en geluid" },
 ] as const;
 
 const colSecondary = [

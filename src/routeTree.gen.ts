@@ -19,8 +19,10 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as NieuwsIndexRouteImport } from './routes/nieuws.index'
+import { Route as BeeldEnGeluidIndexRouteImport } from './routes/beeld-en-geluid.index'
 import { Route as PSlugRouteImport } from './routes/p.$slug'
 import { Route as NieuwsSlugRouteImport } from './routes/nieuws.$slug'
+import { Route as BeeldEnGeluidSlugRouteImport } from './routes/beeld-en-geluid.$slug'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminSponsorsRouteImport } from './routes/_authenticated/admin.sponsors'
@@ -32,6 +34,7 @@ import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminInstellingenRouteImport } from './routes/_authenticated/admin.instellingen'
 import { Route as AuthenticatedAdminHomepageRouteImport } from './routes/_authenticated/admin.homepage'
 import { Route as AuthenticatedAdminGebruikersRouteImport } from './routes/_authenticated/admin.gebruikers'
+import { Route as AuthenticatedAdminBeeldEnGeluidRouteImport } from './routes/_authenticated/admin.beeld-en-geluid'
 import { Route as AuthenticatedAdminAgendaRouteImport } from './routes/_authenticated/admin.agenda'
 
 const SteunRoute = SteunRouteImport.update({
@@ -83,6 +86,11 @@ const NieuwsIndexRoute = NieuwsIndexRouteImport.update({
   path: '/nieuws/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BeeldEnGeluidIndexRoute = BeeldEnGeluidIndexRouteImport.update({
+  id: '/beeld-en-geluid/',
+  path: '/beeld-en-geluid/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PSlugRoute = PSlugRouteImport.update({
   id: '/p/$slug',
   path: '/p/$slug',
@@ -91,6 +99,11 @@ const PSlugRoute = PSlugRouteImport.update({
 const NieuwsSlugRoute = NieuwsSlugRouteImport.update({
   id: '/nieuws/$slug',
   path: '/nieuws/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BeeldEnGeluidSlugRoute = BeeldEnGeluidSlugRouteImport.update({
+  id: '/beeld-en-geluid/$slug',
+  path: '/beeld-en-geluid/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -155,6 +168,12 @@ const AuthenticatedAdminGebruikersRoute =
     path: '/gebruikers',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminBeeldEnGeluidRoute =
+  AuthenticatedAdminBeeldEnGeluidRouteImport.update({
+    id: '/beeld-en-geluid',
+    path: '/beeld-en-geluid',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAgendaRoute =
   AuthenticatedAdminAgendaRouteImport.update({
     id: '/agenda',
@@ -172,10 +191,13 @@ export interface FileRoutesByFullPath {
   '/quickscan': typeof QuickscanRoute
   '/steun': typeof SteunRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/beeld-en-geluid/$slug': typeof BeeldEnGeluidSlugRoute
   '/nieuws/$slug': typeof NieuwsSlugRoute
   '/p/$slug': typeof PSlugRoute
+  '/beeld-en-geluid/': typeof BeeldEnGeluidIndexRoute
   '/nieuws/': typeof NieuwsIndexRoute
   '/admin/agenda': typeof AuthenticatedAdminAgendaRoute
+  '/admin/beeld-en-geluid': typeof AuthenticatedAdminBeeldEnGeluidRoute
   '/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
@@ -196,10 +218,13 @@ export interface FileRoutesByTo {
   '/over': typeof OverRoute
   '/quickscan': typeof QuickscanRoute
   '/steun': typeof SteunRoute
+  '/beeld-en-geluid/$slug': typeof BeeldEnGeluidSlugRoute
   '/nieuws/$slug': typeof NieuwsSlugRoute
   '/p/$slug': typeof PSlugRoute
+  '/beeld-en-geluid': typeof BeeldEnGeluidIndexRoute
   '/nieuws': typeof NieuwsIndexRoute
   '/admin/agenda': typeof AuthenticatedAdminAgendaRoute
+  '/admin/beeld-en-geluid': typeof AuthenticatedAdminBeeldEnGeluidRoute
   '/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
@@ -223,10 +248,13 @@ export interface FileRoutesById {
   '/quickscan': typeof QuickscanRoute
   '/steun': typeof SteunRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/beeld-en-geluid/$slug': typeof BeeldEnGeluidSlugRoute
   '/nieuws/$slug': typeof NieuwsSlugRoute
   '/p/$slug': typeof PSlugRoute
+  '/beeld-en-geluid/': typeof BeeldEnGeluidIndexRoute
   '/nieuws/': typeof NieuwsIndexRoute
   '/_authenticated/admin/agenda': typeof AuthenticatedAdminAgendaRoute
+  '/_authenticated/admin/beeld-en-geluid': typeof AuthenticatedAdminBeeldEnGeluidRoute
   '/_authenticated/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
   '/_authenticated/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/_authenticated/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
@@ -250,10 +278,13 @@ export interface FileRouteTypes {
     | '/quickscan'
     | '/steun'
     | '/admin'
+    | '/beeld-en-geluid/$slug'
     | '/nieuws/$slug'
     | '/p/$slug'
+    | '/beeld-en-geluid/'
     | '/nieuws/'
     | '/admin/agenda'
+    | '/admin/beeld-en-geluid'
     | '/admin/gebruikers'
     | '/admin/homepage'
     | '/admin/instellingen'
@@ -274,10 +305,13 @@ export interface FileRouteTypes {
     | '/over'
     | '/quickscan'
     | '/steun'
+    | '/beeld-en-geluid/$slug'
     | '/nieuws/$slug'
     | '/p/$slug'
+    | '/beeld-en-geluid'
     | '/nieuws'
     | '/admin/agenda'
+    | '/admin/beeld-en-geluid'
     | '/admin/gebruikers'
     | '/admin/homepage'
     | '/admin/instellingen'
@@ -300,10 +334,13 @@ export interface FileRouteTypes {
     | '/quickscan'
     | '/steun'
     | '/_authenticated/admin'
+    | '/beeld-en-geluid/$slug'
     | '/nieuws/$slug'
     | '/p/$slug'
+    | '/beeld-en-geluid/'
     | '/nieuws/'
     | '/_authenticated/admin/agenda'
+    | '/_authenticated/admin/beeld-en-geluid'
     | '/_authenticated/admin/gebruikers'
     | '/_authenticated/admin/homepage'
     | '/_authenticated/admin/instellingen'
@@ -326,8 +363,10 @@ export interface RootRouteChildren {
   OverRoute: typeof OverRoute
   QuickscanRoute: typeof QuickscanRoute
   SteunRoute: typeof SteunRoute
+  BeeldEnGeluidSlugRoute: typeof BeeldEnGeluidSlugRoute
   NieuwsSlugRoute: typeof NieuwsSlugRoute
   PSlugRoute: typeof PSlugRoute
+  BeeldEnGeluidIndexRoute: typeof BeeldEnGeluidIndexRoute
   NieuwsIndexRoute: typeof NieuwsIndexRoute
 }
 
@@ -403,6 +442,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NieuwsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/beeld-en-geluid/': {
+      id: '/beeld-en-geluid/'
+      path: '/beeld-en-geluid'
+      fullPath: '/beeld-en-geluid/'
+      preLoaderRoute: typeof BeeldEnGeluidIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/p/$slug': {
       id: '/p/$slug'
       path: '/p/$slug'
@@ -415,6 +461,13 @@ declare module '@tanstack/react-router' {
       path: '/nieuws/$slug'
       fullPath: '/nieuws/$slug'
       preLoaderRoute: typeof NieuwsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/beeld-en-geluid/$slug': {
+      id: '/beeld-en-geluid/$slug'
+      path: '/beeld-en-geluid/$slug'
+      fullPath: '/beeld-en-geluid/$slug'
+      preLoaderRoute: typeof BeeldEnGeluidSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -494,6 +547,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminGebruikersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/beeld-en-geluid': {
+      id: '/_authenticated/admin/beeld-en-geluid'
+      path: '/beeld-en-geluid'
+      fullPath: '/admin/beeld-en-geluid'
+      preLoaderRoute: typeof AuthenticatedAdminBeeldEnGeluidRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/agenda': {
       id: '/_authenticated/admin/agenda'
       path: '/agenda'
@@ -506,6 +566,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAgendaRoute: typeof AuthenticatedAdminAgendaRoute
+  AuthenticatedAdminBeeldEnGeluidRoute: typeof AuthenticatedAdminBeeldEnGeluidRoute
   AuthenticatedAdminGebruikersRoute: typeof AuthenticatedAdminGebruikersRoute
   AuthenticatedAdminHomepageRoute: typeof AuthenticatedAdminHomepageRoute
   AuthenticatedAdminInstellingenRoute: typeof AuthenticatedAdminInstellingenRoute
@@ -520,6 +581,7 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAgendaRoute: AuthenticatedAdminAgendaRoute,
+  AuthenticatedAdminBeeldEnGeluidRoute: AuthenticatedAdminBeeldEnGeluidRoute,
   AuthenticatedAdminGebruikersRoute: AuthenticatedAdminGebruikersRoute,
   AuthenticatedAdminHomepageRoute: AuthenticatedAdminHomepageRoute,
   AuthenticatedAdminInstellingenRoute: AuthenticatedAdminInstellingenRoute,
@@ -557,20 +619,12 @@ const rootRouteChildren: RootRouteChildren = {
   OverRoute: OverRoute,
   QuickscanRoute: QuickscanRoute,
   SteunRoute: SteunRoute,
+  BeeldEnGeluidSlugRoute: BeeldEnGeluidSlugRoute,
   NieuwsSlugRoute: NieuwsSlugRoute,
   PSlugRoute: PSlugRoute,
+  BeeldEnGeluidIndexRoute: BeeldEnGeluidIndexRoute,
   NieuwsIndexRoute: NieuwsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
