@@ -11,7 +11,7 @@ type Props = {
 
 const colPrimary = [
   { to: "/optredens", label: "Agenda" },
-  { to: "/over", label: "Over ons" },
+  { to: "/p/$slug", params: { slug: "over-ons" }, label: "Over ons" },
   { to: "/nieuws", label: "Nieuws" },
   { to: "/beeld-en-geluid", label: "Beeld en geluid" },
 ] as const;
@@ -80,11 +80,17 @@ export function MobileMenu({ open, onClose }: Props) {
 
       <div className="w-megamenu__body">
         <nav className="w-megamenu__col w-megamenu__col--primary" aria-label="Hoofdsecties">
-          {colPrimary.map((n) => (
-            <Link key={n.label} to={n.to} onClick={onClose} className="w-megamenu__primary-link">
-              {n.label}
-            </Link>
-          ))}
+          {colPrimary.map((n) =>
+            "params" in n ? (
+              <Link key={n.label} to={n.to} params={n.params} onClick={onClose} className="w-megamenu__primary-link">
+                {n.label}
+              </Link>
+            ) : (
+              <Link key={n.label} to={n.to} onClick={onClose} className="w-megamenu__primary-link">
+                {n.label}
+              </Link>
+            )
+          )}
         </nav>
 
         <nav className="w-megamenu__col w-megamenu__col--secondary" aria-label="Vereniging">
