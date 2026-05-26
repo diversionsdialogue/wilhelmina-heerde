@@ -27,7 +27,6 @@ const colSecondary = [
 
 const colTertiary = [
   { slug: "sponsoren", label: "Onze sponsors" },
-  { slug: "contact", label: "Contact" },
 ] as const;
 
 export function MobileMenu({ open, onClose }: Props) {
@@ -117,6 +116,9 @@ export function MobileMenu({ open, onClose }: Props) {
               {n.label}
             </Link>
           ))}
+          <Link to="/contact" onClick={onClose} className="w-megamenu__link">
+            Contact
+          </Link>
         </nav>
 
         <a
