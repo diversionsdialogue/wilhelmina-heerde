@@ -19,6 +19,7 @@ const colPrimary = [
 const colSecondary = [
   { slug: "a-orkest", label: "Orkest" },
   { slug: "wilhelminaband", label: "Wilhelminaband" },
+  { slug: "wilhelmina-nieuw-talent", label: "Wilhelmina & Nieuw Talent" },
   { slug: "bestuur", label: "Bestuur" },
   { slug: "dirigent", label: "Dirigent" },
   { slug: "wilhelmina-nieuw-talent", label: "Opleiding" },
