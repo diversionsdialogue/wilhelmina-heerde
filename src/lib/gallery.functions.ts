@@ -103,7 +103,7 @@ const UpsertSchema = z.object({
   slug: z.string().min(1).max(120).optional().nullable(),
   title: z.string().min(1).max(200),
   eyebrow: z.string().max(120).nullable().optional(),
-  excerpt: z.string().max(500).nullable().optional(),
+  excerpt: z.string().max(2000).nullable().optional(),
   body_md: z.string().max(200_000).nullable().optional(),
   cover_image_url: z.string().url().max(2048).nullable().optional(),
   youtube_url: z.string().url().max(2048).nullable().optional(),
