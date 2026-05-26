@@ -26,7 +26,7 @@ const colSecondary = [
 ] as const;
 
 const colTertiary = [
-  { slug: "sponsoren", label: "Onze sponsors" },
+  { slug: "donateur-worden", label: "Donateur worden" },
 ] as const;
 
 function normalizeHref(href: string | null | undefined): string | undefined {
