@@ -109,17 +109,17 @@ export function MobileMenu({ open, onClose }: Props) {
             </Link>
           ))}
           <span className="w-megamenu__divider" aria-hidden="true" />
-          {colTertiary.map((n) => (
-            <Link
-              key={n.label}
-              to="/p/$slug"
-              params={{ slug: n.slug }}
-              onClick={onClose}
-              className="w-megamenu__link"
-            >
-              {n.label}
-            </Link>
-          ))}
+          {colTertiary.map((n) =>
+            "params" in n ? (
+              <Link key={n.label} to={n.to} params={n.params} onClick={onClose} className="w-megamenu__link">
+                {n.label}
+              </Link>
+            ) : (
+              <Link key={n.label} to={n.to} onClick={onClose} className="w-megamenu__link">
+                {n.label}
+              </Link>
+            )
+          )}
           <Link to="/contact" onClick={onClose} className="w-megamenu__link">
             Contact
           </Link>
