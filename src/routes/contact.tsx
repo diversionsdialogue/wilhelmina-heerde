@@ -56,15 +56,12 @@ function ContactPage() {
               <div className="w-contact__info-block">
                 <span className="w-contact__info-label">Repetitietijden</span>
                 <dl className="w-contact__hours">
-                  <div><dt>Orkest (maandag)</dt><dd>19:45 — 22:00</dd></div>
-                  <div><dt>Wilhelminaband</dt><dd>Op afspraak</dd></div>
-                  <div><dt>Leerlingenorkest</dt><dd>Op afspraak</dd></div>
+                  <div><dt>A-orkest (donderdag)</dt><dd>19:45 — 22:00</dd></div>
+                  <div><dt>Wilhelminaband (vrijdag)</dt><dd>17:30 — 18:15</dd></div>
+                  <div><dt>W&amp;NT (zaterdag)</dt><dd>14:00 — 16:30</dd></div>
                 </dl>
               </div>
 
-              <p className="w-contact__info-foot">
-                Koninklijk Fanfarekorps Wilhelmina · KvK 40101836 · ANBI-status.
-              </p>
             </aside>
 
             <form
