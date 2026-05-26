@@ -69,7 +69,7 @@ function HomePage() {
               "linear-gradient(180deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.45) 70%, rgba(0,0,0,0.8) 100%)",
           }}
         />
-        <div className="w-hero__diamonds" aria-hidden="true"><i /><i /><i /><i /></div>
+        
 
         <div className="w-hero__content is-in">
           {hero.eyebrow && <p className="w-hero__eyebrow">{hero.eyebrow}</p>}
