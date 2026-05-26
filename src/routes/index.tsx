@@ -251,42 +251,42 @@ function HomePage() {
           <path fill="#9B804A" d="M797.07,24.11c-25.22-2.72-46.95,6.93-48.53,21.55c-1.58,14.62,17.59,28.69,42.81,31.41 c6.95,0.75,13.61,0.53,19.68-0.44v153.3l-113.83,16.16V75.31c1.58-14.62-17.59-28.69-42.81-31.41 c-25.22-2.72-46.95,6.93-48.53,21.55c-1.58,14.62,17.59,28.69,42.81,31.41c6.95,0.75,13.61,0.53,19.68-0.44v153.76l-112.71,16 V96.46c1.58-14.62-17.59-28.69-42.81-31.41c-25.22-2.72-46.95,6.93-48.53,21.55c-1.58,14.62,17.59,28.69,42.81,31.41c6.95,0.75,13.61,0.53,19.68-0.44v152.71v38.84v40.71l313.08-40.71v-40.94v-42.35V55.52C841.46,40.89,822.29,26.83,797.07,24.11z" />
         </svg>
         <div className="w-fullbleed__inner">
-          <p className="w-fullbleed__eyebrow">— Ontdek</p>
-          <h2 className="w-fullbleed__title">Drie orkesten,<br />één traditie.</h2>
+          <p className="w-fullbleed__eyebrow">— Over ons</p>
+          <h2 className="w-fullbleed__title">Muziek in het hart<br />van Heerde.</h2>
           <p className="w-fullbleed__dek">
-            Wilhelmina in verhalen, beelden en muziek — van het fanfareorkest op het Wereld Muziek Concours tot de eerste repetitie van het leerlingenorkest.
+            Wilhelmina is een ondernemende club die Heerde laat bruisen. Van spraakmakende projecten zoals de Night of the Music tot het populaire Maestro: wij bezorgen ons dorp onvergetelijke momenten. Of we nu strijden om nationale titels of lokale feesten kleur geven, bij ons beleef je muziek op het hoogste niveau.
           </p>
-          <Link className="w-link-arrow w-link-arrow--light" to="/orkesten">
+          <Link className="w-link-arrow w-link-arrow--light" to="/p/$slug" params={{ slug: "over-ons" }}>
             <span className="w-link-arrow__bar" />
             Lees meer
           </Link>
         </div>
       </section>
 
-      {/* STEUN + LEERLINGENORKEST */}
-      <section className="w-section" id="steun">
+      {/* QUICKSCAN + DONATEUR */}
+      <section className="w-section" id="meedoen">
         <div className="w-container">
           <div className="w-promo-pair">
-            <Link className="w-promo2" to="/steun">
+            <Link className="w-promo2" to="/quickscan">
               <div className="w-promo2__photo ph--strings" aria-hidden="true" />
               <div className="w-promo2__scrim" aria-hidden="true" />
               <div className="w-promo2__inner">
-                <h3 className="w-promo2__title">Steun Wilhelmina</h3>
+                <h3 className="w-promo2__title">Quickscan: start met muziek maken</h3>
                 <p className="w-promo2__dek">
-                  Word vriend van de vereniging en draag bij aan de toekomst van de fanfaretraditie in Heerde — sinds 1898.
+                  Wil je ontdekken hoe jij muziek kunt maken bij Wilhelmina? Vul de scan in en ontdek alle mogelijkheden.
                 </p>
-                <span className="w-promo2__cta">Word vriend {arrow}</span>
+                <span className="w-promo2__cta">Start de quickscan {arrow}</span>
               </div>
             </Link>
-            <Link className="w-promo2" to="/orkesten">
+            <Link className="w-promo2" to="/p/$slug" params={{ slug: "donateur-worden" }}>
               <div className="w-promo2__photo w-promo2__photo--alt" aria-hidden="true" />
               <div className="w-promo2__scrim" aria-hidden="true" />
               <div className="w-promo2__inner">
-                <h3 className="w-promo2__title">Leerlingenorkest</h3>
+                <h3 className="w-promo2__title">Donateur worden</h3>
                 <p className="w-promo2__dek">
-                  Een vrijplaats voor jonge musici tussen 8 en 18 jaar uit Heerde en omgeving — wekelijks repetitie, jaarlijks twee concerten.
+                  Word donateur en draag bij aan de muzikale toekomst van Heerde.
                 </p>
-                <span className="w-promo2__cta">Meedoen {arrow}</span>
+                <span className="w-promo2__cta">Word donateur {arrow}</span>
               </div>
             </Link>
           </div>
