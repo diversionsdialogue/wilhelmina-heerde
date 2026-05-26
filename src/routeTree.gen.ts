@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SteunRouteImport } from './routes/steun'
 import { Route as QuickscanRouteImport } from './routes/quickscan'
-import { Route as OverRouteImport } from './routes/over'
 import { Route as OrkestenRouteImport } from './routes/orkesten'
 import { Route as OptredensRouteImport } from './routes/optredens'
 import { Route as LoginRouteImport } from './routes/login'
@@ -45,11 +44,6 @@ const SteunRoute = SteunRouteImport.update({
 const QuickscanRoute = QuickscanRouteImport.update({
   id: '/quickscan',
   path: '/quickscan',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OverRoute = OverRouteImport.update({
-  id: '/over',
-  path: '/over',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrkestenRoute = OrkestenRouteImport.update({
@@ -187,7 +181,6 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/optredens': typeof OptredensRoute
   '/orkesten': typeof OrkestenRoute
-  '/over': typeof OverRoute
   '/quickscan': typeof QuickscanRoute
   '/steun': typeof SteunRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -215,7 +208,6 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/optredens': typeof OptredensRoute
   '/orkesten': typeof OrkestenRoute
-  '/over': typeof OverRoute
   '/quickscan': typeof QuickscanRoute
   '/steun': typeof SteunRoute
   '/beeld-en-geluid/$slug': typeof BeeldEnGeluidSlugRoute
@@ -244,7 +236,6 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/optredens': typeof OptredensRoute
   '/orkesten': typeof OrkestenRoute
-  '/over': typeof OverRoute
   '/quickscan': typeof QuickscanRoute
   '/steun': typeof SteunRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -274,7 +265,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/optredens'
     | '/orkesten'
-    | '/over'
     | '/quickscan'
     | '/steun'
     | '/admin'
@@ -302,7 +292,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/optredens'
     | '/orkesten'
-    | '/over'
     | '/quickscan'
     | '/steun'
     | '/beeld-en-geluid/$slug'
@@ -330,7 +319,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/optredens'
     | '/orkesten'
-    | '/over'
     | '/quickscan'
     | '/steun'
     | '/_authenticated/admin'
@@ -360,7 +348,6 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   OptredensRoute: typeof OptredensRoute
   OrkestenRoute: typeof OrkestenRoute
-  OverRoute: typeof OverRoute
   QuickscanRoute: typeof QuickscanRoute
   SteunRoute: typeof SteunRoute
   BeeldEnGeluidSlugRoute: typeof BeeldEnGeluidSlugRoute
@@ -384,13 +371,6 @@ declare module '@tanstack/react-router' {
       path: '/quickscan'
       fullPath: '/quickscan'
       preLoaderRoute: typeof QuickscanRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/over': {
-      id: '/over'
-      path: '/over'
-      fullPath: '/over'
-      preLoaderRoute: typeof OverRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/orkesten': {
@@ -616,7 +596,6 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   OptredensRoute: OptredensRoute,
   OrkestenRoute: OrkestenRoute,
-  OverRoute: OverRoute,
   QuickscanRoute: QuickscanRoute,
   SteunRoute: SteunRoute,
   BeeldEnGeluidSlugRoute: BeeldEnGeluidSlugRoute,
@@ -628,3 +607,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
