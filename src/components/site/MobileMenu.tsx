@@ -74,9 +74,6 @@ export function MobileMenu({ open, onClose }: Props) {
         </Link>
         <div className="w-megamenu__topright">
           <Link to="/optredens" onClick={onClose}>Agenda</Link>
-          <button className="w-megamenu__icon" aria-label="Zoeken" type="button">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
-          </button>
           <button className="w-megamenu__icon" aria-label="Menu sluiten" type="button" onClick={onClose}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m18 6-12 12" /><path d="m6 6 12 12" /></svg>
           </button>
