@@ -11,7 +11,7 @@ type Props = {
 
 const colPrimary = [
   { to: "/optredens", label: "Agenda" },
-  { to: "/over", label: "Over ons" },
+  { to: "/p/$slug", params: { slug: "over-ons" }, label: "Over ons" },
   { to: "/nieuws", label: "Nieuws" },
   { to: "/beeld-en-geluid", label: "Beeld en geluid" },
 ] as const;
