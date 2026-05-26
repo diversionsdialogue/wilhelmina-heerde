@@ -22,14 +22,14 @@ export function SiteFooter(_props: Props) {
             <li><Link to="/p/$slug" params={{ slug: "wilhelminaband" }}>Wilhelminaband</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "bestuur" }}>Bestuur</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "oud-papier-inzameling" }}>Oud papier</Link></li>
-            <li><Link to="/p/$slug" params={{ slug: "contact" }}>Contact</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
           </ul>
 
           <ul className="w-footer__col">
-            <li><Link to="/p/$slug" params={{ slug: "opleiding" }}>Opleiding</Link></li>
+            <li><Link to="/p/$slug" params={{ slug: "wilhelmina-nieuw-talent" }}>Opleiding</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "lid-worden" }}>Lid worden</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "muziek-in-de-klas" }}>Meer muziek in de klas</Link></li>
-            <li><Link to="/p/$slug" params={{ slug: "sponsors" }}>Onze sponsors</Link></li>
+            <li><Link to="/p/$slug" params={{ slug: "sponsoren" }}>Onze sponsors</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "donateur-worden" }}>Donateur worden</Link></li>
           </ul>
 
@@ -44,11 +44,7 @@ export function SiteFooter(_props: Props) {
         <div className="w-footer__base">
           <span>© {new Date().getFullYear()} Koninklijk Fanfarekorps Wilhelmina, Heerde</span>
           <span className="w-footer__base-links">
-            <a href="#">Privacy</a>
-            <span aria-hidden="true">·</span>
-            <a href="#">Algemene voorwaarden</a>
-            <span aria-hidden="true">·</span>
-            <a href="#">Cookies</a>
+            <Link to="/p/$slug" params={{ slug: "privacy-policy-privacybeleid" }}>Privacy</Link>
           </span>
         </div>
       </div>

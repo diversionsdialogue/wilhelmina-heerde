@@ -102,19 +102,6 @@ function ContactPage() {
                 <input id="cf-phone" name="phone" type="tel" autoComplete="tel" />
               </div>
 
-              <div className="w-field w-field--select">
-                <label htmlFor="cf-topic">Hoe kunnen we je helpen?<span className="req">*</span></label>
-                <select id="cf-topic" name="topic" required defaultValue="">
-                  <option value="" disabled>Selecteer een onderwerp</option>
-                  <option>Algemene vraag</option>
-                  <option>Concertinformatie</option>
-                  <option>Lid worden</option>
-                  <option>Leerlingenorkest &amp; opleidingen</option>
-                  <option>Boeking / verhuur</option>
-                  <option>Donateur / sponsoring</option>
-                  <option>Pers</option>
-                </select>
-              </div>
 
               <div className="w-field">
                 <label htmlFor="cf-message">Bericht<span className="req">*</span></label>

@@ -27,8 +27,13 @@ const colSecondary = [
 
 const colTertiary = [
   { slug: "sponsoren", label: "Onze sponsors" },
-  { slug: "contact", label: "Contact" },
 ] as const;
+
+function normalizeHref(href: string | null | undefined): string | undefined {
+  if (!href) return undefined;
+  if (/^(https?:\/\/|\/|mailto:|tel:)/.test(href)) return href;
+  return `/p/${href.replace(/^\/+/, "")}`;
+}
 
 export function MobileMenu({ open, onClose }: Props) {
   const fetchBanner = useServerFn(getMenuBanner);
@@ -117,10 +122,13 @@ export function MobileMenu({ open, onClose }: Props) {
               {n.label}
             </Link>
           ))}
+          <Link to="/contact" onClick={onClose} className="w-megamenu__link">
+            Contact
+          </Link>
         </nav>
 
         <a
-          href={banner.data?.href || "/orkesten"}
+          href={normalizeHref(banner.data?.href) || "/orkesten"}
           onClick={onClose}
           className="w-megamenu__feature"
         >
