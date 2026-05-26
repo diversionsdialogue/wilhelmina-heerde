@@ -29,7 +29,7 @@ export function SiteFooter(_props: Props) {
             <li><Link to="/p/$slug" params={{ slug: "wilhelmina-nieuw-talent" }}>Opleiding</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "lid-worden" }}>Lid worden</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "muziek-in-de-klas" }}>Meer muziek in de klas</Link></li>
-            <li><Link to="/p/$slug" params={{ slug: "sponsoren" }}>Onze sponsors</Link></li>
+            <li><Link to="/sponsoren">Onze sponsors</Link></li>
             <li><Link to="/p/$slug" params={{ slug: "donateur-worden" }}>Donateur worden</Link></li>
           </ul>
 

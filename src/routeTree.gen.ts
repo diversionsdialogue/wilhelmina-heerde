@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SteunRouteImport } from './routes/steun'
+import { Route as SponsorenRouteImport } from './routes/sponsoren'
 import { Route as QuickscanRouteImport } from './routes/quickscan'
 import { Route as OrkestenRouteImport } from './routes/orkesten'
 import { Route as OptredensRouteImport } from './routes/optredens'
@@ -39,6 +40,11 @@ import { Route as AuthenticatedAdminAgendaRouteImport } from './routes/_authenti
 const SteunRoute = SteunRouteImport.update({
   id: '/steun',
   path: '/steun',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SponsorenRoute = SponsorenRouteImport.update({
+  id: '/sponsoren',
+  path: '/sponsoren',
   getParentRoute: () => rootRouteImport,
 } as any)
 const QuickscanRoute = QuickscanRouteImport.update({
@@ -182,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/optredens': typeof OptredensRoute
   '/orkesten': typeof OrkestenRoute
   '/quickscan': typeof QuickscanRoute
+  '/sponsoren': typeof SponsorenRoute
   '/steun': typeof SteunRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/beeld-en-geluid/$slug': typeof BeeldEnGeluidSlugRoute
@@ -209,6 +216,7 @@ export interface FileRoutesByTo {
   '/optredens': typeof OptredensRoute
   '/orkesten': typeof OrkestenRoute
   '/quickscan': typeof QuickscanRoute
+  '/sponsoren': typeof SponsorenRoute
   '/steun': typeof SteunRoute
   '/beeld-en-geluid/$slug': typeof BeeldEnGeluidSlugRoute
   '/nieuws/$slug': typeof NieuwsSlugRoute
@@ -237,6 +245,7 @@ export interface FileRoutesById {
   '/optredens': typeof OptredensRoute
   '/orkesten': typeof OrkestenRoute
   '/quickscan': typeof QuickscanRoute
+  '/sponsoren': typeof SponsorenRoute
   '/steun': typeof SteunRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/beeld-en-geluid/$slug': typeof BeeldEnGeluidSlugRoute
@@ -266,6 +275,7 @@ export interface FileRouteTypes {
     | '/optredens'
     | '/orkesten'
     | '/quickscan'
+    | '/sponsoren'
     | '/steun'
     | '/admin'
     | '/beeld-en-geluid/$slug'
@@ -293,6 +303,7 @@ export interface FileRouteTypes {
     | '/optredens'
     | '/orkesten'
     | '/quickscan'
+    | '/sponsoren'
     | '/steun'
     | '/beeld-en-geluid/$slug'
     | '/nieuws/$slug'
@@ -320,6 +331,7 @@ export interface FileRouteTypes {
     | '/optredens'
     | '/orkesten'
     | '/quickscan'
+    | '/sponsoren'
     | '/steun'
     | '/_authenticated/admin'
     | '/beeld-en-geluid/$slug'
@@ -349,6 +361,7 @@ export interface RootRouteChildren {
   OptredensRoute: typeof OptredensRoute
   OrkestenRoute: typeof OrkestenRoute
   QuickscanRoute: typeof QuickscanRoute
+  SponsorenRoute: typeof SponsorenRoute
   SteunRoute: typeof SteunRoute
   BeeldEnGeluidSlugRoute: typeof BeeldEnGeluidSlugRoute
   NieuwsSlugRoute: typeof NieuwsSlugRoute
@@ -364,6 +377,13 @@ declare module '@tanstack/react-router' {
       path: '/steun'
       fullPath: '/steun'
       preLoaderRoute: typeof SteunRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sponsoren': {
+      id: '/sponsoren'
+      path: '/sponsoren'
+      fullPath: '/sponsoren'
+      preLoaderRoute: typeof SponsorenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/quickscan': {
@@ -597,6 +617,7 @@ const rootRouteChildren: RootRouteChildren = {
   OptredensRoute: OptredensRoute,
   OrkestenRoute: OrkestenRoute,
   QuickscanRoute: QuickscanRoute,
+  SponsorenRoute: SponsorenRoute,
   SteunRoute: SteunRoute,
   BeeldEnGeluidSlugRoute: BeeldEnGeluidSlugRoute,
   NieuwsSlugRoute: NieuwsSlugRoute,

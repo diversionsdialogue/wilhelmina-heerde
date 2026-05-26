@@ -26,7 +26,8 @@ const colSecondary = [
 ] as const;
 
 const colTertiary = [
-  { slug: "sponsoren", label: "Onze sponsors" },
+  { to: "/p/$slug", params: { slug: "donateur-worden" }, label: "Donateur worden" },
+  { to: "/sponsoren", label: "Onze sponsors" },
 ] as const;
 
 function normalizeHref(href: string | null | undefined): string | undefined {
@@ -108,17 +109,17 @@ export function MobileMenu({ open, onClose }: Props) {
             </Link>
           ))}
           <span className="w-megamenu__divider" aria-hidden="true" />
-          {colTertiary.map((n) => (
-            <Link
-              key={n.label}
-              to="/p/$slug"
-              params={{ slug: n.slug }}
-              onClick={onClose}
-              className="w-megamenu__link"
-            >
-              {n.label}
-            </Link>
-          ))}
+          {colTertiary.map((n) =>
+            "params" in n ? (
+              <Link key={n.label} to={n.to} params={n.params} onClick={onClose} className="w-megamenu__link">
+                {n.label}
+              </Link>
+            ) : (
+              <Link key={n.label} to={n.to} onClick={onClose} className="w-megamenu__link">
+                {n.label}
+              </Link>
+            )
+          )}
           <Link to="/contact" onClick={onClose} className="w-megamenu__link">
             Contact
           </Link>
