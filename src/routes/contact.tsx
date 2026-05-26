@@ -115,7 +115,6 @@ function ContactPage() {
                 <button className="w-btn w-btn--primary w-contact__submit" type="submit">
                   Verzenden
                 </button>
-                <small>Wij reageren binnen twee werkdagen. Velden met * zijn verplicht.</small>
               </div>
 
               <div className="w-contact__sent" role="status" aria-live="polite">
