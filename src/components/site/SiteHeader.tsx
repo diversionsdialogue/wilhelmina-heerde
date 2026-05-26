@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import logoWhite from "@/assets/wilhelmina-logo-white.png";
+import logoWhite from "@/assets/wilhelmina-logo-gold.svg";
 
 type Props = {
   overDark?: boolean;
