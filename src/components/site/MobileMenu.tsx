@@ -23,8 +23,6 @@ const colSecondary = [
   { slug: "hessenbloazers", label: "Hessenbloazers" },
   { slug: "bestuur", label: "Bestuur" },
   { slug: "dirigent", label: "Dirigent" },
-  { slug: "wilhelmina-nieuw-talent", label: "Opleiding" },
-  { slug: "lid-worden", label: "Lid worden" },
 ] as const;
 
 const colTertiary = [
