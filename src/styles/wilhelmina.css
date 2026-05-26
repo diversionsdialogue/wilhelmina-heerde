@@ -2143,6 +2143,132 @@ img { display: block; max-width: 100%; }
 .w-contact__form.is-sent .w-contact__sent { display: block; }
 
 /* ============================================================
+   CONTACT — Header + split (light info / dark form)
+   ============================================================ */
+.w-contact__header { max-width: 760px; margin: 0 0 clamp(40px, 5vw, 64px); }
+.w-contact__header .w-contact__title { margin-bottom: 20px; }
+.w-contact__header .w-contact__lead { margin-bottom: 0; }
+
+.w-contact__split {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 0;
+  border: 1px solid var(--w-ink-15);
+  background: var(--w-bg-warm);
+}
+@media (max-width: 900px) {
+  .w-contact__split { grid-template-columns: 1fr; }
+}
+
+.w-contact__info {
+  padding: clamp(28px, 4vw, 48px);
+  background: var(--w-bg-sand, var(--w-bg-warm));
+  display: flex; flex-direction: column; gap: 22px;
+}
+.w-contact__info-title {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: clamp(24px, 2.4vw, 30px);
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+  color: var(--w-black);
+}
+.w-contact__info-block { display: flex; flex-direction: column; gap: 6px; }
+.w-contact__info-label {
+  font-family: var(--font-accent);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--w-ink-50);
+}
+.w-contact__info-value {
+  font-family: var(--font-primary);
+  font-weight: 500;
+  font-size: 20px;
+  color: var(--w-black);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
+  align-self: flex-start;
+}
+.w-contact__info-value:hover { color: var(--w-gold); border-bottom-color: var(--w-gold); }
+.w-contact__info-text {
+  font-family: var(--font-primary);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--w-black);
+  margin: 0;
+}
+.w-contact__info-rule { border: 0; border-top: 1px solid var(--w-ink-15); margin: 6px 0; }
+.w-contact__hours { margin: 4px 0 0; display: flex; flex-direction: column; gap: 8px; }
+.w-contact__hours > div {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+  font-family: var(--font-primary);
+  font-size: 15px;
+  color: var(--w-black);
+}
+.w-contact__hours dt { color: var(--w-ink-70); }
+.w-contact__hours dd { margin: 0; font-variant-numeric: tabular-nums; }
+.w-contact__info-foot {
+  margin-top: auto;
+  font-family: var(--font-secondary);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--w-ink-50);
+}
+
+/* Dark form card on the right */
+.w-contact__split .w-contact__form {
+  background: var(--w-black);
+  border: 0;
+  padding: clamp(28px, 4vw, 48px);
+}
+.w-contact__split .w-contact__form::before { display: none; }
+.w-contact__split .w-field label { color: rgba(255,255,255,0.7); }
+.w-contact__split .w-field input,
+.w-contact__split .w-field textarea,
+.w-contact__split .w-field select {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.12);
+  color: var(--w-white);
+}
+.w-contact__split .w-field input:hover,
+.w-contact__split .w-field textarea:hover,
+.w-contact__split .w-field select:hover { border-color: rgba(255,255,255,0.28); }
+.w-contact__split .w-field input:focus,
+.w-contact__split .w-field textarea:focus,
+.w-contact__split .w-field select:focus {
+  border-color: var(--w-gold);
+  background: rgba(255,255,255,0.06);
+}
+.w-contact__split .w-field input::placeholder,
+.w-contact__split .w-field textarea::placeholder { color: rgba(255,255,255,0.4); }
+.w-contact__split .w-field--select::after {
+  border-color: rgba(255,255,255,0.6);
+}
+.w-contact__split .w-field--check { color: rgba(255,255,255,0.7); }
+.w-contact__split .w-field--check span.box {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.25);
+}
+.w-contact__split .w-field--check a { color: var(--w-white); }
+.w-contact__split .w-contact__submit {
+  width: 100%;
+  justify-content: center;
+  background: var(--w-gold);
+  color: var(--w-black);
+  padding: 16px 24px;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+}
+.w-contact__split .w-contact__form-actions { flex-direction: column; align-items: stretch; gap: 12px; }
+.w-contact__split .w-contact__form-actions small {
+  color: rgba(255,255,255,0.55);
+  text-align: center;
+}
+
+
+/* ============================================================
    CONTACT — Locatie band
    ============================================================ */
 
