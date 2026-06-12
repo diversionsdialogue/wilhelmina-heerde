@@ -58,9 +58,8 @@ function MailboxPage() {
                 {query.data?.rows.map((r) => {
                   const open = openId === r.id;
                   return (
-                    <>
+                    <Fragment key={r.id}>
                       <tr
-                        key={r.id}
                         onClick={() => setOpenId(open ? null : r.id)}
                         style={{ borderTop: "1px solid #eee", cursor: "pointer", background: open ? "#fafaf8" : "transparent" }}
                       >
