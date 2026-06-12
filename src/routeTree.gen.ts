@@ -31,6 +31,7 @@ import { Route as AuthenticatedAdminPaginasRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminNieuwsRouteImport } from './routes/_authenticated/admin.nieuws'
 import { Route as AuthenticatedAdminMenuRouteImport } from './routes/_authenticated/admin.menu'
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
+import { Route as AuthenticatedAdminMailboxRouteImport } from './routes/_authenticated/admin.mailbox'
 import { Route as AuthenticatedAdminInstellingenRouteImport } from './routes/_authenticated/admin.instellingen'
 import { Route as AuthenticatedAdminHomepageRouteImport } from './routes/_authenticated/admin.homepage'
 import { Route as AuthenticatedAdminGebruikersRouteImport } from './routes/_authenticated/admin.gebruikers'
@@ -150,6 +151,12 @@ const AuthenticatedAdminMediaRoute = AuthenticatedAdminMediaRouteImport.update({
   path: '/media',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminMailboxRoute =
+  AuthenticatedAdminMailboxRouteImport.update({
+    id: '/mailbox',
+    path: '/mailbox',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminInstellingenRoute =
   AuthenticatedAdminInstellingenRouteImport.update({
     id: '/instellingen',
@@ -201,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
+  '/admin/mailbox': typeof AuthenticatedAdminMailboxRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/menu': typeof AuthenticatedAdminMenuRoute
   '/admin/nieuws': typeof AuthenticatedAdminNieuwsRoute
@@ -228,6 +236,7 @@ export interface FileRoutesByTo {
   '/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
+  '/admin/mailbox': typeof AuthenticatedAdminMailboxRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/menu': typeof AuthenticatedAdminMenuRoute
   '/admin/nieuws': typeof AuthenticatedAdminNieuwsRoute
@@ -258,6 +267,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
   '/_authenticated/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/_authenticated/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
+  '/_authenticated/admin/mailbox': typeof AuthenticatedAdminMailboxRoute
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/menu': typeof AuthenticatedAdminMenuRoute
   '/_authenticated/admin/nieuws': typeof AuthenticatedAdminNieuwsRoute
@@ -288,6 +298,7 @@ export interface FileRouteTypes {
     | '/admin/gebruikers'
     | '/admin/homepage'
     | '/admin/instellingen'
+    | '/admin/mailbox'
     | '/admin/media'
     | '/admin/menu'
     | '/admin/nieuws'
@@ -315,6 +326,7 @@ export interface FileRouteTypes {
     | '/admin/gebruikers'
     | '/admin/homepage'
     | '/admin/instellingen'
+    | '/admin/mailbox'
     | '/admin/media'
     | '/admin/menu'
     | '/admin/nieuws'
@@ -344,6 +356,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/gebruikers'
     | '/_authenticated/admin/homepage'
     | '/_authenticated/admin/instellingen'
+    | '/_authenticated/admin/mailbox'
     | '/_authenticated/admin/media'
     | '/_authenticated/admin/menu'
     | '/_authenticated/admin/nieuws'
@@ -526,6 +539,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMediaRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/mailbox': {
+      id: '/_authenticated/admin/mailbox'
+      path: '/mailbox'
+      fullPath: '/admin/mailbox'
+      preLoaderRoute: typeof AuthenticatedAdminMailboxRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/instellingen': {
       id: '/_authenticated/admin/instellingen'
       path: '/instellingen'
@@ -570,6 +590,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminGebruikersRoute: typeof AuthenticatedAdminGebruikersRoute
   AuthenticatedAdminHomepageRoute: typeof AuthenticatedAdminHomepageRoute
   AuthenticatedAdminInstellingenRoute: typeof AuthenticatedAdminInstellingenRoute
+  AuthenticatedAdminMailboxRoute: typeof AuthenticatedAdminMailboxRoute
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
   AuthenticatedAdminMenuRoute: typeof AuthenticatedAdminMenuRoute
   AuthenticatedAdminNieuwsRoute: typeof AuthenticatedAdminNieuwsRoute
@@ -585,6 +606,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminGebruikersRoute: AuthenticatedAdminGebruikersRoute,
   AuthenticatedAdminHomepageRoute: AuthenticatedAdminHomepageRoute,
   AuthenticatedAdminInstellingenRoute: AuthenticatedAdminInstellingenRoute,
+  AuthenticatedAdminMailboxRoute: AuthenticatedAdminMailboxRoute,
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
   AuthenticatedAdminMenuRoute: AuthenticatedAdminMenuRoute,
   AuthenticatedAdminNieuwsRoute: AuthenticatedAdminNieuwsRoute,
