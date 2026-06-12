@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { submitContact } from "@/lib/contact.functions";
@@ -21,6 +21,7 @@ function ContactPage() {
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const startedAtRef = useRef<number>(Date.now());
   return (
     <SiteLayout>
       <section className="w-contact">
@@ -91,6 +92,8 @@ function ContactPage() {
                       phone: String(fd.get("phone") ?? "") || null,
                       message: String(fd.get("message") ?? ""),
                       consent: true,
+                      website: String(fd.get("website") ?? ""),
+                      started_at: startedAtRef.current,
                     },
                   });
                   setSent(true);
@@ -133,6 +136,17 @@ function ContactPage() {
                 <input id="cf-phone" name="phone" type="tel" autoComplete="tel" />
               </div>
 
+
+              
+              {/* Honeypot — verborgen veld voor bots */}
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                style={{ position: "absolute", left: "-10000px", width: 1, height: 1, opacity: 0 }}
+              />
 
               <div className="w-field">
                 <label htmlFor="cf-message">Bericht<span className="req">*</span></label>

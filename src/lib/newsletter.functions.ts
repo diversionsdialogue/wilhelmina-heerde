@@ -6,20 +6,52 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 const BREVO_LIST_ID = 3;
 const BREVO_GATEWAY_URL = "https://connector-gateway.lovable.dev/brevo";
 
+const MIN_FILL_MS = 1_500;
+const MAX_FILL_MS = 6 * 60 * 60 * 1000;
+const RATE_LIMIT_PER_HOUR = 5;
+
 const Schema = z.object({
   email: z.string().trim().toLowerCase().email().max(255),
   source: z.string().trim().max(100).optional().nullable(),
+  website: z.string().max(0).optional().nullable(), // honeypot
+  started_at: z.number().int().positive(),
 });
 
 export const subscribeNewsletter = createServerFn({ method: "POST" })
   .inputValidator((input) => Schema.parse(input))
   .handler(async ({ data }) => {
+    // Honeypot
+    if (data.website && data.website.length > 0) {
+      return { ok: true as const };
+    }
+
+    // Min-time check
+    const elapsed = Date.now() - data.started_at;
+    if (elapsed < MIN_FILL_MS || elapsed > MAX_FILL_MS) {
+      return { ok: true as const };
+    }
+
     const userAgent = getRequestHeader("user-agent") ?? null;
     let ip: string | null = null;
     try {
       ip = getRequestIP({ xForwardedFor: true }) ?? null;
     } catch {
       ip = null;
+    }
+
+    // Rate limit per IP (laatste uur)
+    if (ip) {
+      const sinceIso = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+      const { count } = await supabaseAdmin
+        .from("newsletter_subscribers")
+        .select("id", { count: "exact", head: true })
+        .eq("ip", ip)
+        .gte("created_at", sinceIso);
+      if ((count ?? 0) >= RATE_LIMIT_PER_HOUR) {
+        throw new Error(
+          "Te veel aanmeldingen vanaf dit netwerk. Probeer het later opnieuw.",
+        );
+      }
     }
 
     // Upsert in eigen DB (uniek op lower(email))

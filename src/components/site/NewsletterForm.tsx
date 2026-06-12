@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { subscribeNewsletter } from "@/lib/newsletter.functions";
 
 export function NewsletterForm({ source = "homepage" }: { source?: string }) {
   const subscribe = useServerFn(subscribeNewsletter);
   const [email, setEmail] = useState("");
+  const [website, setWebsite] = useState(""); // honeypot
+  const startedAtRef = useRef<number>(Date.now());
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -25,7 +27,14 @@ export function NewsletterForm({ source = "homepage" }: { source?: string }) {
         }
         setSubmitting(true);
         try {
-          await subscribe({ data: { email: value, source } });
+          await subscribe({
+            data: {
+              email: value,
+              source,
+              website,
+              started_at: startedAtRef.current,
+            },
+          });
           setSent(true);
         } catch (err) {
           setErrorMsg(
@@ -47,6 +56,17 @@ export function NewsletterForm({ source = "homepage" }: { source?: string }) {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         disabled={submitting || sent}
+      />
+      {/* Honeypot — verborgen voor mensen, ingevuld door bots */}
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        value={website}
+        onChange={(e) => setWebsite(e.target.value)}
+        style={{ position: "absolute", left: "-10000px", width: 1, height: 1, opacity: 0 }}
+        aria-hidden="true"
       />
       <button className="w-news__submit" type="submit" disabled={submitting || sent}>
         {sent ? "Verzonden ✓" : submitting ? "Versturen…" : (

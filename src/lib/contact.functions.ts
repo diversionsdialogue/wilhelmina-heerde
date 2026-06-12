@@ -6,6 +6,11 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 const N8N_WEBHOOK_URL =
   "https://diversions-connect-u67534.vm.elestio.app/webhook/c952ba94-63c9-4b88-81ac-d1858f2d545b";
 
+const MIN_FILL_MS = 2_000; // bots versturen instant
+const MAX_FILL_MS = 6 * 60 * 60 * 1000; // 6u — verlopen sessies weren
+const RATE_LIMIT_PER_HOUR = 3;
+const DEDUP_WINDOW_MS = 24 * 60 * 60 * 1000;
+
 const Schema = z.object({
   first_name: z.string().trim().min(1).max(100),
   last_name: z.string().trim().min(1).max(100),
@@ -13,17 +18,61 @@ const Schema = z.object({
   phone: z.string().trim().max(50).optional().nullable(),
   message: z.string().trim().min(1).max(4000),
   consent: z.literal(true),
+  // anti-spam (client-meegegeven)
+  website: z.string().max(0).optional().nullable(), // honeypot — moet leeg zijn
+  started_at: z.number().int().positive(),
 });
 
 export const submitContact = createServerFn({ method: "POST" })
   .inputValidator((input) => Schema.parse(input))
   .handler(async ({ data }) => {
+    // 1) Honeypot
+    if (data.website && data.website.length > 0) {
+      // Stilletjes "ok" teruggeven om bots geen feedback te geven
+      return { ok: true as const };
+    }
+
+    // 2) Min-time check
+    const elapsed = Date.now() - data.started_at;
+    if (elapsed < MIN_FILL_MS || elapsed > MAX_FILL_MS) {
+      return { ok: true as const };
+    }
+
     const userAgent = getRequestHeader("user-agent") ?? null;
     let ip: string | null = null;
     try {
       ip = getRequestIP({ xForwardedFor: true }) ?? null;
     } catch {
       ip = null;
+    }
+
+    // 3) Rate limit per IP (laatste uur)
+    if (ip) {
+      const sinceIso = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+      const { count } = await supabaseAdmin
+        .from("contact_submissions")
+        .select("id", { count: "exact", head: true })
+        .eq("ip", ip)
+        .gte("created_at", sinceIso);
+      if ((count ?? 0) >= RATE_LIMIT_PER_HOUR) {
+        throw new Error(
+          "Je hebt recent al een bericht verstuurd. Wacht even voordat je opnieuw probeert.",
+        );
+      }
+    }
+
+    // 4) Deduplicatie — zelfde email + bericht in laatste 24u
+    const dedupSince = new Date(Date.now() - DEDUP_WINDOW_MS).toISOString();
+    const { data: dup } = await supabaseAdmin
+      .from("contact_submissions")
+      .select("id")
+      .eq("email", data.email)
+      .eq("message", data.message)
+      .gte("created_at", dedupSince)
+      .limit(1)
+      .maybeSingle();
+    if (dup) {
+      return { ok: true as const };
     }
 
     const { data: inserted, error } = await supabaseAdmin
