@@ -56,6 +56,51 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_submissions: {
+        Row: {
+          consent: boolean
+          created_at: string
+          email: string
+          first_name: string
+          forwarded_to_n8n: boolean
+          id: string
+          ip: string | null
+          last_name: string
+          message: string
+          n8n_error: string | null
+          phone: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          consent?: boolean
+          created_at?: string
+          email: string
+          first_name: string
+          forwarded_to_n8n?: boolean
+          id?: string
+          ip?: string | null
+          last_name: string
+          message: string
+          n8n_error?: string | null
+          phone?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          consent?: boolean
+          created_at?: string
+          email?: string
+          first_name?: string
+          forwarded_to_n8n?: boolean
+          id?: string
+          ip?: string | null
+          last_name?: string
+          message?: string
+          n8n_error?: string | null
+          phone?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       home_sections: {
         Row: {
           key: string

@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { SiteLayout } from "@/components/site/SiteLayout";
+import { submitContact } from "@/lib/contact.functions";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -15,7 +17,10 @@ export const Route = createFileRoute("/contact")({
 });
 
 function ContactPage() {
+  const submit = useServerFn(submitContact);
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   return (
     <SiteLayout>
       <section className="w-contact">
@@ -66,18 +71,47 @@ function ContactPage() {
 
             <form
               className={`w-contact__form${sent ? " is-sent" : ""}`}
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
                 const form = e.currentTarget;
                 if (!form.checkValidity()) {
                   form.reportValidity();
                   return;
                 }
-                setSent(true);
-                window.scrollTo({ top: form.offsetTop - 100, behavior: "smooth" });
+                if (submitting) return;
+                const fd = new FormData(form);
+                setSubmitting(true);
+                setErrorMsg(null);
+                try {
+                  await submit({
+                    data: {
+                      first_name: String(fd.get("first_name") ?? ""),
+                      last_name: String(fd.get("last_name") ?? ""),
+                      email: String(fd.get("email") ?? ""),
+                      phone: String(fd.get("phone") ?? "") || null,
+                      message: String(fd.get("message") ?? ""),
+                      consent: true,
+                    },
+                  });
+                  setSent(true);
+                  window.scrollTo({ top: form.offsetTop - 100, behavior: "smooth" });
+                } catch (err) {
+                  setErrorMsg(
+                    err instanceof Error
+                      ? err.message
+                      : "Er ging iets mis bij het versturen. Probeer het later opnieuw of mail ons direct.",
+                  );
+                } finally {
+                  setSubmitting(false);
+                }
               }}
               noValidate
             >
+              {errorMsg && (
+                <div className="w-contact__error" role="alert">
+                  {errorMsg}
+                </div>
+              )}
               <div className="w-field w-field--row">
                 <div className="w-field">
                   <label htmlFor="cf-first">Voornaam<span className="req">*</span></label>
@@ -106,14 +140,14 @@ function ContactPage() {
               </div>
 
               <label className="w-field--check">
-                <input type="checkbox" id="cf-consent" required />
+                <input type="checkbox" id="cf-consent" name="consent" required />
                 <span className="box" aria-hidden="true" />
                 <span>Ik ga akkoord met de verwerking van mijn gegevens conform de <a href="#">privacyverklaring</a>.</span>
               </label>
 
               <div className="w-contact__form-actions">
-                <button className="w-btn w-btn--primary w-contact__submit" type="submit">
-                  Verzenden
+                <button className="w-btn w-btn--primary w-contact__submit" type="submit" disabled={submitting}>
+                  {submitting ? "Verzenden…" : "Verzenden"}
                 </button>
               </div>
 
