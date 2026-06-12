@@ -49,9 +49,18 @@ export const submitContact = createServerFn({ method: "POST" })
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10_000);
     try {
+      const webhookSecret = process.env.N8N_CONTACT_WEBHOOK_SECRET ?? "";
       const res = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(webhookSecret
+            ? {
+                "X-Webhook-Secret": webhookSecret,
+                Authorization: `Bearer ${webhookSecret}`,
+              }
+            : {}),
+        },
         body: JSON.stringify({
           submission_id: inserted.id,
           created_at: inserted.created_at,
