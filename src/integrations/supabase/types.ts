@@ -253,6 +253,42 @@ export type Database = {
         }
         Relationships: []
       }
+      newsletter_subscribers: {
+        Row: {
+          brevo_error: string | null
+          brevo_synced: boolean
+          created_at: string
+          email: string
+          id: string
+          ip: string | null
+          source: string | null
+          updated_at: string
+          user_agent: string | null
+        }
+        Insert: {
+          brevo_error?: string | null
+          brevo_synced?: boolean
+          created_at?: string
+          email: string
+          id?: string
+          ip?: string | null
+          source?: string | null
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Update: {
+          brevo_error?: string | null
+          brevo_synced?: boolean
+          created_at?: string
+          email?: string
+          id?: string
+          ip?: string | null
+          source?: string | null
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       pages: {
         Row: {
           author_id: string | null
