@@ -137,7 +137,7 @@ function ContactPage() {
               </div>
 
 
-              <input type="tel" name="phone" id="cf-phone" autoComplete="tel" hidden style={{ display: "none" }} aria-hidden="true" tabIndex={-1} />
+              
               {/* Honeypot — verborgen veld voor bots */}
               <input
                 type="text"
