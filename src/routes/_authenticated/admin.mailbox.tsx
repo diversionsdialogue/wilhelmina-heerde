@@ -127,15 +127,87 @@ function MailboxPage() {
         )}
       </section>
 
-      <section style={{ ...card, marginTop: 20 }}>
-        <header style={{ marginBottom: 8 }}>
-          <h2 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>E-mailabonnees</h2>
-        </header>
-        <p style={{ fontSize: 14, color: "#666", margin: 0 }}>
-          Wordt geactiveerd zodra de koppeling met Brevo is gelegd. Hier verschijnen dan de aangemelde abonnees met datum en status.
-        </p>
-      </section>
+      <NewsletterSection />
     </AdminPage>
+  );
+}
+
+function NewsletterSection() {
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+  const fetchList = useServerFn(listNewsletterSubscribers);
+
+  const query = useQuery({
+    queryKey: ["mailbox-newsletter", page],
+    queryFn: () => fetchList({ data: { page, pageSize } }),
+  });
+
+  const totalPages = query.data ? Math.max(1, Math.ceil(query.data.total / pageSize)) : 1;
+
+  return (
+    <section style={{ ...card, marginTop: 20 }}>
+      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 14 }}>
+        <h2 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>E-mailabonnees</h2>
+        <span style={{ fontSize: 13, color: "#666" }}>
+          {query.data ? `${query.data.total} totaal` : ""}
+        </span>
+      </header>
+
+      {query.isLoading ? (
+        <p style={{ color: "#666", fontSize: 14 }}>Laden…</p>
+      ) : query.error ? (
+        <p style={{ color: "#b91c1c", fontSize: 14 }}>Kon abonnees niet laden.</p>
+      ) : query.data && query.data.rows.length === 0 ? (
+        <p style={{ color: "#666", fontSize: 14 }}>Nog geen aanmeldingen.</p>
+      ) : (
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+            <thead>
+              <tr style={{ textAlign: "left", color: "#666", fontSize: 12, textTransform: "uppercase", letterSpacing: ".05em" }}>
+                <th style={th}>Datum</th>
+                <th style={th}>E-mail</th>
+                <th style={th}>Bron</th>
+                <th style={th}>Brevo</th>
+              </tr>
+            </thead>
+            <tbody>
+              {query.data?.rows.map((r) => (
+                <tr key={r.id} style={{ borderTop: "1px solid #eee" }}>
+                  <td style={td}>{formatDutchDate(r.created_at)}</td>
+                  <td style={td}>
+                    <a href={`mailto:${r.email}`} style={{ color: "#0d0d0d" }}>{r.email}</a>
+                  </td>
+                  <td style={td}>{r.source ?? "—"}</td>
+                  <td style={td}>
+                    {r.brevo_synced ? (
+                      <span style={{ ...badge, background: "#dcfce7", color: "#166534" }}>OK</span>
+                    ) : r.brevo_error ? (
+                      <span title={r.brevo_error} style={{ ...badge, background: "#fee2e2", color: "#991b1b" }}>Fout</span>
+                    ) : (
+                      <span style={{ ...badge, background: "#f1f5f9", color: "#475569" }}>—</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {query.data && query.data.total > pageSize && (
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 16 }}>
+          <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} style={pagerBtn(page <= 1)}>
+            ← Vorige
+          </button>
+          <span style={{ fontSize: 13, color: "#666" }}>
+            Pagina {page} van {totalPages}
+          </span>
+          <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page >= totalPages} style={pagerBtn(page >= totalPages)}>
+            Volgende →
+          </button>
+        </div>
+      )}
+    </section>
   );
 }
 
