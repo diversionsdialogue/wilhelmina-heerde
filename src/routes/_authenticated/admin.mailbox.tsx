@@ -3,7 +3,7 @@ import { Fragment, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { AdminPage } from "@/components/admin/AdminPage";
-import { listContactSubmissions } from "@/lib/mailbox.functions";
+import { listContactSubmissions, listNewsletterSubscribers } from "@/lib/mailbox.functions";
 import { formatDutchDate } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/admin/mailbox")({
