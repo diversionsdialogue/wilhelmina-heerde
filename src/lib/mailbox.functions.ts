@@ -38,3 +38,34 @@ export const listContactSubmissions = createServerFn({ method: "POST" })
       pageSize: data.pageSize,
     };
   });
+
+export const listNewsletterSubscribers = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => ListSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    const { data: isEditor } = await context.supabase.rpc("is_content_editor", {
+      _user_id: context.userId,
+    });
+    if (!isEditor) throw new Error("Forbidden");
+
+    const from = (data.page - 1) * data.pageSize;
+    const to = from + data.pageSize - 1;
+
+    const { data: rows, count, error } = await supabaseAdmin
+      .from("newsletter_subscribers")
+      .select(
+        "id, created_at, email, source, brevo_synced, brevo_error",
+        { count: "exact" },
+      )
+      .order("created_at", { ascending: false })
+      .range(from, to);
+
+    if (error) throw error;
+
+    return {
+      rows: rows ?? [],
+      total: count ?? 0,
+      page: data.page,
+      pageSize: data.pageSize,
+    };
+  });
