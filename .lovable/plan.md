@@ -1,44 +1,37 @@
-# Contactformulier afhandeling
-
 ## Doel
-Inzendingen via `/contact` worden:
-1. Opgeslagen in Lovable Cloud (tabel `contact_submissions`) — zodat niets verloren gaat als n8n offline is.
-2. Direct doorgestuurd naar de n8n webhook:
-   `https://diversions-connect-u67534.vm.elestio.app/webhook/c952ba94-63c9-4b88-81ac-d1858f2d545b`
+Het nieuwsbriefformulier ("Schrijf je in voor onze nieuwsbrief") koppelen aan Brevo (lijst-ID **3**), met single opt-in en een eigen logboek in de database.
 
-## Wijzigingen
+## Stappen
 
-### 1. Database
-Nieuwe tabel `public.contact_submissions`:
-- `id` (uuid, pk)
-- `created_at` (timestamptz)
-- `first_name`, `last_name`, `email`, `phone`, `message` (text)
-- `consent` (boolean)
-- `forwarded_to_n8n` (boolean) — true als webhook 2xx teruggaf
-- `n8n_error` (text, nullable) — foutmelding als doorsturen faalde
-- `user_agent`, `ip` (text, nullable) — voor spam-debug
+1. **Brevo koppelen** via de Lovable connector-popup (`standard_connectors--connect` met `brevo`). Jij selecteert/maakt de connectie in een veilig venster — daar plak je de API-key. Er wordt automatisch een `BREVO_API_KEY` secret aangemaakt; geen handmatig kopiëren nodig.
 
-RLS:
-- INSERT toegestaan voor `anon` + `authenticated` (publiek formulier).
-- SELECT/UPDATE/DELETE alleen voor admin (`has_role(auth.uid(),'admin')`).
-- GRANTs conform projectstandaard.
+2. **Database — nieuwe tabel** `newsletter_subscribers`:
+   - velden: `email`, `source` (bijv. "homepage"), `brevo_synced` (bool), `brevo_error` (text), `user_agent`, `ip`
+   - RLS: `anon`/`authenticated` mogen INSERT; alleen admins mogen SELECT/UPDATE/DELETE
+   - `service_role` ALL
+   - unieke index op `lower(email)` zodat dubbele aanmeldingen netjes geüpdatet worden
 
-### 2. Server function (`src/lib/contact.functions.ts`)
-`submitContact` — `createServerFn` POST:
-- Zod-validatie: voornaam/achternaam 1–100, email geldig ≤255, bericht 1–4000, telefoon optioneel ≤50, consent verplicht `true`.
-- Insert via `supabaseAdmin` in `contact_submissions` (bypass RLS, controle staat in validatie).
-- `fetch(N8N_WEBHOOK_URL, { method: 'POST', body: JSON.stringify({...velden, submission_id, created_at}) })` met 10s timeout.
-- Op succes → update rij `forwarded_to_n8n = true`. Bij fout → `n8n_error` invullen, maar **geen** error naar de gebruiker (data is veilig opgeslagen).
-- Retour: `{ ok: true }`.
+3. **Server function** `src/lib/newsletter.functions.ts` → `subscribeNewsletter`:
+   - Zod-validatie (geldig e-mailadres, ≤255)
+   - Insert/upsert in `newsletter_subscribers` via `supabaseAdmin`
+   - `POST https://connector-gateway.lovable.dev/brevo/contacts` met `{ email, listIds: [3], updateEnabled: true }`, headers `Authorization: Bearer LOVABLE_API_KEY` + `X-Connection-Api-Key: BREVO_API_KEY`
+   - Bij succes: `brevo_synced = true`. Bij fout: `brevo_error` invullen maar gebruiker toch een vriendelijke melding tonen (lead is bewaard).
+   - 10s timeout, foutafhandeling per HTTP-status
 
-### 3. Formulier (`src/routes/contact.tsx`)
-- `useServerFn(submitContact)` aanroepen in `onSubmit`.
-- Loading-state op de submit-knop ("Verzenden…").
-- Bij succes huidige `is-sent` bevestiging tonen; bij netwerkfout een nette foutmelding boven het formulier.
+4. **`NewsletterForm` component** koppelen aan de server function via `useServerFn`:
+   - states: `submitting`, `sent`, `errorMsg`
+   - knop disable tijdens submit, succesmelding tonen
+   - hydration-mismatch (LastPass-icon) oplossen met `suppressHydrationWarning` op het juiste niveau / e-mail input `autoComplete="email"` + form `noValidate`
 
-## Beveiliging webhook
-De n8n-URL bevat al een UUID-token (publiek, maar onraadbaar). Geen extra secret-header toegevoegd — kan later eenvoudig met een `CONTACT_WEBHOOK_SECRET` in Lovable Cloud + verify-node in n8n.
+5. **Admin Mailbox** — bestaande sectie "E-mailabonnees" vullen:
+   - `listNewsletterSubscribers` server function (paginering 10/p, admin-only via `is_content_editor`)
+   - tabel met e-mail, datum, Brevo-status (badge OK/Fout/—), bron
+   - foutmelding tonen bij hover/uitklap
 
-## Niet in scope
-- Admin-overzichtspagina van inzendingen (kan in een volgende stap).
-- Bevestigingsmail naar de inzender (gebruikt e-maildomein; aparte vervolgvraag).
+## Technisch
+- Geen edge function nodig — alles via `createServerFn`.
+- Brevo-aanroep gaat door de Lovable connector-gateway, dus de API-key blijft server-side versleuteld; je hoeft hem nergens in code te zetten.
+- Lijst-ID `3` zet ik als constante bovenin de server function, makkelijk aan te passen.
+
+## Wat ik van je nodig heb
+Niets meer in chat — zodra je op "Implement plan" klikt, opent er straks een popup waar je de Brevo-connectie kiest of de API-key plakt. Daarna draait de rest automatisch.
