@@ -125,7 +125,7 @@ function HomePage() {
                 <Link key={c.id} className="w-card" to="/optredens">
                   <div className="w-card__media">
                     {c.image_url ? (
-                      <img src={c.image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                      <img src={c.image_url} alt="" loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                     ) : (
                       <span className="ph ph--strings" aria-hidden="true" />
                     )}
