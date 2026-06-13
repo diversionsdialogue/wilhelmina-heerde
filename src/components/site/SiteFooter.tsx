@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import noirLogo from "@/assets/wilhelmina-noir.svg";
 
