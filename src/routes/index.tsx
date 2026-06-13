@@ -30,7 +30,7 @@ export const Route = createFileRoute("/")({
         rel: "preload",
         as: "image",
         href: "https://wuteknilahqymkocgiir.supabase.co/storage/v1/object/public/news-media/lammert-niessing-is-wilhelminas-maestro-2025/Koninklijk-Fanfarekorps-Wilhelmina",
-        fetchpriority: "high",
+        fetchPriority: "high",
       },
     ],
   }),
@@ -46,6 +46,7 @@ const DATE_FMT = new Intl.DateTimeFormat("nl-NL", {
   day: "numeric",
   month: "short",
   year: "numeric",
+  timeZone: "UTC",
 });
 function formatAgendaDate(iso: string) {
   return DATE_FMT.format(new Date(iso)).replace(/\.$/, "");

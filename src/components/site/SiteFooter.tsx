@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import noirLogo from "@/assets/wilhelmina-noir.svg";
 
@@ -8,6 +9,10 @@ type Props = {
 };
 
 export function SiteFooter(_props: Props) {
+  const [year, setYear] = useState<number>(2026);
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
 
   return (
     <footer className="w-footer">
@@ -42,7 +47,7 @@ export function SiteFooter(_props: Props) {
         </div>
 
         <div className="w-footer__base">
-          <span>© {new Date().getFullYear()} Koninklijk Fanfarekorps Wilhelmina, Heerde</span>
+          <span>© {year} Koninklijk Fanfarekorps Wilhelmina, Heerde</span>
           <span className="w-footer__base-links">
             <Link to="/p/$slug" params={{ slug: "privacy-policy-privacybeleid" }}>Privacy</Link>
           </span>
