@@ -233,7 +233,7 @@ function HomePage() {
                   <Link key={n.id} className="w-card" to="/nieuws/$slug" params={{ slug: n.slug }}>
                     <div className="w-edcard__media">
                       {n.cover_image_url ? (
-                        <img src={n.cover_image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                        <img src={n.cover_image_url} alt="" loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                       ) : (
                         <span className={`ph ${n.cover_placeholder || "ph--score"}`} aria-hidden="true" />
                       )}
