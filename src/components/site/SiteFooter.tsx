@@ -47,7 +47,7 @@ export function SiteFooter(_props: Props) {
         </div>
 
         <div className="w-footer__base">
-          <span>© {new Date().getFullYear()} Koninklijk Fanfarekorps Wilhelmina, Heerde</span>
+          <span>© {year} Koninklijk Fanfarekorps Wilhelmina, Heerde</span>
           <span className="w-footer__base-links">
             <Link to="/p/$slug" params={{ slug: "privacy-policy-privacybeleid" }}>Privacy</Link>
           </span>
