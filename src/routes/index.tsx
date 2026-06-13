@@ -46,6 +46,7 @@ const DATE_FMT = new Intl.DateTimeFormat("nl-NL", {
   day: "numeric",
   month: "short",
   year: "numeric",
+  timeZone: "UTC",
 });
 function formatAgendaDate(iso: string) {
   return DATE_FMT.format(new Date(iso)).replace(/\.$/, "");
