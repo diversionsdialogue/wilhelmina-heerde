@@ -30,7 +30,7 @@ export const Route = createFileRoute("/")({
         rel: "preload",
         as: "image",
         href: "https://wuteknilahqymkocgiir.supabase.co/storage/v1/object/public/news-media/lammert-niessing-is-wilhelminas-maestro-2025/Koninklijk-Fanfarekorps-Wilhelmina",
-        fetchpriority: "high",
+        fetchPriority: "high",
       },
     ],
   }),
