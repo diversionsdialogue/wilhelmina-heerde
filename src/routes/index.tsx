@@ -24,7 +24,15 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: "Sinds 1898 het muzikale hart van Heerde. Drie orkesten, ruim tachtig musici, één traditie." },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "icon", href: "/assets/wilhelmina-mark-gold.svg" }],
+    links: [
+      { rel: "icon", href: "/assets/wilhelmina-mark-gold.svg" },
+      {
+        rel: "preload",
+        as: "image",
+        href: "https://wuteknilahqymkocgiir.supabase.co/storage/v1/object/public/news-media/lammert-niessing-is-wilhelminas-maestro-2025/Koninklijk-Fanfarekorps-Wilhelmina",
+        fetchpriority: "high",
+      },
+    ],
   }),
   component: HomePage,
 });
