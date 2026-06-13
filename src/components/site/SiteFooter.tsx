@@ -9,6 +9,10 @@ type Props = {
 };
 
 export function SiteFooter(_props: Props) {
+  const [year, setYear] = useState<number>(2026);
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
 
   return (
     <footer className="w-footer">
