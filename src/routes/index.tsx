@@ -24,7 +24,15 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: "Sinds 1898 het muzikale hart van Heerde. Drie orkesten, ruim tachtig musici, één traditie." },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "icon", href: "/assets/wilhelmina-mark-gold.svg" }],
+    links: [
+      { rel: "icon", href: "/assets/wilhelmina-mark-gold.svg" },
+      {
+        rel: "preload",
+        as: "image",
+        href: "https://wuteknilahqymkocgiir.supabase.co/storage/v1/object/public/news-media/lammert-niessing-is-wilhelminas-maestro-2025/Koninklijk-Fanfarekorps-Wilhelmina",
+        fetchpriority: "high",
+      },
+    ],
   }),
   component: HomePage,
 });
@@ -117,7 +125,7 @@ function HomePage() {
                 <Link key={c.id} className="w-card" to="/optredens">
                   <div className="w-card__media">
                     {c.image_url ? (
-                      <img src={c.image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                      <img src={c.image_url} alt="" loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                     ) : (
                       <span className="ph ph--strings" aria-hidden="true" />
                     )}
@@ -225,7 +233,7 @@ function HomePage() {
                   <Link key={n.id} className="w-card" to="/nieuws/$slug" params={{ slug: n.slug }}>
                     <div className="w-edcard__media">
                       {n.cover_image_url ? (
-                        <img src={n.cover_image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                        <img src={n.cover_image_url} alt="" loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                       ) : (
                         <span className={`ph ${n.cover_placeholder || "ph--score"}`} aria-hidden="true" />
                       )}
