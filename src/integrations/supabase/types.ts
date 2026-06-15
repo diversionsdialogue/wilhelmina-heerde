@@ -289,6 +289,36 @@ export type Database = {
         }
         Relationships: []
       }
+      not_found_log: {
+        Row: {
+          first_seen_at: string
+          hit_count: number
+          id: string
+          last_referrer: string | null
+          last_seen_at: string
+          last_user_agent: string | null
+          path: string
+        }
+        Insert: {
+          first_seen_at?: string
+          hit_count?: number
+          id?: string
+          last_referrer?: string | null
+          last_seen_at?: string
+          last_user_agent?: string | null
+          path: string
+        }
+        Update: {
+          first_seen_at?: string
+          hit_count?: number
+          id?: string
+          last_referrer?: string | null
+          last_seen_at?: string
+          last_user_agent?: string | null
+          path?: string
+        }
+        Relationships: []
+      }
       pages: {
         Row: {
           author_id: string | null
