@@ -1540,6 +1540,43 @@ img { display: block; max-width: 100%; }
 .w-article__body em { font-style: italic; }
 .w-article__body strong { font-weight: 600; color: var(--w-black); }
 
+.w-article__body h2,
+.w-article__body h3,
+.w-article__body h4 {
+  font-family: var(--font-primary);
+  color: var(--w-black);
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 1.6em 0 0.6em;
+  text-wrap: balance;
+}
+.w-article__body h2 { font-size: clamp(24px, 2.4vw, 30px); letter-spacing: -0.01em; }
+.w-article__body h3 { font-size: clamp(20px, 2vw, 23px); letter-spacing: -0.005em; }
+.w-article__body h4 { font-size: 18px; }
+
+.w-article__body ul,
+.w-article__body ol {
+  font-family: var(--font-text);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--w-ink-90);
+  margin: 0 0 24px;
+  padding-left: 1.4em;
+}
+.w-article__body ul { list-style: disc; }
+.w-article__body ol { list-style: decimal; }
+.w-article__body li { margin: 0 0 8px; }
+.w-article__body li::marker { color: var(--w-gold); }
+.w-article__body li > p { margin: 0 0 8px; }
+
+.w-article__body a {
+  color: var(--w-black);
+  text-decoration: underline;
+  text-decoration-color: var(--w-gold);
+  text-underline-offset: 3px;
+}
+.w-article__body a:hover { color: var(--w-gold); }
+
 /* Inline pull quote inside the column */
 .w-article__quote {
   margin: 40px auto;
