@@ -126,7 +126,7 @@ function Page() {
       const path = `${crypto.randomUUID()}.${ext}`;
       const { error } = await supabase.storage
         .from("agenda-media")
-        .upload(path, blob, { upsert: false, contentType });
+        .upload(path, blob, { upsert: false, contentType, cacheControl: "31536000" });
       if (error) throw error;
       const { data } = supabase.storage.from("agenda-media").getPublicUrl(path);
       setDraft((d) => ({ ...d, image_url: data.publicUrl }));

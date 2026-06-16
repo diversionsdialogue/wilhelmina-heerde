@@ -130,7 +130,7 @@ export const uploadMediaFile = createServerFn({ method: "POST" })
     const bytes = Uint8Array.from(atob(data.dataBase64), (c) => c.charCodeAt(0));
     const { error } = await supabaseAdmin.storage
       .from(data.bucket)
-      .upload(path, bytes, { contentType: data.contentType, upsert: data.upsert });
+      .upload(path, bytes, { contentType: data.contentType, upsert: data.upsert, cacheControl: "31536000" });
     if (error) throw error;
     const { data: pub } = supabaseAdmin.storage.from(data.bucket).getPublicUrl(path);
     return { ok: true, path, publicUrl: pub.publicUrl };
@@ -155,7 +155,7 @@ export const replaceMediaFile = createServerFn({ method: "POST" })
     const bytes = Uint8Array.from(atob(data.dataBase64), (c) => c.charCodeAt(0));
     const { error: upErr } = await supabaseAdmin.storage
       .from(data.bucket)
-      .upload(newPath, bytes, { contentType: data.contentType, upsert: true });
+      .upload(newPath, bytes, { contentType: data.contentType, upsert: true, cacheControl: "31536000" });
     if (upErr) throw upErr;
     if (data.deleteOriginal && newPath !== data.path) {
       const { error: delErr } = await supabaseAdmin.storage.from(data.bucket).remove([data.path]);
