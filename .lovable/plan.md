@@ -1,40 +1,65 @@
 ## Doel
-De PageSpeed-melding "Inefficiënte cachebeleid" oplossen voor twee groepen requests:
-1. Eigen lettertypes (`/fonts/*.woff2`) — geen Cache-Control header.
-2. Afbeeldingen uit Supabase Storage (sponsors/agenda/menu/nieuws/pagina-media) — slechts 1 uur TTL.
+Op `/admin` echte bezoekersstatistieken tonen (in plaats van placeholders), via een eigen lichte, cookieloze tracker. Privacy-vriendelijk: geen persoonlijke data, IP wordt gehasht, geen cookies.
 
-## Wat ik ga doen
+## Stappen
 
-### 1. Fonts via Vite bundelen (immutable cache)
-- Verplaats `public/fonts/*.woff2` naar `src/styles/fonts/`.
-- Pas `src/styles/design-tokens.css` aan zodat `@font-face` verwijst naar `./fonts/Roboto-Regular.woff2` enz. (relatief). Vite hasht ze dan en serveert met `Cache-Control: public, max-age=31536000, immutable`.
-- Werk de twee `<link rel="preload">` in `src/routes/__root.tsx` bij. Omdat de naam dan hashed is, importeer ik de fonts in het rootbestand als `?url` en geef die URL door aan de preload-links.
+### 1. Database — `page_views` tabel
+Nieuwe migratie:
+- `id uuid pk`
+- `created_at timestamptz default now()`
+- `path text` (bv. `/agenda`)
+- `referrer text` (host van referrer, of `direct`)
+- `session_id text` (random id, 30 min sliding, in `sessionStorage` — geen cookie)
+- `visitor_hash text` (sha256 van IP + user-agent + dag-salt, server-side berekend — niet herleidbaar)
+- `device text` (`mobile` | `tablet` | `desktop`)
+- `country text` (optioneel via Cloudflare header `cf-ipcountry`)
+- Indexen op `created_at`, `path`
 
-Effect: fonts gaan van "geen cache" naar 1 jaar immutable, en wijzigingen zijn veilig dankzij de hash.
+RLS:
+- INSERT toegestaan voor `anon` + `authenticated` (tracker werkt voor iedereen)
+- SELECT alleen voor admin/content_manager (via `has_role`)
+- GRANTs: `INSERT TO anon, authenticated`, `SELECT TO authenticated`, `ALL TO service_role`
 
-### 2. Nieuwe Supabase uploads met lange Cache-Control
-In alle bestaande upload-aanroepen `cacheControl: "31536000"` toevoegen (1 jaar):
-- `src/routes/_authenticated/admin.sponsors.tsx`
-- `src/routes/_authenticated/admin.paginas.tsx`
-- `src/routes/_authenticated/admin.nieuws.tsx`
-- `src/routes/_authenticated/admin.menu.tsx`
-- `src/routes/_authenticated/admin.beeld-en-geluid.tsx`
-- `src/routes/_authenticated/admin.agenda.tsx`
-- `src/lib/media.functions.ts` (2 calls)
+### 2. Server endpoint — `POST /api/public/track`
+Server route (geen auth, snel, fire-and-forget):
+- Leest `path`, `referrer`, `session_id`, `device` uit body
+- Berekent `visitor_hash` server-side uit `cf-connecting-ip` + UA + dagelijks roterend salt
+- Leest `cf-ipcountry` header
+- Schrijft één regel via `supabaseAdmin` 
+- Skipt bot-UA's en admin/auth paden
+- Retourneert 204 direct
 
-De bestandsnamen in storage zijn al uniek (UUID / slug), dus 1 jaar cache is veilig — bij vervangen wordt sowieso een nieuwe key gegenereerd.
+### 3. Client tracker
+Klein script in `src/routes/__root.tsx` dat luistert op route-changes (`router.subscribe('onResolved')`):
+- Sla niet op voor `/admin*`, `/auth*`, `/api*`
+- Haal of maak `session_id` (sessionStorage, TTL 30 min)
+- Bepaal device via viewport
+- `navigator.sendBeacon('/api/public/track', …)` zodat het niet blokkeert
 
-### 3. Bestaande afbeeldingen backfillen
-Bestaande objecten in storage houden hun oude `cache-control: max-age=3600` metadata. Ik voeg een admin-only server function toe (`src/lib/storage-cache.functions.ts`) die per bucket alle objecten doorloopt en de metadata bijwerkt door het bestand te downloaden en opnieuw te uploaden met `upsert: true` + nieuwe `cacheControl`. Plus een knop "Cache-headers vernieuwen" op de pagina **Beheer → Instellingen** (admin-only) die deze functie aanroept en voortgang toont.
+### 4. Aggregatie-server functies (`src/lib/analytics.functions.ts`)
+Authenticated (`requireSupabaseAuth` + rolcheck content editor):
+- `getDashboardStats(period)` → unieke bezoekers, pageviews, gem. pageviews/sessie, bouncerate
+- `getViewsTimeseries(period)` → dagelijkse reeks voor de grafiek
+- `getTopPages(period)` → top 10 paden
+- `getTrafficSources(period)` → groepering op referrer-host (Google, Facebook, direct, …)
+- `getDeviceBreakdown(period)` → mobile/tablet/desktop %
+- `getRecentActivity()` → laatste 20 pageviews
 
-Buckets die meegenomen worden: `sponsor-logos`, `agenda-media`, `menu-media`, `paginas-media`, `nieuws-media`, `beeld-en-geluid-media` (ik check de exacte bucketnamen tijdens implementatie).
+### 5. Admin dashboard activeren
+`src/routes/_authenticated/admin.index.tsx` herschrijven:
+- Periode-filter (`today` / `7d` / `30d` / `90d` / `year`) blijft, plus delta tov vorige periode
+- 4 stat-cards met echte cijfers + delta
+- Grafiek via bestaande chart-component (recharts) op timeseries
+- 4 panels (top pagina's, bronnen, apparaten, recente activiteit) met echte data
+- "Cache legen" knop blijft
 
-Dit hoef je maar één keer te draaien; daarna zorgen de aangepaste upload-calls automatisch voor de juiste header.
+## Privacy-noot
+Geen cookies, geen profielvorming, IP wordt nooit opgeslagen — alleen een dagelijks roterende hash. Voldoet aan AVG zonder cookiemelding.
 
-## Wat ik NIET aanraak
-- De CSS-bundel (`styles-…css`) — die wordt al immutable gecached, het render-blocking issue daarvan is een aparte discussie.
-- Supabase project- of bucketinstellingen.
-- Bestaande pagina-layouts of styling.
-
-## Vragen vooraf
-Geen — als je akkoord bent, voer ik het uit. De backfill-knop kun je daarna één keer indrukken vanuit Beheer → Instellingen.
+## Bestanden
+- nieuw: migratie `page_views` + RLS + GRANTs
+- nieuw: `src/routes/api/public/track.ts`
+- nieuw: `src/lib/analytics.functions.ts`
+- nieuw: `src/components/admin/AnalyticsChart.tsx`
+- gewijzigd: `src/routes/__root.tsx` (tracker)
+- gewijzigd: `src/routes/_authenticated/admin.index.tsx` (echte data)

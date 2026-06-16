@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect } from "react";
 import {
   Outlet,
   Link,
@@ -115,6 +116,85 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const SESSION_KEY = "wh_sid";
+    const SESSION_TS = "wh_sid_ts";
+    const SESSION_TTL = 30 * 60 * 1000;
+
+    function getSessionId(): string {
+      try {
+        const now = Date.now();
+        const existing = sessionStorage.getItem(SESSION_KEY);
+        const ts = Number(sessionStorage.getItem(SESSION_TS) ?? 0);
+        if (existing && now - ts < SESSION_TTL) {
+          sessionStorage.setItem(SESSION_TS, String(now));
+          return existing;
+        }
+        const id = (crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)).replace(/-/g, "");
+        sessionStorage.setItem(SESSION_KEY, id);
+        sessionStorage.setItem(SESSION_TS, String(now));
+        return id;
+      } catch {
+        return "anon";
+      }
+    }
+
+    function getDevice(): "mobile" | "tablet" | "desktop" {
+      const w = window.innerWidth;
+      if (w < 640) return "mobile";
+      if (w < 1024) return "tablet";
+      return "desktop";
+    }
+
+    let lastPath = "";
+    function send(path: string) {
+      if (!path || path === lastPath) return;
+      if (
+        path.startsWith("/admin") ||
+        path.startsWith("/auth") ||
+        path.startsWith("/login") ||
+        path.startsWith("/api") ||
+        path.startsWith("/_")
+      )
+        return;
+      lastPath = path;
+      const payload = JSON.stringify({
+        path,
+        referrer: document.referrer || null,
+        session_id: getSessionId(),
+        device: getDevice(),
+      });
+      try {
+        const blob = new Blob([payload], { type: "application/json" });
+        const ok = navigator.sendBeacon?.("/api/public/track", blob);
+        if (!ok) {
+          fetch("/api/public/track", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: payload,
+            keepalive: true,
+          }).catch(() => {});
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+
+    // Initial pageview
+    send(window.location.pathname);
+
+    const unsub = router.subscribe("onResolved", (e) => {
+      const path = e.toLocation?.pathname ?? window.location.pathname;
+      send(path);
+    });
+    return () => {
+      unsub();
+    };
+  }, [router]);
 
   return (
     <QueryClientProvider client={queryClient}>

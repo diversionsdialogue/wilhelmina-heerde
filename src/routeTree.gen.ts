@@ -27,6 +27,7 @@ import { Route as NieuwsSlugRouteImport } from './routes/nieuws.$slug'
 import { Route as BeeldEnGeluidSlugRouteImport } from './routes/beeld-en-geluid.$slug'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as ApiPublicTrackRouteImport } from './routes/api/public/track'
 import { Route as AuthenticatedAdminSponsorsRouteImport } from './routes/_authenticated/admin.sponsors'
 import { Route as AuthenticatedAdminRedirectsRouteImport } from './routes/_authenticated/admin.redirects'
 import { Route as AuthenticatedAdminPaginasRouteImport } from './routes/_authenticated/admin.paginas'
@@ -129,6 +130,11 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const ApiPublicTrackRoute = ApiPublicTrackRouteImport.update({
+  id: '/api/public/track',
+  path: '/api/public/track',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminSponsorsRoute =
   AuthenticatedAdminSponsorsRouteImport.update({
     id: '/sponsors',
@@ -229,6 +235,7 @@ export interface FileRoutesByFullPath {
   '/admin/paginas': typeof AuthenticatedAdminPaginasRoute
   '/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
   '/admin/sponsors': typeof AuthenticatedAdminSponsorsRoute
+  '/api/public/track': typeof ApiPublicTrackRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -259,6 +266,7 @@ export interface FileRoutesByTo {
   '/admin/paginas': typeof AuthenticatedAdminPaginasRoute
   '/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
   '/admin/sponsors': typeof AuthenticatedAdminSponsorsRoute
+  '/api/public/track': typeof ApiPublicTrackRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
@@ -292,6 +300,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/paginas': typeof AuthenticatedAdminPaginasRoute
   '/_authenticated/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
   '/_authenticated/admin/sponsors': typeof AuthenticatedAdminSponsorsRoute
+  '/api/public/track': typeof ApiPublicTrackRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -325,6 +334,7 @@ export interface FileRouteTypes {
     | '/admin/paginas'
     | '/admin/redirects'
     | '/admin/sponsors'
+    | '/api/public/track'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -355,6 +365,7 @@ export interface FileRouteTypes {
     | '/admin/paginas'
     | '/admin/redirects'
     | '/admin/sponsors'
+    | '/api/public/track'
     | '/admin'
   id:
     | '__root__'
@@ -387,6 +398,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/paginas'
     | '/_authenticated/admin/redirects'
     | '/_authenticated/admin/sponsors'
+    | '/api/public/track'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -407,6 +419,7 @@ export interface RootRouteChildren {
   PSlugRoute: typeof PSlugRoute
   BeeldEnGeluidIndexRoute: typeof BeeldEnGeluidIndexRoute
   NieuwsIndexRoute: typeof NieuwsIndexRoute
+  ApiPublicTrackRoute: typeof ApiPublicTrackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -536,6 +549,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/api/public/track': {
+      id: '/api/public/track'
+      path: '/api/public/track'
+      fullPath: '/api/public/track'
+      preLoaderRoute: typeof ApiPublicTrackRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin/sponsors': {
       id: '/_authenticated/admin/sponsors'
@@ -688,6 +708,7 @@ const rootRouteChildren: RootRouteChildren = {
   PSlugRoute: PSlugRoute,
   BeeldEnGeluidIndexRoute: BeeldEnGeluidIndexRoute,
   NieuwsIndexRoute: NieuwsIndexRoute,
+  ApiPublicTrackRoute: ApiPublicTrackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
