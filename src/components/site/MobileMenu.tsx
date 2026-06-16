@@ -20,7 +20,7 @@ const colSecondary = [
   { slug: "a-orkest", label: "Orkest" },
   { slug: "wilhelminaband", label: "Wilhelminaband" },
   { slug: "wilhelmina-nieuw-talent", label: "Wilhelmina & Nieuw Talent" },
-  { slug: "hessenbloazers", label: "Hessenbloazers" },
+  { slug: "hessenblazers", label: "Hessenblazers" },
   { slug: "bestuur", label: "Bestuur" },
   { slug: "dirigent", label: "Dirigent" },
 ] as const;
