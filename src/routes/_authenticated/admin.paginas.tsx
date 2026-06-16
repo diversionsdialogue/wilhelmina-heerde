@@ -154,7 +154,7 @@ function Page() {
       const path = `${crypto.randomUUID()}.${ext}`;
       const { error } = await supabase.storage
         .from("page-media")
-        .upload(path, blob, { upsert: false, contentType });
+        .upload(path, blob, { upsert: false, contentType, cacheControl: "31536000" });
       if (error) throw error;
       const { data } = supabase.storage.from("page-media").getPublicUrl(path);
       setDraft((d) => ({ ...d, cover_image_url: data.publicUrl }));

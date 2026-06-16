@@ -9,6 +9,8 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import robotoRegularUrl from "../styles/fonts/Roboto-Regular.woff2?url";
+import robotoSemiBoldUrl from "../styles/fonts/Roboto-SemiBold.woff2?url";
 
 function NotFoundComponent() {
   return (
@@ -87,8 +89,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "preconnect", href: "https://wuteknilahqymkocgiir.supabase.co", crossOrigin: "anonymous" },
-      { rel: "preload", as: "font", type: "font/woff2", href: "/fonts/Roboto-Regular.woff2", crossOrigin: "anonymous" },
-      { rel: "preload", as: "font", type: "font/woff2", href: "/fonts/Roboto-SemiBold.woff2", crossOrigin: "anonymous" },
+      { rel: "preload", as: "font", type: "font/woff2", href: robotoRegularUrl, crossOrigin: "anonymous" },
+      { rel: "preload", as: "font", type: "font/woff2", href: robotoSemiBoldUrl, crossOrigin: "anonymous" },
     ],
   }),
   shellComponent: RootShell,
