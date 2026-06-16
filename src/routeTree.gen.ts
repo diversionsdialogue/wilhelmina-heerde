@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SteunRouteImport } from './routes/steun'
 import { Route as SponsorenRouteImport } from './routes/sponsoren'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as QuickscanRouteImport } from './routes/quickscan'
 import { Route as OrkestenRouteImport } from './routes/orkesten'
 import { Route as OptredensRouteImport } from './routes/optredens'
@@ -47,6 +48,11 @@ const SteunRoute = SteunRouteImport.update({
 const SponsorenRoute = SponsorenRouteImport.update({
   id: '/sponsoren',
   path: '/sponsoren',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const QuickscanRoute = QuickscanRouteImport.update({
@@ -202,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/optredens': typeof OptredensRoute
   '/orkesten': typeof OrkestenRoute
   '/quickscan': typeof QuickscanRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sponsoren': typeof SponsorenRoute
   '/steun': typeof SteunRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -232,6 +239,7 @@ export interface FileRoutesByTo {
   '/optredens': typeof OptredensRoute
   '/orkesten': typeof OrkestenRoute
   '/quickscan': typeof QuickscanRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sponsoren': typeof SponsorenRoute
   '/steun': typeof SteunRoute
   '/beeld-en-geluid/$slug': typeof BeeldEnGeluidSlugRoute
@@ -263,6 +271,7 @@ export interface FileRoutesById {
   '/optredens': typeof OptredensRoute
   '/orkesten': typeof OrkestenRoute
   '/quickscan': typeof QuickscanRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sponsoren': typeof SponsorenRoute
   '/steun': typeof SteunRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -295,6 +304,7 @@ export interface FileRouteTypes {
     | '/optredens'
     | '/orkesten'
     | '/quickscan'
+    | '/sitemap.xml'
     | '/sponsoren'
     | '/steun'
     | '/admin'
@@ -325,6 +335,7 @@ export interface FileRouteTypes {
     | '/optredens'
     | '/orkesten'
     | '/quickscan'
+    | '/sitemap.xml'
     | '/sponsoren'
     | '/steun'
     | '/beeld-en-geluid/$slug'
@@ -355,6 +366,7 @@ export interface FileRouteTypes {
     | '/optredens'
     | '/orkesten'
     | '/quickscan'
+    | '/sitemap.xml'
     | '/sponsoren'
     | '/steun'
     | '/_authenticated/admin'
@@ -387,6 +399,7 @@ export interface RootRouteChildren {
   OptredensRoute: typeof OptredensRoute
   OrkestenRoute: typeof OrkestenRoute
   QuickscanRoute: typeof QuickscanRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SponsorenRoute: typeof SponsorenRoute
   SteunRoute: typeof SteunRoute
   BeeldEnGeluidSlugRoute: typeof BeeldEnGeluidSlugRoute
@@ -410,6 +423,13 @@ declare module '@tanstack/react-router' {
       path: '/sponsoren'
       fullPath: '/sponsoren'
       preLoaderRoute: typeof SponsorenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/quickscan': {
@@ -660,6 +680,7 @@ const rootRouteChildren: RootRouteChildren = {
   OptredensRoute: OptredensRoute,
   OrkestenRoute: OrkestenRoute,
   QuickscanRoute: QuickscanRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SponsorenRoute: SponsorenRoute,
   SteunRoute: SteunRoute,
   BeeldEnGeluidSlugRoute: BeeldEnGeluidSlugRoute,
