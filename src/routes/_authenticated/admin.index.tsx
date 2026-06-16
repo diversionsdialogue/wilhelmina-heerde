@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { AdminPage } from "@/components/admin/AdminPage";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
@@ -18,6 +19,27 @@ const PERIODS: { id: Period; label: string }[] = [
 
 function Dashboard() {
   const [period, setPeriod] = useState<Period>("30d");
+  const queryClient = useQueryClient();
+
+  async function clearCache() {
+    if (!confirm("Lokale cache leegmaken en pagina herladen?")) return;
+    try {
+      queryClient.clear();
+      if ("caches" in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map((k) => caches.delete(k)));
+      }
+      if ("serviceWorker" in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map((r) => r.unregister()));
+      }
+      try {
+        sessionStorage.clear();
+      } catch {}
+    } finally {
+      window.location.reload();
+    }
+  }
 
   // Dummy data — wordt in stap 2 vervangen door echte cijfers uit page_views-tabel.
   const stats = [
@@ -32,25 +54,43 @@ function Dashboard() {
       title="Dashboard"
       description="Overzicht van bezoekers en activiteit."
       actions={
-        <div style={{ display: "flex", gap: 4, background: "#fff", border: "1px solid #e4e4e4", borderRadius: 999, padding: 4 }}>
-          {PERIODS.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => setPeriod(p.id)}
-              style={{
-                padding: "6px 14px",
-                borderRadius: 999,
-                border: "none",
-                fontSize: 13,
-                fontWeight: 500,
-                cursor: "pointer",
-                background: period === p.id ? "#0d0d0d" : "transparent",
-                color: period === p.id ? "#fff" : "#555",
-              }}
-            >
-              {p.label}
-            </button>
-          ))}
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <button
+            onClick={clearCache}
+            style={{
+              padding: "6px 14px",
+              borderRadius: 999,
+              border: "1px solid #e4e4e4",
+              background: "#fff",
+              fontSize: 13,
+              fontWeight: 500,
+              cursor: "pointer",
+              color: "#0d0d0d",
+            }}
+            title="Wist de query-cache, service worker en herlaadt de pagina"
+          >
+            Cache legen
+          </button>
+          <div style={{ display: "flex", gap: 4, background: "#fff", border: "1px solid #e4e4e4", borderRadius: 999, padding: 4 }}>
+            {PERIODS.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => setPeriod(p.id)}
+                style={{
+                  padding: "6px 14px",
+                  borderRadius: 999,
+                  border: "none",
+                  fontSize: 13,
+                  fontWeight: 500,
+                  cursor: "pointer",
+                  background: period === p.id ? "#0d0d0d" : "transparent",
+                  color: period === p.id ? "#fff" : "#555",
+                }}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
         </div>
       }
     >
