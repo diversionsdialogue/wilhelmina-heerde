@@ -1,0 +1,22 @@
+# Koninklijk Fanfarekorps Wilhelmina — Heerde
+
+> Sinds 1898 het muzikale hart van Heerde. Drie orkesten, ruim tachtig musici, één traditie.
+
+Koninklijk Fanfarekorps Wilhelmina is een muziekvereniging uit Heerde met een fanfareorkest, slagwerkensemble en leerlingenorkest. De website biedt informatie over optredens, nieuws, orkesten, sponsoren en mogelijkheden om muziek te maken of de vereniging te steunen.
+
+## Pages
+
+- [Home](/): Homepage met agenda, sponsors, nieuws en quickscan.
+- [Agenda](/optredens): Concerten en optredens in en rondom Heerde.
+- [Orkesten](/orkesten): Fanfareorkest, slagwerkensemble en leerlingenorkest.
+- [Nieuws](/nieuws): Interviews, achtergronden en aankondigingen.
+- [Beeld en geluid](/beeld-en-geluid): Foto's en video's van optredens.
+- [Sponsors](/sponsoren): Lokale ondernemers die Wilhelmina steunen.
+- [Steun ons](/steun): Donateur worden en de vereniging ondersteunen.
+- [Contact](/contact): Contactgegevens en contactformulier.
+- [Muzikale quickscan](/quickscan): Ontdek welk instrument bij jou past.
+
+## Optional
+
+- [Over ons](/p/over-ons): Informatie over de vereniging.
+- [Donateur worden](/p/donateur-worden): Word vriend van Wilhelmina.
