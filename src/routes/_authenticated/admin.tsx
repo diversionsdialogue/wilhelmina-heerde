@@ -26,7 +26,7 @@ const NAV: { group: string; items: NavItem[] }[] = [
       { to: "/admin/paginas", label: "Pagina's" },
       { to: "/admin/sponsors", label: "Sponsors" },
       { to: "/admin/media", label: "Media" },
-      { to: "/admin/redirects", label: "Redirects" },
+      { to: "/admin/redirects", label: "Redirects", adminOnly: true },
     ],
   },
   {
