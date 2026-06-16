@@ -40,7 +40,7 @@ export const Route = createFileRoute("/sitemap.xml")({
             .select("slug, updated_at, published_at")
             .eq("status", "published"),
           supabaseAdmin
-            .from("albums")
+            .from("media_albums")
             .select("slug, updated_at, published_at")
             .eq("status", "published"),
         ]);
