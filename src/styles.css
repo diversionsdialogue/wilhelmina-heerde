@@ -309,12 +309,17 @@
   -webkit-backdrop-filter: none !important;
 }
 .w-header__logo {
-  height: 44px;
+  height: 66px;
   width: auto;
   display: block;
+  transition: height var(--dur-base) var(--ease-out);
+}
+.w-header.is-scrolled .w-header__logo {
+  height: 44px;
 }
 @media (max-width: 560px) {
-  .w-header__logo { height: 36px; }
+  .w-header__logo { height: 52px; }
+  .w-header.is-scrolled .w-header__logo { height: 36px; }
 }
 
 /* Footer logo (noir svg) */
