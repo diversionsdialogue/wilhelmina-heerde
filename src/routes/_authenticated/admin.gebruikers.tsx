@@ -80,6 +80,7 @@ function Page() {
   });
 
   const [inviteEmail, setInviteEmail] = useState("");
+  const [invitePassword, setInvitePassword] = useState("");
 
   return (
     <AdminPage
@@ -87,16 +88,16 @@ function Page() {
       description="Beheer accounts en wijs redactie- of beheerdersrechten toe."
     >
       <div style={card}>
-        <h2 style={{ margin: "0 0 4px", fontSize: 16, fontWeight: 600 }}>Gebruiker uitnodigen</h2>
+        <h2 style={{ margin: "0 0 4px", fontSize: 16, fontWeight: 600 }}>Gebruiker aanmaken</h2>
         <p style={{ margin: "0 0 14px", color: "#666", fontSize: 13 }}>
-          Stuurt een e-mail met een uitnodigingslink. Rollen ken je daarna hieronder toe.
+          Vul een wachtwoord in om direct een account aan te maken (geen uitnodigingsmail). Laat het wachtwoord leeg om een uitnodiging te sturen.
         </p>
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (inviteEmail.trim()) invite.mutate(inviteEmail.trim());
+            if (inviteEmail.trim()) invite.mutate({ email: inviteEmail.trim(), password: invitePassword || undefined });
           }}
-          style={{ display: "flex", gap: 10, flexWrap: "wrap" }}
+          style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "flex-end" }}
         >
           <input
             type="email"
@@ -106,8 +107,15 @@ function Page() {
             onChange={(e) => setInviteEmail(e.target.value)}
             style={input}
           />
+          <input
+            type="text"
+            placeholder="Wachtwoord (optioneel)"
+            value={invitePassword}
+            onChange={(e) => setInvitePassword(e.target.value)}
+            style={{ ...input, minWidth: 200 }}
+          />
           <button type="submit" style={btnPrimary} disabled={invite.isPending}>
-            {invite.isPending ? "Versturen…" : "Uitnodigen"}
+            {invite.isPending ? "Bezig…" : invitePassword ? "Aanmaken" : "Uitnodigen"}
           </button>
         </form>
       </div>
