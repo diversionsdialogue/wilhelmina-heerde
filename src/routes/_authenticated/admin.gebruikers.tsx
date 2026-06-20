@@ -70,12 +70,13 @@ function Page() {
   });
 
   const invite = useMutation({
-    mutationFn: (email: string) => inviteFn({ data: { email } }),
+    mutationFn: (vars: { email: string; password?: string }) => inviteFn({ data: vars }),
     onSuccess: () => {
       setInviteEmail("");
+      setInvitePassword("");
       qc.invalidateQueries({ queryKey: ["admin-users"] });
     },
-    onError: (err: Error) => alert(err.message || "Uitnodiging mislukt"),
+    onError: (err: Error) => alert(err.message || "Aanmaken mislukt"),
   });
 
   const [inviteEmail, setInviteEmail] = useState("");
