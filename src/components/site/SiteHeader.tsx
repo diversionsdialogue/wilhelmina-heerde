@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import logoWhite from "@/assets/wilhelmina-logo-gold.svg";
 
@@ -6,9 +7,32 @@ type Props = {
   onOpenMenu?: () => void;
 };
 
-export function SiteHeader({ onOpenMenu }: Props) {
+export function SiteHeader({ overDark, onOpenMenu }: Props) {
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+
+    const onScroll = () => {
+      if (window.scrollY > 40) {
+        header.classList.add("is-scrolled");
+      } else {
+        header.classList.remove("is-scrolled");
+      }
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="w-header w-header--black" id="site-header">
+    <header
+      ref={headerRef}
+      className={`w-header w-header--black${overDark ? " is-over-dark" : ""}`}
+      id="site-header"
+    >
       <div className="w-header__inner">
         <Link className="w-header__brand" to="/" aria-label="Wilhelmina — home">
           <img src={logoWhite} alt="Koninklijk Fanfarekorps Wilhelmina Heerde" className="w-header__logo" />
