@@ -91,13 +91,24 @@ export const setUserRole = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-const inviteInput = z.object({ email: z.string().email() });
+const inviteInput = z.object({ email: z.string().email(), password: z.string().min(6).optional() });
 
 export const inviteUser = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => inviteInput.parse(input))
   .handler(async ({ data, context }) => {
     const supabaseAdmin = await assertAdmin(context.userId);
+
+    if (data.password) {
+      const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
+        email: data.email,
+        password: data.password,
+        email_confirm: true,
+      });
+      if (error) throw error;
+      return { ok: true, userId: created.user?.id ?? null };
+    }
+
     const { data: invited, error } = await supabaseAdmin.auth.admin.inviteUserByEmail(
       data.email,
     );
