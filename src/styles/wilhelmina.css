@@ -122,7 +122,15 @@ img { display: block; max-width: 100%; }
   border-bottom: 1px solid transparent;
 }
 .w-header.is-over-dark { color: var(--w-bg-warm); }
-.w-hello-bar {
+.w-header.is-scrolled {
+  background: rgba(247, 245, 243, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-1);
+  border-bottom-color: var(--w-ink-15);
+  color: var(--w-black);
+}
+
   position: fixed;
   top: 0;
   left: 0;
