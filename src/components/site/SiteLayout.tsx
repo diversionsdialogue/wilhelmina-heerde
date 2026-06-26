@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
 import { MobileMenu } from "./MobileMenu";
+import { HelloBar } from "./HelloBar";
 
 type Props = {
   children: ReactNode;
@@ -11,9 +12,12 @@ type Props = {
 
 export function SiteLayout({ children, overDark = false }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const showHelloBar = true;
   return (
-    <div className="w-page">
+    <div className={`w-page${showHelloBar ? " has-hello-bar" : ""}`}>
+      <HelloBar />
       <SiteHeader overDark={overDark} onOpenMenu={() => setMenuOpen(true)} />
+
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
       <main>{children}</main>
       <SiteFooter />
