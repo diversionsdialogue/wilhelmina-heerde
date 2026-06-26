@@ -165,7 +165,6 @@ img { display: block; max-width: 100%; }
   .w-hello-bar { font-size: 13px; padding: 0 12px; }
 }
 
-
 .w-header__inner {
   width: 100%;
   display: flex; align-items: center; justify-content: space-between;
