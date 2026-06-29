@@ -3,6 +3,7 @@ import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
 import { MobileMenu } from "./MobileMenu";
 import { HelloBar } from "./HelloBar";
+import { useHelloBar } from "@/lib/hello-bar";
 
 type Props = {
   children: ReactNode;
@@ -12,7 +13,8 @@ type Props = {
 
 export function SiteLayout({ children, overDark = false }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const showHelloBar = true;
+  const { data } = useHelloBar();
+  const showHelloBar = !!(data?.active && data.message.trim());
   return (
     <div className={`w-page${showHelloBar ? " has-hello-bar" : ""}`}>
       <HelloBar />

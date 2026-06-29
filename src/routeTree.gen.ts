@@ -37,6 +37,7 @@ import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminMailboxRouteImport } from './routes/_authenticated/admin.mailbox'
 import { Route as AuthenticatedAdminInstellingenRouteImport } from './routes/_authenticated/admin.instellingen'
 import { Route as AuthenticatedAdminHomepageRouteImport } from './routes/_authenticated/admin.homepage'
+import { Route as AuthenticatedAdminHellobarRouteImport } from './routes/_authenticated/admin.hellobar'
 import { Route as AuthenticatedAdminGebruikersRouteImport } from './routes/_authenticated/admin.gebruikers'
 import { Route as AuthenticatedAdminBeeldEnGeluidRouteImport } from './routes/_authenticated/admin.beeld-en-geluid'
 import { Route as AuthenticatedAdminAgendaRouteImport } from './routes/_authenticated/admin.agenda'
@@ -187,6 +188,12 @@ const AuthenticatedAdminHomepageRoute =
     path: '/homepage',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminHellobarRoute =
+  AuthenticatedAdminHellobarRouteImport.update({
+    id: '/hellobar',
+    path: '/hellobar',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminGebruikersRoute =
   AuthenticatedAdminGebruikersRouteImport.update({
     id: '/gebruikers',
@@ -226,6 +233,7 @@ export interface FileRoutesByFullPath {
   '/admin/agenda': typeof AuthenticatedAdminAgendaRoute
   '/admin/beeld-en-geluid': typeof AuthenticatedAdminBeeldEnGeluidRoute
   '/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
+  '/admin/hellobar': typeof AuthenticatedAdminHellobarRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
   '/admin/mailbox': typeof AuthenticatedAdminMailboxRoute
@@ -257,6 +265,7 @@ export interface FileRoutesByTo {
   '/admin/agenda': typeof AuthenticatedAdminAgendaRoute
   '/admin/beeld-en-geluid': typeof AuthenticatedAdminBeeldEnGeluidRoute
   '/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
+  '/admin/hellobar': typeof AuthenticatedAdminHellobarRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
   '/admin/mailbox': typeof AuthenticatedAdminMailboxRoute
@@ -291,6 +300,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/agenda': typeof AuthenticatedAdminAgendaRoute
   '/_authenticated/admin/beeld-en-geluid': typeof AuthenticatedAdminBeeldEnGeluidRoute
   '/_authenticated/admin/gebruikers': typeof AuthenticatedAdminGebruikersRoute
+  '/_authenticated/admin/hellobar': typeof AuthenticatedAdminHellobarRoute
   '/_authenticated/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/_authenticated/admin/instellingen': typeof AuthenticatedAdminInstellingenRoute
   '/_authenticated/admin/mailbox': typeof AuthenticatedAdminMailboxRoute
@@ -325,6 +335,7 @@ export interface FileRouteTypes {
     | '/admin/agenda'
     | '/admin/beeld-en-geluid'
     | '/admin/gebruikers'
+    | '/admin/hellobar'
     | '/admin/homepage'
     | '/admin/instellingen'
     | '/admin/mailbox'
@@ -356,6 +367,7 @@ export interface FileRouteTypes {
     | '/admin/agenda'
     | '/admin/beeld-en-geluid'
     | '/admin/gebruikers'
+    | '/admin/hellobar'
     | '/admin/homepage'
     | '/admin/instellingen'
     | '/admin/mailbox'
@@ -389,6 +401,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/agenda'
     | '/_authenticated/admin/beeld-en-geluid'
     | '/_authenticated/admin/gebruikers'
+    | '/_authenticated/admin/hellobar'
     | '/_authenticated/admin/homepage'
     | '/_authenticated/admin/instellingen'
     | '/_authenticated/admin/mailbox'
@@ -620,6 +633,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminHomepageRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/hellobar': {
+      id: '/_authenticated/admin/hellobar'
+      path: '/hellobar'
+      fullPath: '/admin/hellobar'
+      preLoaderRoute: typeof AuthenticatedAdminHellobarRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/gebruikers': {
       id: '/_authenticated/admin/gebruikers'
       path: '/gebruikers'
@@ -648,6 +668,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAgendaRoute: typeof AuthenticatedAdminAgendaRoute
   AuthenticatedAdminBeeldEnGeluidRoute: typeof AuthenticatedAdminBeeldEnGeluidRoute
   AuthenticatedAdminGebruikersRoute: typeof AuthenticatedAdminGebruikersRoute
+  AuthenticatedAdminHellobarRoute: typeof AuthenticatedAdminHellobarRoute
   AuthenticatedAdminHomepageRoute: typeof AuthenticatedAdminHomepageRoute
   AuthenticatedAdminInstellingenRoute: typeof AuthenticatedAdminInstellingenRoute
   AuthenticatedAdminMailboxRoute: typeof AuthenticatedAdminMailboxRoute
@@ -664,6 +685,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAgendaRoute: AuthenticatedAdminAgendaRoute,
   AuthenticatedAdminBeeldEnGeluidRoute: AuthenticatedAdminBeeldEnGeluidRoute,
   AuthenticatedAdminGebruikersRoute: AuthenticatedAdminGebruikersRoute,
+  AuthenticatedAdminHellobarRoute: AuthenticatedAdminHellobarRoute,
   AuthenticatedAdminHomepageRoute: AuthenticatedAdminHomepageRoute,
   AuthenticatedAdminInstellingenRoute: AuthenticatedAdminInstellingenRoute,
   AuthenticatedAdminMailboxRoute: AuthenticatedAdminMailboxRoute,
