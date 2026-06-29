@@ -1,6 +1,11 @@
+import { useHelloBar } from "@/lib/hello-bar";
+
 export function HelloBar() {
-  const message =
-    "Helaas gaat vanwege het extreme weer ons concert op Vosbergen niet door.";
+  const { data } = useHelloBar();
+  if (!data || !data.active || !data.message.trim()) return null;
+
+  const message = data.message.trim();
+  const href = data.link_url?.trim() || null;
 
   const separator = (
     <span className="w-hello-bar__sep" aria-hidden="true">
@@ -27,16 +32,24 @@ export function HelloBar() {
     </span>
   );
 
+  const inner = href ? (
+    <a href={href} className="w-hello-bar__link">
+      {message}
+    </a>
+  ) : (
+    message
+  );
+
   const item = (
     <span className="w-hello-bar__item">
       {separator}
-      {message}
+      {inner}
     </span>
   );
 
   return (
     <div className="w-hello-bar" role="alert">
-      <span className="w-hello-bar__text">{message}</span>
+      <span className="w-hello-bar__text">{inner}</span>
       <div className="w-hello-bar__ticker">
         <div className="w-hello-bar__track">
           {item}

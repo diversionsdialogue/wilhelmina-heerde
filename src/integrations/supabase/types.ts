@@ -101,6 +101,30 @@ export type Database = {
         }
         Relationships: []
       }
+      hello_bar: {
+        Row: {
+          active: boolean
+          id: number
+          link_url: string | null
+          message: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          id?: number
+          link_url?: string | null
+          message?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          id?: number
+          link_url?: string | null
+          message?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       home_sections: {
         Row: {
           key: string

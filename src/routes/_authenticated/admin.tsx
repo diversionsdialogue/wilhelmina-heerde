@@ -18,6 +18,7 @@ const NAV: { group: string; items: NavItem[] }[] = [
     items: [
       { to: "/admin", label: "Dashboard" },
       { to: "/admin/homepage", label: "Homepage" },
+      { to: "/admin/hellobar", label: "Hellobar" },
       { to: "/admin/menu", label: "Menu" },
       { to: "/admin/nieuws", label: "Nieuws" },
       { to: "/admin/mailbox", label: "Mailbox" },
