@@ -56,7 +56,7 @@ export const Route = createFileRoute("/p/$slug")({
   errorComponent: ({ error }) => (
     <SiteLayout>
       <div className="w-article__container" style={{ padding: "80px 0" }}>
-        <p>Er ging iets mis: {error.message}</p>
+        <p>Er ging iets mis: {error instanceof Error ? error.message : String(error)}</p>
       </div>
     </SiteLayout>
   ),
