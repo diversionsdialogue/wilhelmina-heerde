@@ -9,81 +9,42 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SteunRouteImport } from './routes/steun'
-import { Route as SponsorenRouteImport } from './routes/sponsoren'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as QuickscanRouteImport } from './routes/quickscan'
-import { Route as OrkestenRouteImport } from './routes/orkesten'
-import { Route as OptredensRouteImport } from './routes/optredens'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
-import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as NieuwsIndexRouteImport } from './routes/nieuws.index'
-import { Route as BeeldEnGeluidIndexRouteImport } from './routes/beeld-en-geluid.index'
-import { Route as PSlugRouteImport } from './routes/p.$slug'
-import { Route as NieuwsSlugRouteImport } from './routes/nieuws.$slug'
-import { Route as BeeldEnGeluidSlugRouteImport } from './routes/beeld-en-geluid.$slug'
+import { Route as SplatRouteImport } from './routes/$'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as OptredensRouteImport } from './routes/optredens'
+import { Route as OrkestenRouteImport } from './routes/orkesten'
+import { Route as QuickscanRouteImport } from './routes/quickscan'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SponsorenRouteImport } from './routes/sponsoren'
+import { Route as SteunRouteImport } from './routes/steun'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as BeeldEnGeluidIndexRouteImport } from './routes/beeld-en-geluid.index'
+import { Route as BeeldEnGeluidSlugRouteImport } from './routes/beeld-en-geluid.$slug'
+import { Route as NieuwsIndexRouteImport } from './routes/nieuws.index'
+import { Route as NieuwsSlugRouteImport } from './routes/nieuws.$slug'
+import { Route as PSlugRouteImport } from './routes/p.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
-import { Route as ApiPublicTrackRouteImport } from './routes/api/public/track'
-import { Route as AuthenticatedAdminSponsorsRouteImport } from './routes/_authenticated/admin.sponsors'
-import { Route as AuthenticatedAdminRedirectsRouteImport } from './routes/_authenticated/admin.redirects'
-import { Route as AuthenticatedAdminPaginasRouteImport } from './routes/_authenticated/admin.paginas'
-import { Route as AuthenticatedAdminNieuwsRouteImport } from './routes/_authenticated/admin.nieuws'
-import { Route as AuthenticatedAdminMenuRouteImport } from './routes/_authenticated/admin.menu'
-import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
-import { Route as AuthenticatedAdminMailboxRouteImport } from './routes/_authenticated/admin.mailbox'
-import { Route as AuthenticatedAdminInstellingenRouteImport } from './routes/_authenticated/admin.instellingen'
-import { Route as AuthenticatedAdminHomepageRouteImport } from './routes/_authenticated/admin.homepage'
-import { Route as AuthenticatedAdminHellobarRouteImport } from './routes/_authenticated/admin.hellobar'
-import { Route as AuthenticatedAdminGebruikersRouteImport } from './routes/_authenticated/admin.gebruikers'
-import { Route as AuthenticatedAdminBeeldEnGeluidRouteImport } from './routes/_authenticated/admin.beeld-en-geluid'
 import { Route as AuthenticatedAdminAgendaRouteImport } from './routes/_authenticated/admin.agenda'
+import { Route as AuthenticatedAdminBeeldEnGeluidRouteImport } from './routes/_authenticated/admin.beeld-en-geluid'
+import { Route as AuthenticatedAdminGebruikersRouteImport } from './routes/_authenticated/admin.gebruikers'
+import { Route as AuthenticatedAdminHellobarRouteImport } from './routes/_authenticated/admin.hellobar'
+import { Route as AuthenticatedAdminHomepageRouteImport } from './routes/_authenticated/admin.homepage'
+import { Route as AuthenticatedAdminInstellingenRouteImport } from './routes/_authenticated/admin.instellingen'
+import { Route as AuthenticatedAdminMailboxRouteImport } from './routes/_authenticated/admin.mailbox'
+import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
+import { Route as AuthenticatedAdminMenuRouteImport } from './routes/_authenticated/admin.menu'
+import { Route as AuthenticatedAdminNieuwsRouteImport } from './routes/_authenticated/admin.nieuws'
+import { Route as AuthenticatedAdminPaginasRouteImport } from './routes/_authenticated/admin.paginas'
+import { Route as AuthenticatedAdminRedirectsRouteImport } from './routes/_authenticated/admin.redirects'
+import { Route as AuthenticatedAdminSponsorsRouteImport } from './routes/_authenticated/admin.sponsors'
+import { Route as ApiPublicTrackRouteImport } from './routes/api/public/track'
 
-const SteunRoute = SteunRouteImport.update({
-  id: '/steun',
-  path: '/steun',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SponsorenRoute = SponsorenRouteImport.update({
-  id: '/sponsoren',
-  path: '/sponsoren',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuickscanRoute = QuickscanRouteImport.update({
-  id: '/quickscan',
-  path: '/quickscan',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OrkestenRoute = OrkestenRouteImport.update({
-  id: '/orkesten',
-  path: '/orkesten',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OptredensRoute = OptredensRouteImport.update({
-  id: '/optredens',
-  path: '/optredens',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedRoute = AuthenticatedRouteImport.update({
-  id: '/_authenticated',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SplatRoute = SplatRouteImport.update({
@@ -91,34 +52,48 @@ const SplatRoute = SplatRouteImport.update({
   path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NieuwsIndexRoute = NieuwsIndexRouteImport.update({
-  id: '/nieuws/',
-  path: '/nieuws/',
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BeeldEnGeluidIndexRoute = BeeldEnGeluidIndexRouteImport.update({
-  id: '/beeld-en-geluid/',
-  path: '/beeld-en-geluid/',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PSlugRoute = PSlugRouteImport.update({
-  id: '/p/$slug',
-  path: '/p/$slug',
+const OptredensRoute = OptredensRouteImport.update({
+  id: '/optredens',
+  path: '/optredens',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NieuwsSlugRoute = NieuwsSlugRouteImport.update({
-  id: '/nieuws/$slug',
-  path: '/nieuws/$slug',
+const OrkestenRoute = OrkestenRouteImport.update({
+  id: '/orkesten',
+  path: '/orkesten',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BeeldEnGeluidSlugRoute = BeeldEnGeluidSlugRouteImport.update({
-  id: '/beeld-en-geluid/$slug',
-  path: '/beeld-en-geluid/$slug',
+const QuickscanRoute = QuickscanRouteImport.update({
+  id: '/quickscan',
+  path: '/quickscan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SponsorenRoute = SponsorenRouteImport.update({
+  id: '/sponsoren',
+  path: '/sponsoren',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SteunRoute = SteunRouteImport.update({
+  id: '/steun',
+  path: '/steun',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -126,78 +101,40 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const BeeldEnGeluidIndexRoute = BeeldEnGeluidIndexRouteImport.update({
+  id: '/beeld-en-geluid/',
+  path: '/beeld-en-geluid/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BeeldEnGeluidSlugRoute = BeeldEnGeluidSlugRouteImport.update({
+  id: '/beeld-en-geluid/$slug',
+  path: '/beeld-en-geluid/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NieuwsIndexRoute = NieuwsIndexRouteImport.update({
+  id: '/nieuws/',
+  path: '/nieuws/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NieuwsSlugRoute = NieuwsSlugRouteImport.update({
+  id: '/nieuws/$slug',
+  path: '/nieuws/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PSlugRoute = PSlugRouteImport.update({
+  id: '/p/$slug',
+  path: '/p/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
-const ApiPublicTrackRoute = ApiPublicTrackRouteImport.update({
-  id: '/api/public/track',
-  path: '/api/public/track',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedAdminSponsorsRoute =
-  AuthenticatedAdminSponsorsRouteImport.update({
-    id: '/sponsors',
-    path: '/sponsors',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
-const AuthenticatedAdminRedirectsRoute =
-  AuthenticatedAdminRedirectsRouteImport.update({
-    id: '/redirects',
-    path: '/redirects',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
-const AuthenticatedAdminPaginasRoute =
-  AuthenticatedAdminPaginasRouteImport.update({
-    id: '/paginas',
-    path: '/paginas',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
-const AuthenticatedAdminNieuwsRoute =
-  AuthenticatedAdminNieuwsRouteImport.update({
-    id: '/nieuws',
-    path: '/nieuws',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
-const AuthenticatedAdminMenuRoute = AuthenticatedAdminMenuRouteImport.update({
-  id: '/menu',
-  path: '/menu',
-  getParentRoute: () => AuthenticatedAdminRoute,
-} as any)
-const AuthenticatedAdminMediaRoute = AuthenticatedAdminMediaRouteImport.update({
-  id: '/media',
-  path: '/media',
-  getParentRoute: () => AuthenticatedAdminRoute,
-} as any)
-const AuthenticatedAdminMailboxRoute =
-  AuthenticatedAdminMailboxRouteImport.update({
-    id: '/mailbox',
-    path: '/mailbox',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
-const AuthenticatedAdminInstellingenRoute =
-  AuthenticatedAdminInstellingenRouteImport.update({
-    id: '/instellingen',
-    path: '/instellingen',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
-const AuthenticatedAdminHomepageRoute =
-  AuthenticatedAdminHomepageRouteImport.update({
-    id: '/homepage',
-    path: '/homepage',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
-const AuthenticatedAdminHellobarRoute =
-  AuthenticatedAdminHellobarRouteImport.update({
-    id: '/hellobar',
-    path: '/hellobar',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
-const AuthenticatedAdminGebruikersRoute =
-  AuthenticatedAdminGebruikersRouteImport.update({
-    id: '/gebruikers',
-    path: '/gebruikers',
+const AuthenticatedAdminAgendaRoute =
+  AuthenticatedAdminAgendaRouteImport.update({
+    id: '/agenda',
+    path: '/agenda',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminBeeldEnGeluidRoute =
@@ -206,12 +143,75 @@ const AuthenticatedAdminBeeldEnGeluidRoute =
     path: '/beeld-en-geluid',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
-const AuthenticatedAdminAgendaRoute =
-  AuthenticatedAdminAgendaRouteImport.update({
-    id: '/agenda',
-    path: '/agenda',
+const AuthenticatedAdminGebruikersRoute =
+  AuthenticatedAdminGebruikersRouteImport.update({
+    id: '/gebruikers',
+    path: '/gebruikers',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminHellobarRoute =
+  AuthenticatedAdminHellobarRouteImport.update({
+    id: '/hellobar',
+    path: '/hellobar',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminHomepageRoute =
+  AuthenticatedAdminHomepageRouteImport.update({
+    id: '/homepage',
+    path: '/homepage',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminInstellingenRoute =
+  AuthenticatedAdminInstellingenRouteImport.update({
+    id: '/instellingen',
+    path: '/instellingen',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminMailboxRoute =
+  AuthenticatedAdminMailboxRouteImport.update({
+    id: '/mailbox',
+    path: '/mailbox',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminMediaRoute = AuthenticatedAdminMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminMenuRoute = AuthenticatedAdminMenuRouteImport.update({
+  id: '/menu',
+  path: '/menu',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminNieuwsRoute =
+  AuthenticatedAdminNieuwsRouteImport.update({
+    id: '/nieuws',
+    path: '/nieuws',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminPaginasRoute =
+  AuthenticatedAdminPaginasRouteImport.update({
+    id: '/paginas',
+    path: '/paginas',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminRedirectsRoute =
+  AuthenticatedAdminRedirectsRouteImport.update({
+    id: '/redirects',
+    path: '/redirects',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSponsorsRoute =
+  AuthenticatedAdminSponsorsRouteImport.update({
+    id: '/sponsors',
+    path: '/sponsors',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const ApiPublicTrackRoute = ApiPublicTrackRouteImport.update({
+  id: '/api/public/track',
+  path: '/api/public/track',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -437,67 +437,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/steun': {
-      id: '/steun'
-      path: '/steun'
-      fullPath: '/steun'
-      preLoaderRoute: typeof SteunRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sponsoren': {
-      id: '/sponsoren'
-      path: '/sponsoren'
-      fullPath: '/sponsoren'
-      preLoaderRoute: typeof SponsorenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quickscan': {
-      id: '/quickscan'
-      path: '/quickscan'
-      fullPath: '/quickscan'
-      preLoaderRoute: typeof QuickscanRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/orkesten': {
-      id: '/orkesten'
-      path: '/orkesten'
-      fullPath: '/orkesten'
-      preLoaderRoute: typeof OrkestenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/optredens': {
-      id: '/optredens'
-      path: '/optredens'
-      fullPath: '/optredens'
-      preLoaderRoute: typeof OptredensRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
+    '/': {
+      id: '/'
+      path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedRouteImport
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$': {
@@ -507,46 +451,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/nieuws/': {
-      id: '/nieuws/'
-      path: '/nieuws'
-      fullPath: '/nieuws/'
-      preLoaderRoute: typeof NieuwsIndexRouteImport
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/beeld-en-geluid/': {
-      id: '/beeld-en-geluid/'
-      path: '/beeld-en-geluid'
-      fullPath: '/beeld-en-geluid/'
-      preLoaderRoute: typeof BeeldEnGeluidIndexRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/p/$slug': {
-      id: '/p/$slug'
-      path: '/p/$slug'
-      fullPath: '/p/$slug'
-      preLoaderRoute: typeof PSlugRouteImport
+    '/optredens': {
+      id: '/optredens'
+      path: '/optredens'
+      fullPath: '/optredens'
+      preLoaderRoute: typeof OptredensRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/nieuws/$slug': {
-      id: '/nieuws/$slug'
-      path: '/nieuws/$slug'
-      fullPath: '/nieuws/$slug'
-      preLoaderRoute: typeof NieuwsSlugRouteImport
+    '/orkesten': {
+      id: '/orkesten'
+      path: '/orkesten'
+      fullPath: '/orkesten'
+      preLoaderRoute: typeof OrkestenRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/beeld-en-geluid/$slug': {
-      id: '/beeld-en-geluid/$slug'
-      path: '/beeld-en-geluid/$slug'
-      fullPath: '/beeld-en-geluid/$slug'
-      preLoaderRoute: typeof BeeldEnGeluidSlugRouteImport
+    '/quickscan': {
+      id: '/quickscan'
+      path: '/quickscan'
+      fullPath: '/quickscan'
+      preLoaderRoute: typeof QuickscanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sponsoren': {
+      id: '/sponsoren'
+      path: '/sponsoren'
+      fullPath: '/sponsoren'
+      preLoaderRoute: typeof SponsorenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/steun': {
+      id: '/steun'
+      path: '/steun'
+      fullPath: '/steun'
+      preLoaderRoute: typeof SteunRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -556,6 +521,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/beeld-en-geluid/': {
+      id: '/beeld-en-geluid/'
+      path: '/beeld-en-geluid'
+      fullPath: '/beeld-en-geluid/'
+      preLoaderRoute: typeof BeeldEnGeluidIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/beeld-en-geluid/$slug': {
+      id: '/beeld-en-geluid/$slug'
+      path: '/beeld-en-geluid/$slug'
+      fullPath: '/beeld-en-geluid/$slug'
+      preLoaderRoute: typeof BeeldEnGeluidSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nieuws/': {
+      id: '/nieuws/'
+      path: '/nieuws'
+      fullPath: '/nieuws/'
+      preLoaderRoute: typeof NieuwsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nieuws/$slug': {
+      id: '/nieuws/$slug'
+      path: '/nieuws/$slug'
+      fullPath: '/nieuws/$slug'
+      preLoaderRoute: typeof NieuwsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/p/$slug': {
+      id: '/p/$slug'
+      path: '/p/$slug'
+      fullPath: '/p/$slug'
+      preLoaderRoute: typeof PSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
       path: '/'
@@ -563,88 +563,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/api/public/track': {
-      id: '/api/public/track'
-      path: '/api/public/track'
-      fullPath: '/api/public/track'
-      preLoaderRoute: typeof ApiPublicTrackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/admin/sponsors': {
-      id: '/_authenticated/admin/sponsors'
-      path: '/sponsors'
-      fullPath: '/admin/sponsors'
-      preLoaderRoute: typeof AuthenticatedAdminSponsorsRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/redirects': {
-      id: '/_authenticated/admin/redirects'
-      path: '/redirects'
-      fullPath: '/admin/redirects'
-      preLoaderRoute: typeof AuthenticatedAdminRedirectsRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/paginas': {
-      id: '/_authenticated/admin/paginas'
-      path: '/paginas'
-      fullPath: '/admin/paginas'
-      preLoaderRoute: typeof AuthenticatedAdminPaginasRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/nieuws': {
-      id: '/_authenticated/admin/nieuws'
-      path: '/nieuws'
-      fullPath: '/admin/nieuws'
-      preLoaderRoute: typeof AuthenticatedAdminNieuwsRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/menu': {
-      id: '/_authenticated/admin/menu'
-      path: '/menu'
-      fullPath: '/admin/menu'
-      preLoaderRoute: typeof AuthenticatedAdminMenuRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/media': {
-      id: '/_authenticated/admin/media'
-      path: '/media'
-      fullPath: '/admin/media'
-      preLoaderRoute: typeof AuthenticatedAdminMediaRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/mailbox': {
-      id: '/_authenticated/admin/mailbox'
-      path: '/mailbox'
-      fullPath: '/admin/mailbox'
-      preLoaderRoute: typeof AuthenticatedAdminMailboxRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/instellingen': {
-      id: '/_authenticated/admin/instellingen'
-      path: '/instellingen'
-      fullPath: '/admin/instellingen'
-      preLoaderRoute: typeof AuthenticatedAdminInstellingenRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/homepage': {
-      id: '/_authenticated/admin/homepage'
-      path: '/homepage'
-      fullPath: '/admin/homepage'
-      preLoaderRoute: typeof AuthenticatedAdminHomepageRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/hellobar': {
-      id: '/_authenticated/admin/hellobar'
-      path: '/hellobar'
-      fullPath: '/admin/hellobar'
-      preLoaderRoute: typeof AuthenticatedAdminHellobarRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
-    '/_authenticated/admin/gebruikers': {
-      id: '/_authenticated/admin/gebruikers'
-      path: '/gebruikers'
-      fullPath: '/admin/gebruikers'
-      preLoaderRoute: typeof AuthenticatedAdminGebruikersRouteImport
+    '/_authenticated/admin/agenda': {
+      id: '/_authenticated/admin/agenda'
+      path: '/agenda'
+      fullPath: '/admin/agenda'
+      preLoaderRoute: typeof AuthenticatedAdminAgendaRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/beeld-en-geluid': {
@@ -654,12 +577,89 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminBeeldEnGeluidRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/_authenticated/admin/agenda': {
-      id: '/_authenticated/admin/agenda'
-      path: '/agenda'
-      fullPath: '/admin/agenda'
-      preLoaderRoute: typeof AuthenticatedAdminAgendaRouteImport
+    '/_authenticated/admin/gebruikers': {
+      id: '/_authenticated/admin/gebruikers'
+      path: '/gebruikers'
+      fullPath: '/admin/gebruikers'
+      preLoaderRoute: typeof AuthenticatedAdminGebruikersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/hellobar': {
+      id: '/_authenticated/admin/hellobar'
+      path: '/hellobar'
+      fullPath: '/admin/hellobar'
+      preLoaderRoute: typeof AuthenticatedAdminHellobarRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/homepage': {
+      id: '/_authenticated/admin/homepage'
+      path: '/homepage'
+      fullPath: '/admin/homepage'
+      preLoaderRoute: typeof AuthenticatedAdminHomepageRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/instellingen': {
+      id: '/_authenticated/admin/instellingen'
+      path: '/instellingen'
+      fullPath: '/admin/instellingen'
+      preLoaderRoute: typeof AuthenticatedAdminInstellingenRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/mailbox': {
+      id: '/_authenticated/admin/mailbox'
+      path: '/mailbox'
+      fullPath: '/admin/mailbox'
+      preLoaderRoute: typeof AuthenticatedAdminMailboxRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/media': {
+      id: '/_authenticated/admin/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AuthenticatedAdminMediaRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/menu': {
+      id: '/_authenticated/admin/menu'
+      path: '/menu'
+      fullPath: '/admin/menu'
+      preLoaderRoute: typeof AuthenticatedAdminMenuRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/nieuws': {
+      id: '/_authenticated/admin/nieuws'
+      path: '/nieuws'
+      fullPath: '/admin/nieuws'
+      preLoaderRoute: typeof AuthenticatedAdminNieuwsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/paginas': {
+      id: '/_authenticated/admin/paginas'
+      path: '/paginas'
+      fullPath: '/admin/paginas'
+      preLoaderRoute: typeof AuthenticatedAdminPaginasRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/redirects': {
+      id: '/_authenticated/admin/redirects'
+      path: '/redirects'
+      fullPath: '/admin/redirects'
+      preLoaderRoute: typeof AuthenticatedAdminRedirectsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/sponsors': {
+      id: '/_authenticated/admin/sponsors'
+      path: '/sponsors'
+      fullPath: '/admin/sponsors'
+      preLoaderRoute: typeof AuthenticatedAdminSponsorsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/api/public/track': {
+      id: '/api/public/track'
+      path: '/api/public/track'
+      fullPath: '/api/public/track'
+      preLoaderRoute: typeof ApiPublicTrackRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
