@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { createPublicSupabase } from "./supabase-public.server";
 
 export type AgendaCategory = "concert" | "educatie" | "optreden";
 
@@ -33,7 +34,7 @@ export const listAgendaItems = createServerFn({ method: "GET" })
   });
 
 export const getUpcomingAgenda = createServerFn({ method: "GET" }).handler(async () => {
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await createPublicSupabase()
     .from("agenda_items")
     .select("id, starts_at, image_url, category, location, title, description, hide_on_homepage")
     .eq("hide_on_homepage", false)
@@ -50,7 +51,7 @@ export const listPublicAgenda = createServerFn({ method: "GET" }).handler(async 
   const now = new Date();
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
 
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await createPublicSupabase()
     .from("agenda_items")
     .select("id, starts_at, image_url, category, location, title, description, hide_on_homepage")
     .gte("starts_at", startOfToday)

@@ -33,3 +33,20 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## External Cloudflare hosting
+
+The public homepage, agenda, menu, sponsors and sitemap use the public database key and respect existing row-level security. They do not need a service-role key.
+
+Configure the public connection values in two places in Cloudflare:
+
+| Where | Variables |
+| --- | --- |
+| Workers Builds settings (available during `bun run build`) | `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` |
+| Worker Settings → Variables and Secrets (runtime) | `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` |
+
+Use the same public URL and public key for both pairs. Redeploy after changing build variables. Keep runtime variables available to `process.env` with the configured `nodejs_compat` flag. Do not put private keys in `VITE_*` variables.
+
+**Not yet portable:** contact submission, newsletter/Brevo synchronization, privileged administration, analytics and 404 logging still rely on the managed server environment. The Lovable Cloud service-role key is not exportable. These operations need a separate secure hosted processing endpoint before switching the production domain; do not weaken database policies or replace the admin client with a public client for private operations.
+
+Deployment check: verify `/`, `/optredens`, `/sponsoren`, a published `/p/...` page and `/sitemap.xml` on the Worker URL before moving the domain. Do not infer that forms or administration work from a successful homepage check.

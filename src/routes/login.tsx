@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteLayout } from "@/components/site/SiteLayout";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Inloggen — Wilhelmina Heerde" }] }),
+  head: () => ({ meta: [{ title: "Inloggen — Wilhelmina Heerde" }, { name: "description", content: "Inloggen voor het beheer van Wilhelmina Heerde." }, { name: "robots", content: "noindex" }, { property: "og:title", content: "Inloggen — Wilhelmina Heerde" }, { property: "og:description", content: "Beheeromgeving van Wilhelmina Heerde." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   beforeLoad: async () => {
     if (typeof window === "undefined") return;
     const { data } = await supabase.auth.getSession();

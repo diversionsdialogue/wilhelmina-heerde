@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { createPublicSupabase } from "./supabase-public.server";
 
 export type MenuBannerPayload = {
   image_url: string;
@@ -18,7 +19,7 @@ const DEFAULTS: MenuBannerPayload = {
 };
 
 export const getMenuBanner = createServerFn({ method: "GET" }).handler(async () => {
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await createPublicSupabase()
     .from("home_sections")
     .select("payload")
     .eq("key", "menu_banner")

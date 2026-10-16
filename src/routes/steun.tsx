@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
 
 export const Route = createFileRoute("/steun")({
-  head: () => ({ meta: [{ title: "Steun Wilhelmina — Heerde" }, { name: "description", content: "Word vriend van de vereniging en draag bij aan de toekomst van de fanfaretraditie in Heerde." }] }),
+  head: () => ({ meta: [{ title: "Steun Wilhelmina — Heerde" }, { name: "description", content: "Word vriend van de vereniging en draag bij aan de toekomst van de fanfaretraditie in Heerde." }, { property: "og:title", content: "Steun Wilhelmina — Heerde" }, { property: "og:description", content: "Draag bij aan de toekomst van de fanfaretraditie in Heerde." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: SteunPage,
 });
 

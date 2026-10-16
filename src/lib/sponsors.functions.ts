@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { createPublicSupabase } from "./supabase-public.server";
 
 export type Sponsor = {
   id: string;
@@ -14,7 +15,7 @@ export type Sponsor = {
 
 /** Publieke lijst — alleen actieve sponsors, gesorteerd. */
 export const getPublicSponsors = createServerFn({ method: "GET" }).handler(async () => {
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await createPublicSupabase()
     .from("sponsors")
     .select("id, name, logo_url, website_url, sort_order, is_active")
     .eq("is_active", true)
