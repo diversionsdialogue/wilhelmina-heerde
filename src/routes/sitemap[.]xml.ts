@@ -14,7 +14,8 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { createPublicSupabase } = await import("@/lib/supabase-public.server");
+        const supabaseAdmin = createPublicSupabase();
 
         const staticEntries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
