@@ -8,7 +8,7 @@ export const Route = createFileRoute("/sponsoren")({
   head: () => ({
     meta: [
       { title: "Onze sponsors — Wilhelmina Heerde" },
-      { name: "description", content: "De lokale ondernemers die Wilhelmina Heerde steunen en cultuur in ons dorp een warm hart toedragen." },
+      { name: "description", content: "De lokale ondernemers die Wilhelmina Heerde steunen en cultuur in ons dorp een warm hart toedragen." }, { property: "og:title", content: "Onze sponsors — Wilhelmina Heerde" }, { property: "og:description", content: "Lokale ondernemers die Wilhelmina Heerde steunen." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
     ],
   }),
   component: SponsorenPage,

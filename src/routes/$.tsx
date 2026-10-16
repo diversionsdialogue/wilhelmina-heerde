@@ -16,6 +16,7 @@ export const Route = createFileRoute("/$")({
       // bewust stil — log mag nooit een 404-pagina breken
     });
   },
+  head: () => ({ meta: [{ title: "Pagina niet gevonden — Wilhelmina Heerde" }, { name: "description", content: "Deze pagina van Wilhelmina Heerde bestaat niet (meer)." }, { name: "robots", content: "noindex" }, { property: "og:title", content: "Pagina niet gevonden — Wilhelmina Heerde" }, { property: "og:description", content: "Deze pagina bestaat niet (meer)." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: NotFoundPage,
 });
 
