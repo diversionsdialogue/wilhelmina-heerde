@@ -2863,6 +2863,7 @@ img { display: block; max-width: 100%; }
   border: 0;
 }
 .w-album__gallery { margin: 24px 0 40px; }
+.w-article__gallery-caption { margin-top: 16px; color: var(--w-ink-70); font-family: var(--font-text); font-size: 16px; line-height: 1.6; letter-spacing: 0; }
 
 .w-gallery {
   display: grid;

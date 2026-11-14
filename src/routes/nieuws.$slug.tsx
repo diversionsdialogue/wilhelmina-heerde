@@ -5,6 +5,8 @@ import { NewsletterBand } from "@/components/site/NewsletterBand";
 import { MarkdownArticle, parseArticleBody, buildFaqJsonLd } from "@/components/site/MarkdownArticle";
 import { fetchNewsBySlug, fetchPublishedNews, type NewsRow } from "@/lib/news";
 import { formatDutchDate } from "@/lib/format";
+import { PhotoGallery } from "@/components/site/PhotoGallery";
+import { faberhalGalleryCaption, faberhalGalleryPhotos } from "@/lib/faberhal-gallery";
 
 export const Route = createFileRoute("/nieuws/$slug")({
   loader: async ({ params }) => {
@@ -97,6 +99,12 @@ function NieuwsDetail() {
           </figure>
 
           <MarkdownArticle body={item.body_md ?? ""} />
+          {slug === "heerde-verbindt-faberhal-14-november-2026" && (
+            <figure className="w-album__gallery" aria-label="Foto's van de opbouw van de Faberhal">
+              <PhotoGallery photos={faberhalGalleryPhotos} />
+              <figcaption className="w-article__gallery-caption">{faberhalGalleryCaption}</figcaption>
+            </figure>
+          )}
         </div>
       </article>
 
