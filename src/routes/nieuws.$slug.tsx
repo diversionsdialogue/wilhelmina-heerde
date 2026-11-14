@@ -31,7 +31,9 @@ export const Route = createFileRoute("/nieuws/$slug")({
         { name: "description", content: description },
         { property: "og:title", content: item.title },
         { property: "og:description", content: description },
-        ...(item.cover_image_url
+        { property: "og:type", content: "article" },
+        { name: "twitter:card", content: "summary_large_image" },
+        ...(item.cover_image_url?.startsWith("https://")
           ? [
               { property: "og:image", content: item.cover_image_url },
               { name: "twitter:image", content: item.cover_image_url },

@@ -467,6 +467,15 @@ img { display: block; max-width: 100%; }
   background: var(--w-bg-warm);
   position: relative;
 }
+.w-faberhal { padding-top: var(--section-y); background: var(--w-bg-warm); }
+.w-faberhal__photo { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: contain; }
+.w-faberhal__copy { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 32px 0; border-bottom: 1px solid var(--w-ink-15); }
+.w-faberhal__title { margin: 14px 0 0; font-family: var(--font-primary); font-size: 30px; font-weight: 600; line-height: 1.2; letter-spacing: 0; max-width: 32ch; }
+.w-faberhal__button { flex-shrink: 0; height: auto; letter-spacing: 0; }
+@media (max-width: 767px) {
+  .w-faberhal__copy { flex-direction: column; align-items: flex-start; gap: 24px; padding: 24px 0; }
+  .w-faberhal__title { font-size: 24px; }
+}
 .w-section--sand { background: var(--w-bg-sand); }
 .w-section--ink  { background: var(--w-black); color: var(--w-bg-warm); }
 

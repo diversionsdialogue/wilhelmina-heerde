@@ -5,6 +5,8 @@ import { getHomeSections } from "@/lib/home.functions";
 import { getPublicSponsors } from "@/lib/sponsors.functions";
 import { getUpcomingAgenda, type AgendaItem } from "@/lib/agenda.functions";
 import { fetchPublishedNews, type NewsRow } from "@/lib/news";
+import { Button } from "@/components/ui/button";
+import faberhalPhoto from "@/assets/faberhal-heerde-verbindt.webp.asset.json";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
@@ -23,6 +25,9 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Koninklijk Fanfarekorps Wilhelmina — Heerde" },
       { property: "og:description", content: "Sinds 1898 het muzikale hart van Heerde. Drie orkesten, ruim tachtig musici, één traditie." },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:image", content: "https://wuteknilahqymkocgiir.supabase.co/storage/v1/object/public/news-media/lammert-niessing-is-wilhelminas-maestro-2025/Koninklijk-Fanfarekorps-Wilhelmina" },
+      { name: "twitter:image", content: "https://wuteknilahqymkocgiir.supabase.co/storage/v1/object/public/news-media/lammert-niessing-is-wilhelminas-maestro-2025/Koninklijk-Fanfarekorps-Wilhelmina" },
     ],
     links: [
       { rel: "icon", href: "/assets/wilhelmina-mark-gold.svg" },
@@ -101,6 +106,21 @@ function HomePage() {
           </div>
         </div>
         <div className="w-hero__scroll" aria-hidden="true">Scroll</div>
+      </section>
+
+      <section className="w-faberhal" aria-labelledby="faberhal-title">
+        <div className="w-container">
+          <img className="w-faberhal__photo" src={faberhalPhoto.url} alt="De Faberhal met concertpodium en stoelen, klaar voor Heerde Verbindt" width={1024} height={768} loading="lazy" decoding="async" />
+          <div className="w-faberhal__copy">
+            <div>
+              <p className="w-eyebrow">Heerde Verbindt</p>
+              <h2 id="faberhal-title" className="w-faberhal__title">Alles over het muziekspectakel in de Faberhal op 14 november 2026.</h2>
+            </div>
+            <Button asChild className="w-btn w-btn--primary w-faberhal__button">
+              <Link to="/nieuws/$slug" params={{ slug: "heerde-verbindt-faberhal-14-november-2026" }}>Lees het artikel {arrow}</Link>
+            </Button>
+          </div>
+        </div>
       </section>
 
       {/* BINNENKORT */}
