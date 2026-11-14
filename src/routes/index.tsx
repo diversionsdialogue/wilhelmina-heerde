@@ -6,7 +6,7 @@ import { getPublicSponsors } from "@/lib/sponsors.functions";
 import { getUpcomingAgenda, type AgendaItem } from "@/lib/agenda.functions";
 import { fetchPublishedNews, type NewsRow } from "@/lib/news";
 import { Button } from "@/components/ui/button";
-import faberhalPhoto from "@/assets/faberhal-heerde-verbindt.webp.asset.json";
+import faberhalPhoto from "@/assets/faberhal-concert.webp.asset.json";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
@@ -110,7 +110,7 @@ function HomePage() {
 
       <section className="w-faberhal" aria-labelledby="faberhal-title">
         <div className="w-container">
-          <img className="w-faberhal__photo" src={faberhalPhoto.url} alt="De Faberhal met concertpodium en stoelen, klaar voor Heerde Verbindt" width={1024} height={768} loading="lazy" decoding="async" />
+          <img className="w-faberhal__photo" src={faberhalPhoto.url} alt="Het orkest tijdens het concert in de Faberhal" width={1400} height={1050} loading="lazy" decoding="async" />
           <div className="w-faberhal__copy">
             <div>
               <p className="w-eyebrow">Heerde Verbindt</p>
