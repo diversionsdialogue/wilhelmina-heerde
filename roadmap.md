@@ -1,5 +1,8 @@
 # Cloudflare hosting
 
+## Terugblik Heerde Verbindt
+- [x] Publish supplied retrospective with music1 as cover and all ten photos in the shared gallery.
+
 ## Homepage: Heerde Verbindt
 - [x] Add uploaded photo and banner above Binnenkort.
 - [x] Publish supplied article and verify the banner link on desktop and mobile.

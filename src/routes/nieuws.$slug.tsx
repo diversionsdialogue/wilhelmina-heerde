@@ -7,6 +7,7 @@ import { fetchNewsBySlug, fetchPublishedNews, type NewsRow } from "@/lib/news";
 import { formatDutchDate } from "@/lib/format";
 import { PhotoGallery } from "@/components/site/PhotoGallery";
 import { faberhalGalleryCaption, faberhalGalleryPhotos } from "@/lib/faberhal-gallery";
+import { heerdeVerbindtTerugblikPhotos, heerdeVerbindtTerugblikSlug } from "@/lib/heerde-verbindt-terugblik-gallery";
 
 export const Route = createFileRoute("/nieuws/$slug")({
   loader: async ({ params }) => {
@@ -103,6 +104,11 @@ function NieuwsDetail() {
             <figure className="w-album__gallery" aria-label="Foto's van de opbouw van de Faberhal">
               <PhotoGallery photos={faberhalGalleryPhotos} />
               <figcaption className="w-article__gallery-caption">{faberhalGalleryCaption}</figcaption>
+            </figure>
+          )}
+          {slug === heerdeVerbindtTerugblikSlug && (
+            <figure className="w-album__gallery" aria-label="Concertfoto's van Heerde Verbindt">
+              <PhotoGallery photos={heerdeVerbindtTerugblikPhotos} />
             </figure>
           )}
         </div>
