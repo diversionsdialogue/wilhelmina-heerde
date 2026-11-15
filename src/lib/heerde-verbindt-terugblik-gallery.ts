@@ -29,4 +29,4 @@ export const heerdeVerbindtTerugblikPhotos: GalleryPhoto[] = [
   id: photo.asset_id,
   image_url: photo.url,
   caption: null,
-}));
+})).reverse();
