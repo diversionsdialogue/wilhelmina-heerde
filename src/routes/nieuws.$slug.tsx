@@ -109,6 +109,10 @@ function NieuwsDetail() {
           {slug === heerdeVerbindtTerugblikSlug && (
             <figure className="w-album__gallery" aria-label="Concertfoto's van Heerde Verbindt">
               <PhotoGallery photos={heerdeVerbindtTerugblikPhotos} />
+              <figcaption className="w-article__gallery-caption">
+                Fotografie:{" "}
+                <a href="https://www.facebook.com/benno.wonink/?locale=nl_NL" target="_blank" rel="noopener noreferrer">Benno Wonink</a>
+              </figcaption>
             </figure>
           )}
         </div>

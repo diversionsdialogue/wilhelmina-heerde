@@ -6,7 +6,7 @@ import { getPublicSponsors } from "@/lib/sponsors.functions";
 import { getUpcomingAgenda, type AgendaItem } from "@/lib/agenda.functions";
 import { fetchPublishedNews, type NewsRow } from "@/lib/news";
 import { Button } from "@/components/ui/button";
-import faberhalPhoto from "@/assets/faberhal-concert.webp.asset.json";
+import faberhalPhoto from "@/assets/heerde-verbindt-terugblik-8.webp.asset.json";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
@@ -110,14 +110,14 @@ function HomePage() {
 
       <section className="w-faberhal" aria-labelledby="faberhal-title">
         <div className="w-container">
-          <img className="w-faberhal__photo" src={faberhalPhoto.url} alt="Het orkest tijdens het concert in de Faberhal" width={1400} height={1050} loading="lazy" decoding="async" />
+          <img className="w-faberhal__photo" src={faberhalPhoto.url} alt="Het orkest tijdens het concert in de Faberhal" width={1280} height={681} loading="lazy" decoding="async" />
           <div className="w-faberhal__copy">
             <div>
               <p className="w-eyebrow">Heerde Verbindt</p>
-              <h2 id="faberhal-title" className="w-faberhal__title">Alles over het muziekspectakel in de Faberhal op 14 november 2026.</h2>
+              <h2 id="faberhal-title" className="w-faberhal__title">Terugblik op het muziekspektakel in de Faberhal</h2>
             </div>
             <Button asChild className="w-btn w-btn--primary w-faberhal__button">
-              <Link to="/nieuws/$slug" params={{ slug: "heerde-verbindt-faberhal-14-november-2026" }}>Lees het artikel {arrow}</Link>
+              <Link to="/nieuws/$slug" params={{ slug: "terugblik-heerde-verbindt-2026" }}>Lees het artikel {arrow}</Link>
             </Button>
           </div>
         </div>
